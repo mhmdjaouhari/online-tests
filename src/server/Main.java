@@ -1,7 +1,23 @@
 package server;
 
+import server.dispatchers.EtudiantDispatcher;
 
-// this will be a singleton class that will maintain the server and will handle client connections
-// it will contain the switch that will dispatch requests to the methods defined in the other classes of the server package (Student, Test...)
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 public class Main {
+
+    public static void main(String[] args) {
+        try (ServerSocket serverSocket = new ServerSocket(5000)) {
+            while (true) {
+                Socket socket = serverSocket.accept();
+                System.out.println("Client connected");
+                EtudiantDispatcher etudiantController = new EtudiantDispatcher(socket);
+                etudiantController.start();
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
