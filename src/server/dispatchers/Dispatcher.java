@@ -12,7 +12,7 @@ abstract public class Dispatcher extends Thread {
         this.socket = socket;
     }
 
-    abstract public void startController();
+    abstract public void launch();
 
     protected ObjectOutputStream getOutputStream() throws IOException {
         return new ObjectOutputStream(socket.getOutputStream());

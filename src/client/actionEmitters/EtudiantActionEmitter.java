@@ -1,6 +1,7 @@
 package client.actionEmitters;
 
 import models.Etudiant;
+import util.Action;
 import util.Request;
 import util.Response;
 
@@ -19,7 +20,7 @@ public class EtudiantActionEmitter extends ActionEmitter {
         System.out.println("login etudiant...");
         try {
             ObjectOutputStream outputStream = getOutputStream();
-            Request request = new Request("LOGIN", etudiant);
+            Request request = new Request(Action.LOGIN, etudiant);
             outputStream.writeObject(request);
             ObjectInputStream inputStream = getInputStream();
             Response response = (Response) inputStream.readObject();
