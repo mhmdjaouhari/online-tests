@@ -2,6 +2,7 @@ package server.dispatchers;
 
 import server.actionHandlers.EtudiantActionHandler;
 import models.Etudiant;
+import util.Action;
 import util.Request;
 import util.Response;
 
@@ -18,35 +19,35 @@ public class EtudiantDispatcher extends Dispatcher {
         super(socket);
     }
 
-    public void startController() {
-        try (ObjectInputStream inputStream = getInputStream();
-             ObjectOutputStream outputStream = getOutputStream();) {
-            String action;
-            do {
+    public void launch() {
+        Action action = Action.DEFAULT;
+        do {
+            try {
+                ObjectInputStream inputStream = getInputStream();
+                ObjectOutputStream outputStream = getOutputStream();
                 Request request = (Request) inputStream.readObject();
                 action = request.getAction();
                 Etudiant etudiant = (Etudiant) request.getData();
                 switch (action) {
-                    case "LOGIN":
+                    case LOGIN:
                         Response response = EtudiantActionHandler.login(etudiant);
                         outputStream.writeObject(response);
                         break;
-                    case "EXIT":
+                    case EXIT:
                         System.out.println("Closing session...");
                         break;
                     default:
                         System.out.println("Action not found");
                 }
-            } while (!action.equals("EXIT"));
-
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } while (action != Action.EXIT);
     }
 
     @Override
     public void run() {
-        startController();
+        launch();
     }
 
 }

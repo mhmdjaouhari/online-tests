@@ -13,8 +13,8 @@ public class Main {
             while (true) {
                 Socket socket = serverSocket.accept();
                 System.out.println("Client connected");
-                EtudiantDispatcher etudiantController = new EtudiantDispatcher(socket);
-                etudiantController.start();
+                EtudiantDispatcher etudiantDispatcher = new EtudiantDispatcher(socket);
+                etudiantDispatcher.start();
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());

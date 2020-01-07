@@ -7,8 +7,6 @@ import java.util.Scanner;
 import client.actionEmitters.EtudiantActionEmitter;
 import models.Etudiant;
 
-/* this is just a test */
-
 public class Main {
 
     public static void main(String[] args) {
