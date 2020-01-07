@@ -16,7 +16,7 @@ public class DataSource{
             Class.forName("com.mysql.jdbc.Driver");
             System.out.println("Driver loaded successfully ...");
             connection = DriverManager
-                    .getConnection("jdbc:mysql://localhost:3306/online-tests1","root","");
+                    .getConnection("jdbc:mysql://localhost:3306/online-tests","root","");
             System.out.println("Database Connected");
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();

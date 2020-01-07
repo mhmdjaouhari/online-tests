@@ -12,16 +12,16 @@ public class Main {
     public static void main(String[] args) {
         try (Socket socket = new Socket("localhost", 5000)) {
             EtudiantActionEmitter etudiantEmitter = new EtudiantActionEmitter(socket);
-            String login, password;
+            String username, password;
             Scanner scanner = new Scanner(System.in);
             Etudiant etudiant = new Etudiant();
             do {
-                login = scanner.nextLine();
-                if (login.equals("exit")) {
+                username = scanner.nextLine();
+                if (username.equals("exit")) {
                     break;
                 }
                 password = scanner.nextLine();
-                etudiant.setLogin(login);
+                etudiant.setUsername(username);
                 etudiant.setPassword(password);
                 etudiantEmitter.login(etudiant);
             } while (true);

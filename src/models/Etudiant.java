@@ -7,15 +7,15 @@ public class Etudiant implements Serializable {
     private int idGroupe;
     private String nom;
     private String prenom;
-    private String login;
+    private String username;
     private String password;
 
-    public Etudiant(String CNE, int idGroupe, String nom, String prenom, String login, String password) {
+    public Etudiant(String CNE, int idGroupe, String nom, String prenom, String username, String password) {
         this.CNE = CNE;
         this.idGroupe = idGroupe;
         this.nom = nom;
         this.prenom = prenom;
-        this.login = login;
+        this.username = username;
         this.password = password;
     }
 
@@ -53,12 +53,12 @@ public class Etudiant implements Serializable {
         this.prenom = prenom;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -76,7 +76,7 @@ public class Etudiant implements Serializable {
                 ", id_groupe=" + idGroupe +
                 ", nom='" + nom + '\'' +
                 ", prenom='" + prenom + '\'' +
-                ", login='" + login + '\'' +
+                ", login='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }
