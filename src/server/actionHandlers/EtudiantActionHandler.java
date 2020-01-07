@@ -4,8 +4,6 @@ import server.dataSource.DataSource;
 import models.Etudiant;
 import util.Response;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.sql.*;
 
 /* This class handles the actions coming from the client,
@@ -16,8 +14,8 @@ public class EtudiantActionHandler {
     public static Response login(Etudiant etudiant) {
         Connection conn = DataSource.getInstance().getConnection();
         try {
-            PreparedStatement statement = conn.prepareStatement("select * from etudiant where login=? and password=?");
-            statement.setString(1, etudiant.getLogin());
+            PreparedStatement statement = conn.prepareStatement("select * from etudiants where username=? and password=?");
+            statement.setString(1, etudiant.getUsername());
             statement.setString(2, etudiant.getPassword());
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -26,7 +24,7 @@ public class EtudiantActionHandler {
                 fullEtudiant.setIdGroupe(resultSet.getInt("id_groupe"));
                 fullEtudiant.setNom(resultSet.getString("nom"));
                 fullEtudiant.setPrenom(resultSet.getString("prenom"));
-                fullEtudiant.setLogin(resultSet.getString("login"));
+                fullEtudiant.setUsername(resultSet.getString("username"));
                 fullEtudiant.setPassword(resultSet.getString("password"));
                 return new Response(fullEtudiant);
             } else {
