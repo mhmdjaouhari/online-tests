@@ -3,11 +3,16 @@ package util;
 import java.io.Serializable;
 
 public class Request implements Serializable {
-    private String action;
+    private Action action;
     private Object data;
 
-    public Request(String action, Object data) {
+    public Request(Action action, Object data) {
         this.data = data;
+        this.action = action;
+    }
+
+    public Request(Action action) {
+        this.data = null;
         this.action = action;
     }
 
@@ -19,11 +24,11 @@ public class Request implements Serializable {
         this.data = data;
     }
 
-    public String getAction() {
+    public Action getAction() {
         return action;
     }
 
-    public void setAction(String action) {
+    public void setAction(Action action) {
         this.action = action;
     }
 }

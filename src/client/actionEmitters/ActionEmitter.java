@@ -1,5 +1,6 @@
 package client.actionEmitters;
 
+import util.Action;
 import util.Request;
 
 import java.io.IOException;
@@ -25,9 +26,11 @@ abstract public class ActionEmitter {
 
     public void exit() {
         try {
-            Request request = new Request("EXIT", null);
+            Request request = new Request(Action.EXIT);
             getOutputStream().writeObject(request);
-        } catch (IOException e) {
+            System.out.println("Exiting in 5 seconds...");
+            Thread.sleep(5000);
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

@@ -6,5 +6,4 @@ module online.tests {
     opens GUI.admins;
     opens GUI.students;
     opens GUI.profs;
-    opens app;
 }
