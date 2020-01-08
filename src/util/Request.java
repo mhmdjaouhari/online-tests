@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class Request implements Serializable {
     private Action action;
     private Object data;
+    private String type;
 
     public Request(Action action, Object data) {
         this.data = data;
@@ -26,6 +27,14 @@ public class Request implements Serializable {
 
     public Action getAction() {
         return action;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public void setAction(Action action) {
