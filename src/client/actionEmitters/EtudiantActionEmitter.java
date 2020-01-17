@@ -4,6 +4,7 @@ import models.Etudiant;
 import util.Action;
 import util.Request;
 import util.Response;
+import util.Role;
 
 import java.io.*;
 import java.net.Socket;
@@ -20,7 +21,7 @@ public class EtudiantActionEmitter extends ActionEmitter {
         System.out.println("login etudiant...");
         try {
             ObjectOutputStream outputStream = getOutputStream();
-            Request request = new Request(Action.LOGIN, etudiant);
+            Request request = new Request(Action.LOGIN, etudiant, Role.ETUDIANT);
             outputStream.writeObject(request);
             ObjectInputStream inputStream = getInputStream();
             Response response = (Response) inputStream.readObject();
