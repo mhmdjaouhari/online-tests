@@ -1,6 +1,6 @@
-package server.actionHandlers;
+package server.DAOs;
 
-import server.dataSource.DataSource;
+import server.DAOs.DataSource;
 import models.Etudiant;
 import util.Response;
 
@@ -9,7 +9,7 @@ import java.sql.*;
 /* This class handles the actions coming from the client,
     and all classes who interact with database are in this ActionHandlers Package */
 
-public class EtudiantActionHandler {
+public class EtudiantDAO {
 
     public static Response login(Etudiant etudiant) {
         Connection conn = DataSource.getInstance().getConnection();

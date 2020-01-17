@@ -2,6 +2,7 @@ package client.actionEmitters;
 
 import util.Action;
 import util.Request;
+import util.Role;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -26,7 +27,7 @@ abstract public class ActionEmitter {
 
     public void exit() {
         try {
-            Request request = new Request(Action.EXIT);
+            Request request = new Request(Action.EXIT, Role.ETUDIANT);
             getOutputStream().writeObject(request);
             System.out.println("Exiting in 5 seconds...");
             Thread.sleep(5000);
