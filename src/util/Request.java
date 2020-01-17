@@ -5,16 +5,18 @@ import java.io.Serializable;
 public class Request implements Serializable {
     private Action action;
     private Object data;
-    private String type;
+    private Role role;
 
-    public Request(Action action, Object data) {
+    public Request(Action action, Object data, Role role) {
         this.data = data;
         this.action = action;
+        this.role = role;
     }
 
-    public Request(Action action) {
+    public Request(Action action, Role role) {
         this.data = null;
         this.action = action;
+        this.role = role;
     }
 
     public Object getData() {
@@ -29,15 +31,15 @@ public class Request implements Serializable {
         return action;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public void setAction(Action action) {
         this.action = action;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
