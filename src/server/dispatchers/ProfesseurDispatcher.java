@@ -6,7 +6,7 @@ import util.Action;
 import util.Request;
 import util.Response;
 
-public class EtudiantDispatcher {
+public class ProfesseurDispatcher {
 
     public static Response handle(Request request){
         Action action = request.getAction();

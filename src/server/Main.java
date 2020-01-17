@@ -1,6 +1,5 @@
 package server;
 
-import server.dispatchers.EtudiantDispatcher;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -13,8 +12,8 @@ public class Main {
             while (true) {
                 Socket socket = serverSocket.accept();
                 System.out.println("Client connected");
-                EtudiantDispatcher etudiantDispatcher = new EtudiantDispatcher(socket);
-                etudiantDispatcher.start();
+                Session session = new Session(socket);
+                session.start();
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
