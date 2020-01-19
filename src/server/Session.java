@@ -15,9 +15,14 @@ import java.net.Socket;
 
 public class Session extends Thread {
     Socket socket;
+    ObjectOutputStream outputStream;
+    ObjectInputStream inputStream;
 
-    public Session(Socket socket) {
+    public Session(Socket socket,ObjectInputStream inputStream,ObjectOutputStream outputStream) throws IOException {
         this.socket = socket;
+        this.inputStream = inputStream;
+        this.outputStream = outputStream;
+
     }
 
     public void launch() {
@@ -25,9 +30,6 @@ public class Session extends Thread {
         Role role;
         while (true) {
             try {
-                ObjectInputStream inputStream = getInputStream();
-                ObjectOutputStream outputStream = getOutputStream();
-
                 Request request = (Request) inputStream.readObject();
 
                 role = request.getRole();
@@ -55,6 +57,13 @@ public class Session extends Thread {
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
+        }
+        try{
+            inputStream.close();
+            outputStream.close();
+        }catch (IOException e){
+            System.out.println("Error in closing streams...");
+            e.printStackTrace();
         }
     }
 

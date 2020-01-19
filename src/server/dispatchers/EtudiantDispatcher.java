@@ -11,6 +11,7 @@ public class EtudiantDispatcher {
     public static Response handle(Request request){
         Action action = request.getAction();
         Etudiant etudiant = (Etudiant) request.getData();
+//        System.out.println("recieved : " + etudiant.toString());
         Response response;
         switch (action) {
             case LOGIN:

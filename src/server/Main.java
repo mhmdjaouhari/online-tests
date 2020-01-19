@@ -12,7 +12,9 @@ public class Main {
             while (true) {
                 Socket socket = serverSocket.accept();
                 System.out.println("Client connected");
-                Session session = new Session(socket);
+                ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+                ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+                Session session = new Session(socket,inputStream,outputStream);
                 session.start();
             }
         } catch (IOException e) {

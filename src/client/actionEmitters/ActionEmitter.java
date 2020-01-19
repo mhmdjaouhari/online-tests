@@ -12,26 +12,23 @@ import java.net.Socket;
 abstract public class ActionEmitter {
 
     private Socket socket;
+    protected ObjectInputStream inputStream;    // Protected is the best solution for the encapsulation so far
+    protected ObjectOutputStream outputStream;
 
-    public ActionEmitter(Socket socket) {
+    public ActionEmitter(Socket socket,ObjectInputStream inputStream,ObjectOutputStream outputStream) {
         this.socket = socket;
+        this.inputStream = inputStream;
+        this.outputStream = outputStream;
     }
 
-    protected ObjectOutputStream getOutputStream() throws IOException {
-        return new ObjectOutputStream(socket.getOutputStream());
-    }
-
-    protected ObjectInputStream getInputStream() throws IOException {
-        return new ObjectInputStream(socket.getInputStream());
-    }
 
     public void exit() {
         try {
             Request request = new Request(Action.EXIT, Role.ETUDIANT);
-            getOutputStream().writeObject(request);
-            System.out.println("Exiting in 5 seconds...");
-            Thread.sleep(5000);
-        } catch (IOException | InterruptedException e) {
+            outputStream.writeObject(request);
+            outputStream.close();
+            inputStream.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -43,4 +40,5 @@ abstract public class ActionEmitter {
     public void setSocket(Socket socket) {
         this.socket = socket;
     }
+
 }
