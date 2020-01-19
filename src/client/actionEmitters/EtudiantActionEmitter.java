@@ -13,17 +13,16 @@ import java.net.Socket;
 
 public class EtudiantActionEmitter extends ActionEmitter {
 
-    public EtudiantActionEmitter(Socket socket) {
-        super(socket);
+    public EtudiantActionEmitter(Socket socket,ObjectInputStream inputStream,ObjectOutputStream outputStream) {
+        super(socket,inputStream,outputStream);
     }
 
     public void login(Etudiant etudiant) {
         System.out.println("login etudiant...");
         try {
-            ObjectOutputStream outputStream = getOutputStream();
             Request request = new Request(Action.LOGIN, etudiant, Role.ETUDIANT);
+            //System.out.println("sent : "+etudiant.toString());
             outputStream.writeObject(request);
-            ObjectInputStream inputStream = getInputStream();
             Response response = (Response) inputStream.readObject();
             if (response.getStatus() == 0) {
                 etudiant = (Etudiant) response.getData();
@@ -31,6 +30,7 @@ public class EtudiantActionEmitter extends ActionEmitter {
             } else {
                 System.out.println(response.getMessage());
             }
+            outputStream.reset();
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

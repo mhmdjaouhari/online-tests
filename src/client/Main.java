@@ -11,7 +11,16 @@ public class Main {
 
     public static void main(String[] args) {
         try (Socket socket = new Socket("localhost", 5000)) {
-            EtudiantActionEmitter etudiantEmitter = new EtudiantActionEmitter(socket);
+            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+            EtudiantActionEmitter etudiantEmitter = new EtudiantActionEmitter(socket,inputStream,outputStream);
+            Runtime.getRuntime().addShutdownHook(new Thread(){
+                @Override
+                public void run() {
+                    System.out.println("closing ...");
+                    etudiantEmitter.exit();
+                }
+            });
             String username, password;
             Scanner scanner = new Scanner(System.in);
             Etudiant etudiant = new Etudiant();
