@@ -7,16 +7,14 @@ import util.Request;
 import util.Response;
 import util.Role;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
 
 public class Session extends Thread {
-    Socket socket;
-    ObjectOutputStream outputStream;
-    ObjectInputStream inputStream;
+    private Socket socket;
+    private ObjectOutputStream outputStream;
+    private ObjectInputStream inputStream;
 
     public Session(Socket socket,ObjectInputStream inputStream,ObjectOutputStream outputStream) throws IOException {
         this.socket = socket;
@@ -25,11 +23,31 @@ public class Session extends Thread {
 
     }
 
-    public void launch() {
+    public Session(Socket socket){
+        this.socket = socket;
+    }
 
+    public void launch() {
+        //getting streams after running the thread,
+        // to not crash the entire server in case of error
+        try{
+            OutputStream out = socket.getOutputStream();
+            InputStream in = socket.getInputStream();
+            if(in.available() != 0){
+                this.outputStream = new ObjectOutputStream(out);
+                this.inputStream = new ObjectInputStream(in);
+            }else{
+                System.out.println("Ping/Test request arrived...");
+                return;
+            }
+        }catch (IOException e){
+            System.out.println("Invalid Request");
+            e.printStackTrace();
+            return;
+        }
         Action action = Action.DEFAULT;
         Role role;
-        while (true) {
+        while (true){
             try {
                 Request request = (Request) inputStream.readObject();
 
@@ -39,7 +57,6 @@ public class Session extends Thread {
 
                 if (action == Action.EXIT) {
                     System.out.println("Closing session...");
-                    Thread.currentThread().interrupt();
                     break;
                 }
                 Response response;
@@ -57,9 +74,7 @@ public class Session extends Thread {
                         new Response(1, "Type not found !!");
                 }
             } catch (IOException | ClassNotFoundException e) {
-                System.err.println("Client break the connection ! "+Thread.currentThread());
-                Thread.currentThread().interrupt();
-                break;
+                e.printStackTrace();
             }
         }
         try{
@@ -76,13 +91,6 @@ public class Session extends Thread {
         launch();
     }
 
-    protected ObjectOutputStream getOutputStream() throws IOException {
-        return new ObjectOutputStream(socket.getOutputStream());
-    }
-
-    protected ObjectInputStream getInputStream() throws IOException {
-        return new ObjectInputStream(socket.getInputStream());
-    }
 
     public Socket getSocket() {
         return socket;

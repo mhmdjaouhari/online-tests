@@ -18,7 +18,9 @@ public class Main {
                 @Override
                 public void run() {
                     System.out.println("closing ...");
-                    etudiantEmitter.exit();
+                    if(etudiantEmitter.getClientOnline()){
+                        etudiantEmitter.exit();
+                    }
                 }
             });
             String username, password;
@@ -27,14 +29,17 @@ public class Main {
             do {
                 username = scanner.nextLine();
                 if (username.equals("exit")) {
-                    break;
+                    if(etudiantEmitter.exit()){
+                        etudiantEmitter.setClientOnline(false);
+                        break;
+                    }
                 }
                 password = scanner.nextLine();
                 etudiant.setUsername(username);
                 etudiant.setPassword(password);
                 etudiantEmitter.login(etudiant);
             } while (true);
-            etudiantEmitter.exit();
+
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
