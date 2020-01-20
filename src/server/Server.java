@@ -23,11 +23,12 @@ public class Server implements Runnable{
             while (true) {
                 // to stop the server
                 if(!stopServer){
+                    System.out.println("Closing server ....");
                     Thread.currentThread().interrupt();
                     break;
                 }
                 socket = serverSocket.accept();
-                System.out.println("Client connected"+socket);
+                System.out.println("Client connected"+" info : "+socket);
                 ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
                 ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
                 Session session = new Session(socket,inputStream,outputStream);
@@ -42,5 +43,13 @@ public class Server implements Runnable{
             }
             System.out.println(e.getMessage());
         }
+    }
+
+    public static boolean isStopServer() {
+        return stopServer;
+    }
+
+    public static void setStopServer(boolean stopServer) {
+        Server.stopServer = stopServer;
     }
 }
