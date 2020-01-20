@@ -2,6 +2,7 @@ package client.actionEmitters;
 
 import util.Action;
 import util.Request;
+import util.Response;
 import util.Role;
 
 import java.io.IOException;
@@ -10,7 +11,6 @@ import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.rmi.UnknownHostException;
 import java.util.Scanner;
 
 abstract public class ActionEmitter {
@@ -55,10 +55,6 @@ abstract public class ActionEmitter {
         return true;
     }
 
-    // this function contains the case when the server is
-    // offline and the user exit, so changes aren't comitted to the server
-
-
     public Socket getSocket() {
         return socket;
     }
@@ -66,8 +62,6 @@ abstract public class ActionEmitter {
     public void setSocket(Socket socket) {
         this.socket = socket;
     }
-
-
 
     public Boolean getClientOnline() {
         return isClientOnline;
@@ -85,7 +79,7 @@ abstract public class ActionEmitter {
         this.connectedToServer = connectedToServer;
     }
 
-    public boolean isServerOnline(){
+    public  boolean isServerOnline(){
         boolean isAlive=false;
         SocketAddress socketAddress = new InetSocketAddress("localhost",5000);
         Socket TestSocket = new Socket();
@@ -100,10 +94,40 @@ abstract public class ActionEmitter {
         return isAlive;
     }
 
-    public void reConenct() throws IOException {
-        socket = new Socket("localhost",5000);
-        inputStream = new ObjectInputStream(socket.getInputStream());
-        outputStream = new ObjectOutputStream(socket.getOutputStream());
+    public void reConnect() {
+        try {
+            outputStream.close();
+            inputStream.close();
+            socket.close();
+            System.out.println("okk");
+            socket = new Socket("localhost",5000);
+            inputStream = new ObjectInputStream(socket.getInputStream());
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            connectedToServer = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+    }
+
+    public Response post(Request request) {
+        Response response = null;
+        try{
+            if(!isServerOnline()){
+                System.out.println("Server is offline, please try later...");
+                outputStream.reset();
+                return null;
+            }
+            if(!connectedToServer && isServerOnline()){
+                System.out.println("switched...");
+                reConnect();
+            }
+            outputStream.writeObject(request);
+            response = (Response) inputStream.readObject();
+            outputStream.reset();
+        }catch (IOException | ClassNotFoundException e){
+            e.printStackTrace();
+        }
+        return response;
     }
 }

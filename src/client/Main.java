@@ -10,7 +10,8 @@ import models.Etudiant;
 public class Main {
 
     public static void main(String[] args) {
-        try (Socket socket = new Socket("localhost", 5000)) {
+        try  {
+            Socket socket = new Socket("localhost", 5000);
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
             EtudiantActionEmitter etudiantEmitter = new EtudiantActionEmitter(socket,inputStream,outputStream);

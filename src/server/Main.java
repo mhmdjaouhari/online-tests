@@ -8,16 +8,20 @@ import java.net.Socket;
 public class Main {
 
     public static void main(String[] args) {
+        Socket socket = null;
         try (ServerSocket serverSocket = new ServerSocket(5000)) {
             while (true) {
-                Socket socket = serverSocket.accept();
+                socket = serverSocket.accept();
                 System.out.println("Receiving...");
-                //ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-                //ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
                 Session session = new Session(socket);
                 session.start();
             }
         } catch (IOException e) {
+            try {
+                socket.close();
+            }catch(IOException ex){
+                ex.printStackTrace();
+            }
             e.printStackTrace();
             System.out.println(e.getMessage());
         }
