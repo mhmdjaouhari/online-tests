@@ -74,7 +74,9 @@ public class Session extends Thread {
                         new Response(1, "Type not found !!");
                 }
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                System.err.println("Client break the connection ! "+Thread.currentThread());
+//                Thread.currentThread().interrupt();
+//                break;
             }
         }
         try{

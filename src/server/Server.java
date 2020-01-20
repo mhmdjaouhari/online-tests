@@ -8,34 +8,27 @@ import java.net.Socket;
 
 public class Server implements Runnable{
     public static boolean stopServer=true;
-    Socket socket=null;
-    ServerSocket serverSocket = null;
-
 
     @Override
     public void run() {
-
-        try {
-
-            serverSocket=new ServerSocket(5000);
-            socket=null;
-
+        Socket socket = null;
+        try (ServerSocket serverSocket = new ServerSocket(5000)) {
             while (true) {
-                // to stop the server
+
                 if(!stopServer){
                     System.out.println("Closing server ....");
                     Thread.currentThread().interrupt();
                     break;
                 }
+
                 socket = serverSocket.accept();
                 System.out.println("Client connected"+" info : "+socket);
-                ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-                ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-                Session session = new Session(socket,inputStream,outputStream);
+                //ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+                //ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+                Session session = new Session(socket);
                 session.start();
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             try {
                 socket.close();
             } catch (IOException ex) {
