@@ -75,8 +75,8 @@ public class Session extends Thread {
                 }
             } catch (IOException | ClassNotFoundException e) {
                 System.err.println("Client break the connection ! "+Thread.currentThread());
-//                Thread.currentThread().interrupt();
-//                break;
+                Thread.currentThread().interrupt();
+                break;
             }
         }
         try{
