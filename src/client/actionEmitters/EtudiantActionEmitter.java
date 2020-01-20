@@ -20,6 +20,14 @@ public class EtudiantActionEmitter extends ActionEmitter {
     public void login(Etudiant etudiant) {
         System.out.println("login etudiant...");
         try {
+            if(!isServerOnline()){
+                System.out.println("Server is offline, please try later...");
+                return;
+            }
+            if(!getConnectedToServer() && isServerOnline()){
+                reConenct();
+                setConnectedToServer(true);
+            }
             Request request = new Request(Action.LOGIN, etudiant, Role.ETUDIANT);
             //System.out.println("sent : "+etudiant.toString());
             outputStream.writeObject(request);
@@ -30,6 +38,7 @@ public class EtudiantActionEmitter extends ActionEmitter {
             } else {
                 System.out.println(response.getMessage());
             }
+            //clear the output stream *darori*
             outputStream.reset();
 
         } catch (IOException | ClassNotFoundException e) {
