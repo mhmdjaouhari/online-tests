@@ -29,7 +29,7 @@ public class Session extends Thread {
     public void launch() {
         //getting streams after running the thread,
         // to not crash the entire server in case of error
-        try{
+         try{
             OutputStream out = socket.getOutputStream();
             InputStream in = socket.getInputStream();
             this.outputStream = new ObjectOutputStream(out);
@@ -69,7 +69,9 @@ public class Session extends Thread {
                         new Response(1, "Type not found !!");
                 }
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                System.err.println("Client break the connection ! "+Thread.currentThread());
+                Thread.currentThread().interrupt();
+                break;
             }
         }
         try{
