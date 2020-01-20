@@ -26,6 +26,7 @@ public class Session extends Thread {
     }
 
     public void launch() {
+
         Action action = Action.DEFAULT;
         Role role;
         while (true) {
@@ -38,6 +39,7 @@ public class Session extends Thread {
 
                 if (action == Action.EXIT) {
                     System.out.println("Closing session...");
+                    Thread.currentThread().interrupt();
                     break;
                 }
                 Response response;
@@ -55,7 +57,9 @@ public class Session extends Thread {
                         new Response(1, "Type not found !!");
                 }
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                System.err.println("Client break the connection ! "+Thread.currentThread());
+                Thread.currentThread().interrupt();
+                break;
             }
         }
         try{
