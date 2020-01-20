@@ -20,7 +20,6 @@ public class Session extends Thread {
         this.socket = socket;
         this.inputStream = inputStream;
         this.outputStream = outputStream;
-
     }
 
     public Session(Socket socket){
@@ -33,16 +32,12 @@ public class Session extends Thread {
         try{
             OutputStream out = socket.getOutputStream();
             InputStream in = socket.getInputStream();
-            if(in.available() != 0){
-                this.outputStream = new ObjectOutputStream(out);
-                this.inputStream = new ObjectInputStream(in);
-            }else{
-                System.out.println("Ping/Test request arrived...");
-                return;
-            }
+            this.outputStream = new ObjectOutputStream(out);
+            this.inputStream = new ObjectInputStream(in);
+
         }catch (IOException e){
-            System.out.println("Invalid Request");
-            e.printStackTrace();
+            System.out.println("Ping/Test request");
+            //e.printStackTrace();
             return;
         }
         Action action = Action.DEFAULT;
