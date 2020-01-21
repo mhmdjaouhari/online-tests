@@ -93,7 +93,7 @@ public class EtudiantDAO {
         try
         {
             Statement st=conn.createStatement();
-            resultSet=st.executeQuery("select * from professeurs;");
+            resultSet=st.executeQuery("select * from etudiants;");
             System.out.println("getAllAProf done ! ");
             while (resultSet.next())
             {
