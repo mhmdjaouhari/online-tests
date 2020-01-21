@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="640.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.etudiant.DashboardController">
+   <children>
+      <BorderPane prefHeight="640.0" prefWidth="960.0">
+         <left>
+            <VBox prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox spacing="4.0" style="-fx-background-color: #046dd5;">
+                     <children>
+                        <Label text="Bienvenue" textFill="WHITE">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin></Label>
+                        <Label fx:id="nomEtudiant" textFill="WHITE" wrapText="true">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Ubuntu" size="22.0" />
+                           </font></Label>
+                        <Label fx:id="groupeEtudiant" textFill="WHITE">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin></Label>
+                     </children>
+                     <padding>
+                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                     </padding>
+                  </VBox>
+                  <VBox style="-fx-background-color: #333;" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label text="Vous avez" textFill="WHITE" />
+                        <Label fx:id="newTestCount" textFill="WHITE">
+                           <font>
+                              <Font name="Ubuntu Bold" size="28.0" />
+                           </font></Label>
+                        <Label text="tests à passer !" textFill="WHITE" />
+                     </children>
+                     <padding>
+                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                     </padding>
+                  </VBox>
+                  <VBox style="-fx-background-color: #111;" VBox.vgrow="NEVER">
+                     <children>
+                        <Label text="Serveur" textFill="WHITE">
+                           <padding>
+                              <Insets left="16.0" right="16.0" top="20.0" />
+                           </padding>
+                        </Label>
+                        <Label text="En ligne" textFill="#76ff03">
+                           <padding>
+                              <Insets left="16.0" right="16.0" />
+                           </padding>
+                        </Label>
+                        <JFXButton onAction="#handleLogout" buttonType="RAISED" ripplerFill="WHITE" styleClass="bg-red" text="Se déconnecter" textFill="#ffffff">
+                           <VBox.margin>
+                              <Insets bottom="20.0" left="16.0" right="16.0" top="16.0" />
+                           </VBox.margin>
+                        </JFXButton>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </left>
+         <center>
+            <VBox spacing="8.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
+               <children>
+                  <Label text="Mes tests">
+                     <font>
+                        <Font size="28.0" />
+                     </font>
+                  </Label>
+                  <HBox spacing="8.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label text="À passer" />
+                              <ScrollPane fx:id="newTestsPane" hbarPolicy="NEVER" pannable="true" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #eee;" VBox.vgrow="ALWAYS">
+                                <content>
+                                   <Label text="Chargement..." />
+                                </content>
+                              </ScrollPane>
+                           </children>
+                        </VBox>
+                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label text="Passés" />
+                              <ScrollPane fx:id="oldTestsPane" hbarPolicy="NEVER" pannable="true" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #eee;" VBox.vgrow="ALWAYS">
+                                <content>
+                                   <Label text="Chargement..." />
+                                </content>
+                              </ScrollPane>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
+               </padding>
+            </VBox>
+         </center></BorderPane>
+   </children>
+</AnchorPane>

@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.2-internal" fx:controller="GUI.profs.Controller">
+<GridPane alignment="center" hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.2-internal" fx:controller="GUI.professeur.Controller">
    <columnConstraints>
       <ColumnConstraints />
    </columnConstraints>

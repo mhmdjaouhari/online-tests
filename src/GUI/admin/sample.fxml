@@ -3,7 +3,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.*?>
-<GridPane alignment="center" hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.2-internal" fx:controller="GUI.admins.Controller">
+<GridPane alignment="center" hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.2-internal" fx:controller="GUI.admin.Controller">
    <columnConstraints>
       <ColumnConstraints />
    </columnConstraints>

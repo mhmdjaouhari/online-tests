@@ -1,4 +1,4 @@
-package GUI.profs;
+package GUI.admin;
 
 public class Controller {
 }

@@ -38,7 +38,11 @@ public class Main {
                 password = scanner.nextLine();
                 etudiant.setUsername(username);
                 etudiant.setPassword(password);
-                etudiantEmitter.login(etudiant);
+                try {
+                    etudiantEmitter.login(etudiant);
+                } catch(Exception e){
+                    System.err.print(e.getMessage());
+                }
             } while (true);
 
         } catch (IOException e) {

@@ -17,20 +17,22 @@ public class EtudiantActionEmitter extends ActionEmitter {
         super(socket,inputStream,outputStream);
     }
 
-    public void login(Etudiant etudiant) {
+    public Etudiant login(Etudiant etudiant) throws Exception {
         System.out.println("login etudiant...");
         Request request = new Request(Action.LOGIN, etudiant, Role.ETUDIANT);
         Response response = post(request);
         if(response == null){
-            return;
+            return null;
         }
+        Etudiant result;
         if (response.getStatus() == 0) {
-            etudiant = (Etudiant) response.getData();
-            System.out.println("Welcome " + etudiant.getNom() + " " + etudiant.getPrenom());
+            result = (Etudiant) response.getData();
+            System.out.println("Welcome " + result.getNom() + " " + result.getPrenom());
         } else {
             System.out.println(response.getMessage());
+            throw new Exception(response.getMessage());
         }
-
+        return result;
     }
 
 }

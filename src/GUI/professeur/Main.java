@@ -1,4 +1,4 @@
-package GUI.students;
+package GUI.professeur;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
