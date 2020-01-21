@@ -24,22 +24,22 @@ public class EtudiantDispatcher {
                 System.out.println("Closing session...");
                 response = new Response(0,"Closing session...");
                 break;
-            case ADD:
+            case CREATE_ETUDIANT:
                 etudiant=(Etudiant) request.getData();
                 response = EtudiantDAO.add(etudiant);
                 break;
-            case UPDATE:
+            case UPDATE_ETUDIANT:
                 ArrayList<Etudiant> ArrayEtud = ( ArrayList<Etudiant>) request.getData();
                 response = EtudiantDAO.update(ArrayEtud.get(0),ArrayEtud.get(1));
                 break;
-            case DELETE:
+            case DELETE_ETUDIANT:
                 etudiant=(Etudiant) request.getData();
                 response = EtudiantDAO.delete(etudiant);
                 break;
-            case GETALL:
+            case GET_ALL_ETUDIANTS:
                 response = EtudiantDAO.getAll();
                 break;
-            case SEARCH:
+            case SEARCH_ETUDIANT:
                 etudiant=(Etudiant) request.getData();
                 response = EtudiantDAO.search(etudiant);
                 break;

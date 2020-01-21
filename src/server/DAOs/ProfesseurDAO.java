@@ -47,7 +47,8 @@ public class ProfesseurDAO {
                 Statement st=conn.createStatement();
                 resultSet=st.executeQuery("select * from professeurs;");
                 System.out.println("getAllAProf done ! ");
-                while (resultSet.next()) {
+                while (resultSet.next())
+                {
                     Professeur professeur = new Professeur();
                     professeur.setMatricule(resultSet.getString("matricule"));
                     professeur.setNom(resultSet.getString("nom"));
@@ -157,5 +158,4 @@ public class ProfesseurDAO {
             return new Response(1, "SERVER DB ERROR");
         }
         }
-
 }
