@@ -11,10 +11,6 @@ import javafx.stage.Stage;
 import models.Etudiant;
 import util.Role;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-
 public class App extends Application {
 
     private Stage stage;
@@ -22,7 +18,6 @@ public class App extends Application {
     private static App instance;
     private static EtudiantActionEmitter emitter;
 
-    //shouldn't this be private ?
     public App() {
         instance = this;
     }
@@ -35,15 +30,6 @@ public class App extends Application {
             throw new Exception("Server is offline");
         }
         emitter = (EtudiantActionEmitter) client.getEmitter();
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                System.out.println("Closing...");
-                if (emitter.getClientOnline()) {
-                    emitter.exit();
-                }
-            }
-        });
 
         stage = primaryStage;
         FXMLLoader fxmlLoader = new FXMLLoader();
