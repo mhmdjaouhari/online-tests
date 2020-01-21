@@ -1,12 +1,15 @@
 package GUI.etudiant;
 
+import client.Client;
 import client.actionEmitters.EtudiantActionEmitter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import models.Etudiant;
+import util.Role;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -19,16 +22,19 @@ public class App extends Application {
     private static App instance;
     private static EtudiantActionEmitter emitter;
 
+    //shouldn't this be private ?
     public App() {
         instance = this;
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Socket socket = new Socket("localhost", 5000);
-        ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-        ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-        emitter = new EtudiantActionEmitter(socket, inputStream, outputStream);
+        Client client = new Client(Role.ETUDIANT);
+        if(!client.connect()){
+            showErrorAlert("Server is offline");
+            throw new Exception("Server is offline");
+        }
+        emitter = (EtudiantActionEmitter) client.getEmitter();
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
@@ -106,5 +112,11 @@ public class App extends Application {
         stage.setHeight(v1);
         stage.centerOnScreen();
         return page;
+    }
+
+    public void showErrorAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(message);
+        alert.showAndWait();
     }
 }

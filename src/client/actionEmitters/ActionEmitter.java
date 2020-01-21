@@ -21,10 +21,10 @@ abstract public class ActionEmitter {
     private Boolean isClientOnline;
     private Boolean connectedToServer;
 
-    public ActionEmitter(Socket socket,ObjectInputStream inputStream,ObjectOutputStream outputStream) {
+    public ActionEmitter(Socket socket) throws IOException {
         this.socket = socket;
-        this.inputStream = inputStream;
-        this.outputStream = outputStream;
+        this.inputStream = new ObjectInputStream(socket.getInputStream());
+        this.outputStream = new ObjectOutputStream(socket.getOutputStream());
         isClientOnline = true;
         connectedToServer = true;
     }

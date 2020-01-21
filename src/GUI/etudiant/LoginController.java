@@ -32,15 +32,11 @@ public class LoginController {
             app.gotoDashboard();
             return true;
         } catch (Exception e) {
-            showErrorAlert(e.getMessage());
+            App.getInstance().showErrorAlert(e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
 
-    public void showErrorAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText(message);
-        alert.showAndWait();
-    }
+
 }

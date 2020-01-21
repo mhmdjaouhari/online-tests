@@ -6,47 +6,32 @@ import java.util.Scanner;
 
 import client.actionEmitters.EtudiantActionEmitter;
 import models.Etudiant;
+import util.Role;
 
 public class Main {
 
     public static void main(String[] args) {
-        try  {
-            Socket socket = new Socket("localhost", 5000);
-            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-            EtudiantActionEmitter etudiantEmitter = new EtudiantActionEmitter(socket,inputStream,outputStream);
-            Runtime.getRuntime().addShutdownHook(new Thread(){
-                @Override
-                public void run() {
-                    System.out.println("closing ...");
-                    if(etudiantEmitter.getClientOnline()){
-                        etudiantEmitter.exit();
-                    }
+        Client client = new Client(Role.ETUDIANT);
+        client.connect();
+        String username, password;
+        Scanner scanner = new Scanner(System.in);
+        Etudiant etudiant = new Etudiant();
+        do {
+            username = scanner.nextLine();
+            if (username.equals("exit")) {
+                if(client.getEmitter().exit()){
+                    client.getEmitter().setClientOnline(false);
+                    break;
                 }
-            });
-            String username, password;
-            Scanner scanner = new Scanner(System.in);
-            Etudiant etudiant = new Etudiant();
-            do {
-                username = scanner.nextLine();
-                if (username.equals("exit")) {
-                    if(etudiantEmitter.exit()){
-                        etudiantEmitter.setClientOnline(false);
-                        break;
-                    }
-                }
-                password = scanner.nextLine();
-                etudiant.setUsername(username);
-                etudiant.setPassword(password);
-                try {
-                    etudiantEmitter.login(etudiant);
-                } catch(Exception e){
-                    System.err.print(e.getMessage());
-                }
-            } while (true);
-
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+            }
+            password = scanner.nextLine();
+            etudiant.setUsername(username);
+            etudiant.setPassword(password);
+            try {
+                ((EtudiantActionEmitter)client.getEmitter()).login(etudiant);
+            } catch(Exception e){
+                System.err.print(e.getMessage());
+            }
+        } while (true);
     }
 }

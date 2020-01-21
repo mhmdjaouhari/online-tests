@@ -39,7 +39,7 @@ public class DashboardController {
 
     public void initialize() {
         setApp(App.getInstance());
-        ArrayList<Test> allTests = getNewTests();
+        ArrayList<Test> allTests = App.getEmitter().getNewTests();
 
         nomEtudiant.setText(app.getLoggedEtudiant().getPrenom() + " " + app.getLoggedEtudiant().getNom());
         groupeEtudiant.setText("ID Groupe : " + app.getLoggedEtudiant().getIdGroupe());
@@ -77,14 +77,6 @@ public class DashboardController {
         app.gotoLogin();
     }
 
-    // BELOW ARE METHODS THAT SHOULD BE IMPLEMENTED IN THE CLIENT PACKAGE
 
-    public ArrayList<Test> getNewTests() {
-        ArrayList<Test> allTests = new ArrayList<>();
-        allTests.add(new Test(1, "a123", "Assu qualité ISO 9001"));
-        allTests.add(new Test(2, "a123", "Assu qualité ISO 9001"));
-        allTests.add(new Test(3, "a123", "Assurance qualité ISO 9001"));
-        return allTests;
-    }
 
 }
