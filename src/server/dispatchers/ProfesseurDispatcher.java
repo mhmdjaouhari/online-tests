@@ -1,24 +1,46 @@
 package server.dispatchers;
 
-import models.Etudiant;
-import server.DAOs.EtudiantDAO;
+import models.Professeur;
+import server.DAOs.ProfesseurDAO;
 import util.Action;
 import util.Request;
 import util.Response;
+
+import java.util.ArrayList;
 
 public class ProfesseurDispatcher {
 
     public static Response handle(Request request){
         Action action = request.getAction();
-        Etudiant etudiant = (Etudiant) request.getData();
+        Professeur professeur;
         Response response;
         switch (action) {
             case LOGIN:
-                response = EtudiantDAO.login(etudiant);
+                professeur= (Professeur) request.getData();
+                response = ProfesseurDAO.login(professeur);
                 break;
             case EXIT:
                 System.out.println("Closing session...");
                 response = new Response(0,"Closing session...");
+                break;
+            case ADD:
+                professeur= (Professeur) request.getData();
+                response = ProfesseurDAO.add(professeur);
+                break;
+            case UPDATE:
+                ArrayList<Professeur> ArrayProf = ( ArrayList<Professeur>) request.getData();
+                response = ProfesseurDAO.update( ArrayProf.get(0), ArrayProf.get(1));
+                break;
+            case DELETE:
+                professeur= (Professeur) request.getData();
+                response = ProfesseurDAO.delete(professeur);
+                break;
+            case GETALL:
+                response = ProfesseurDAO.getAll();
+                break;
+            case SEARCH:
+                professeur= (Professeur) request.getData();
+                response = ProfesseurDAO.search(professeur);
                 break;
             default:
                 System.out.println("Action not found");
