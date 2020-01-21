@@ -1,5 +1,14 @@
 package util;
 
 public enum Action {
-    LOGIN, EXIT, DEFAULT,GET_NEW_TESTS,GET_TEST
+    LOGIN,
+    EXIT,
+    DEFAULT,
+    GET_NEW_TESTS,
+    GET_TEST,
+    ADD,
+    DELETE,
+    UPDATE,
+    GETALL,
+    SEARCH
 }
