@@ -24,13 +24,12 @@ public class EtudiantActionEmitter extends ActionEmitter {
         if(response == null){
             return;
         }
-        if (response.getStatus() == 0) {
+        if (response.getStatus() == 0)
+        {
             etudiant = (Etudiant) response.getData();
             System.out.println("Welcome " + etudiant.getNom() + " " + etudiant.getPrenom());
         } else {
             System.out.println(response.getMessage());
         }
-
     }
-
 }
