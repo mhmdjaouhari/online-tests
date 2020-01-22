@@ -1,4 +1,4 @@
-package GUI.students;
+package GUI.professeur;
 
 public class Controller {
 }

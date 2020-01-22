@@ -1,4 +1,4 @@
-package GUI.profs;
+package GUI.admin;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

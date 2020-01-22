@@ -2,38 +2,57 @@ package client.actionEmitters;
 
 import util.Action;
 import util.Request;
+import util.Response;
 import util.Role;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
+import java.util.Scanner;
 
 abstract public class ActionEmitter {
 
     private Socket socket;
+    protected ObjectInputStream inputStream;    // Protected is the best solution for the encapsulation so far
+    protected ObjectOutputStream outputStream;
+    private Boolean isClientOnline;
+    private Boolean connectedToServer;
 
-    public ActionEmitter(Socket socket) {
+    public ActionEmitter(Socket socket) throws IOException {
         this.socket = socket;
+        this.inputStream = new ObjectInputStream(socket.getInputStream());
+        this.outputStream = new ObjectOutputStream(socket.getOutputStream());
+        isClientOnline = true;
+        connectedToServer = true;
     }
 
-    protected ObjectOutputStream getOutputStream() throws IOException {
-        return new ObjectOutputStream(socket.getOutputStream());
-    }
 
-    protected ObjectInputStream getInputStream() throws IOException {
-        return new ObjectInputStream(socket.getInputStream());
-    }
+    public boolean exit() {
 
-    public void exit() {
         try {
+            if(!isServerOnline()){
+                System.out.println("Server is offline, changes aren't comitted, exit anyway ?(Y/N) :");
+                Scanner scanner = new Scanner(System.in);
+                String answer = scanner.next();
+                if(answer.equalsIgnoreCase("y")){
+                    outputStream.close();
+                    inputStream.close();
+                    return true;
+                }else{
+                    return false;
+                }
+            }
             Request request = new Request(Action.EXIT, Role.ETUDIANT);
-            getOutputStream().writeObject(request);
-            System.out.println("Exiting in 5 seconds...");
-            Thread.sleep(5000);
-        } catch (IOException | InterruptedException e) {
+            outputStream.writeObject(request);
+            outputStream.close();
+            inputStream.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
+        return true;
     }
 
     public Socket getSocket() {
@@ -42,5 +61,73 @@ abstract public class ActionEmitter {
 
     public void setSocket(Socket socket) {
         this.socket = socket;
+    }
+
+    public Boolean getClientOnline() {
+        return isClientOnline;
+    }
+
+    public void setClientOnline(Boolean clientOnline) {
+        isClientOnline = clientOnline;
+    }
+
+    public Boolean getConnectedToServer() {
+        return connectedToServer;
+    }
+
+    public void setConnectedToServer(Boolean connectedToServer) {
+        this.connectedToServer = connectedToServer;
+    }
+
+    public  boolean isServerOnline(){
+        boolean isAlive=false;
+        SocketAddress socketAddress = new InetSocketAddress("localhost",5000);
+        Socket TestSocket = new Socket();
+        try{
+            TestSocket.connect(socketAddress);
+            TestSocket.close();
+            isAlive = true;
+        }catch (IOException e){
+            connectedToServer = false;
+            System.out.println("Server unreachable");
+        }
+        return isAlive;
+    }
+
+    public void reConnect() {
+        try {
+            outputStream.close();
+            inputStream.close();
+            socket.close();
+            System.out.println("okk");
+            socket = new Socket("localhost",5000);
+            inputStream = new ObjectInputStream(socket.getInputStream());
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            connectedToServer = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public Response post(Request request) {
+        Response response = null;
+        try{
+            if(!isServerOnline()){
+                System.out.println("Server is offline, please try later...");
+                outputStream.reset();
+                return null;
+            }
+            if(!connectedToServer && isServerOnline()){
+                System.out.println("switched...");
+                reConnect();
+            }
+            outputStream.writeObject(request);
+            response = (Response) inputStream.readObject();
+            outputStream.reset();
+        }catch (IOException | ClassNotFoundException e){
+            e.printStackTrace();
+        }
+        return response;
     }
 }

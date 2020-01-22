@@ -1,22 +1,18 @@
 package server;
 
+import models.Etudiant;
+import models.Professeur;
+import server.dispatchers.EtudiantDispatcher;
+import util.Action;
+import util.Request;
+import util.Role;
 
-import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.util.ArrayList;
 
+//just for console tests
 public class Main {
-
     public static void main(String[] args) {
-        try (ServerSocket serverSocket = new ServerSocket(5000)) {
-            while (true) {
-                Socket socket = serverSocket.accept();
-                System.out.println("Client connected");
-                Session session = new Session(socket);
-                session.start();
-            }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+        Server server= new Server();
+        server.run();
     }
 }

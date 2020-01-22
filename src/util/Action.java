@@ -1,5 +1,19 @@
 package util;
 
 public enum Action {
-    LOGIN, EXIT, DEFAULT
+    LOGIN,
+    EXIT,
+    DEFAULT,
+    CREATE_ETUDIANT,
+    DELETE_ETUDIANT,
+    UPDATE_ETUDIANT,
+    GET_ALL_ETUDIANTS,
+    SEARCH_ETUDIANT,
+    CREATE_PROF,
+    DELETE_PROF,
+    UPDATE_PROF,
+    GET_ALL_PROFS,
+    SEARCH_PROF,
+    GET_NEW_TESTS,
+    GET_TEST
 }

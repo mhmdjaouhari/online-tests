@@ -4,13 +4,14 @@ import java.io.Serializable;
 
 public class Etudiant implements Serializable {
     private String CNE;
-    private int idGroupe;
     private String nom;
     private String prenom;
     private String username;
     private String password;
+    private int idGroupe;
+    private String nomGroupe;
 
-    public Etudiant(String CNE, int idGroupe, String nom, String prenom, String username, String password) {
+    public Etudiant(String CNE, String nom, String prenom, String username, String password, int idGroupe) {
         this.CNE = CNE;
         this.idGroupe = idGroupe;
         this.nom = nom;

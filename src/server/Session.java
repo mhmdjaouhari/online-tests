@@ -7,27 +7,43 @@ import util.Request;
 import util.Response;
 import util.Role;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
 
 public class Session extends Thread {
-    Socket socket;
+    private Socket socket;
+    private ObjectOutputStream outputStream;
+    private ObjectInputStream inputStream;
 
-    public Session(Socket socket) {
+    public Session(Socket socket,ObjectInputStream inputStream,ObjectOutputStream outputStream) throws IOException {
+        this.socket = socket;
+        this.inputStream = inputStream;
+        this.outputStream = outputStream;
+    }
+
+    public Session(Socket socket){
         this.socket = socket;
     }
 
     public void launch() {
+        //getting streams after running the thread,
+        // to not crash the entire server in case of error
+         try{
+            OutputStream out = socket.getOutputStream();
+            InputStream in = socket.getInputStream();
+            this.outputStream = new ObjectOutputStream(out);
+            this.inputStream = new ObjectInputStream(in);
+
+        }catch (IOException e){
+            System.out.println("Ping/Test request");
+            //e.printStackTrace();
+            return;
+        }
         Action action = Action.DEFAULT;
         Role role;
-        while (true) {
+        while (true){
             try {
-                ObjectInputStream inputStream = getInputStream();
-                ObjectOutputStream outputStream = getOutputStream();
-
                 Request request = (Request) inputStream.readObject();
 
                 role = request.getRole();
@@ -53,8 +69,17 @@ public class Session extends Thread {
                         new Response(1, "Type not found !!");
                 }
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                System.err.println("Client break the connection ! "+Thread.currentThread());
+                Thread.currentThread().interrupt();
+                break;
             }
+        }
+        try{
+            inputStream.close();
+            outputStream.close();
+        }catch (IOException e){
+            System.out.println("Error in closing streams...");
+            e.printStackTrace();
         }
     }
 
@@ -63,13 +88,6 @@ public class Session extends Thread {
         launch();
     }
 
-    protected ObjectOutputStream getOutputStream() throws IOException {
-        return new ObjectOutputStream(socket.getOutputStream());
-    }
-
-    protected ObjectInputStream getInputStream() throws IOException {
-        return new ObjectInputStream(socket.getInputStream());
-    }
 
     public Socket getSocket() {
         return socket;
