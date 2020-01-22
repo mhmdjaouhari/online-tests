@@ -1,8 +1,11 @@
 package models;
 
+import java.util.ArrayList;
+
 public class Groupe {
     private int id;
     private String nom;
+    private ArrayList<Etudiant> etudiants;
 
     public Groupe(int id, String nom) {
         this.id = id;
@@ -26,6 +29,14 @@ public class Groupe {
 
     public void setNom(String nom) {
         this.nom = nom;
+    }
+
+    public ArrayList<Etudiant> getEtudiants() {
+        return etudiants;
+    }
+
+    public void setEtudiants(ArrayList<Etudiant> etudiants) {
+        this.etudiants = etudiants;
     }
 
     @Override
