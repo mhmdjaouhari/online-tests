@@ -4,7 +4,7 @@ public class Reponse {
     private int id;
     private int idFiche;
     private int idQuestion;
-    private String value;
+    private String value = "";
 
     public Reponse() {
     }

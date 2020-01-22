@@ -45,8 +45,8 @@ public class EtudiantActionEmitter extends ActionEmitter {
 //        ArrayList<Test> tests = (ArrayList<Test>) response.getData();
         ArrayList<Test> tests = new ArrayList<>();
         tests.add(new Test(0, "Assu qualité ISO 9001", false, 90, "a123", "Chichi"));
-        tests.add(new Test(0, "Assu qualité ISO 9001", false, 90, "a123", "Chichi"));
-        tests.add(new Test(0, "Assu qualité ISO 9001", false, 90, "a123", "Chichi"));
+        tests.add(new Test(0, "Assu qualité 2", false, 90, "a123", "Chichi"));
+        tests.add(new Test(0, "Assu qualité 3", false, 90, "a123", "Chichi"));
         return tests;
     }
 
@@ -55,8 +55,8 @@ public class EtudiantActionEmitter extends ActionEmitter {
 //        Response response = post(new Request(Action.GET_TEST,Role.ETUDIANT));
 //        Test test = (Test) response.getData();
         Test test = new Test(0, "Assu qualité ISO 9001", false, 90, "a123", "Chichi");
-        Question question1 = new Question(0, "C'est quoi la qualité ? \n 1- Qualité \n 2- qualité \n 3-quality \n 4- Kalinti", "1,2,3", 0);
-        Question question2 = new Question(0, "C'est quoi la qualité ? \n 1- Qualité \n 2- qualité \n 3-quality \n 4- Kalinti", "1,2,3", 0);
+        Question question1 = new Question(0, "C'est quoi la qualité ? \n 1- Qualité \n 2- qualité \n 3-quality \n 4- Kalinti", "123", 0);
+        Question question2 = new Question(0, "C'est quoi la qualitéeeeeeee ? \n 1- Qualité \n 2- qualité \n 3-quality \n 4- Kalintieee", "123", 0);
         test.getQuestions().add(question1);
         test.getQuestions().add(question2);
         return test;
