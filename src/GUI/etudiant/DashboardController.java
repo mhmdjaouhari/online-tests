@@ -49,7 +49,7 @@ public class DashboardController {
         content.setSpacing(8);
         content.setPadding(new Insets(8));
         for (Test test : allTests) {
-            content.getChildren().addAll(createTestRow(test.getTitre(), 90, "simo"));
+            content.getChildren().addAll(createTestRow(test.getTitre(), 90, test.getNomProf()));
         }
         newTestsPane.setContent(content);
     }
@@ -65,7 +65,7 @@ public class DashboardController {
         String durationString = "" + hours + "h" + (duration - hours * 60);
         Label titleLabel = new Label(title);
         titleLabel.setStyle("-fx-font-weight: bold");
-        Label subtitleLabel = new Label("durée : " + durationString + " - par : " + nomProf);
+        Label subtitleLabel = new Label("Durée : " + durationString + " – Professeur : " + nomProf);
         subtitleLabel.setStyle("-fx-font-size: 12");
         vBox.getChildren().addAll(titleLabel, subtitleLabel);
         row.setGraphic(vBox);

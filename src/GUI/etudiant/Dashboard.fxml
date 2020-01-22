@@ -78,7 +78,7 @@
                <children>
                   <Label text="Mes tests">
                      <font>
-                        <Font size="28.0" />
+                        <Font name="Ubuntu" size="28.0" />
                      </font>
                   </Label>
                   <HBox spacing="8.0" VBox.vgrow="ALWAYS">

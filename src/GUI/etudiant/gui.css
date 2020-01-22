@@ -1,7 +1,6 @@
 .root {
     -fx-font-size: 12pt;
     -fx-font-family: "Ubuntu";
-    -fx-base: "#333";
     -fx-background: "#eee";
 }
 
@@ -11,4 +10,16 @@
 
 .bg-red {
     -fx-background-color: "#F44336";
+}
+
+.bg-white {
+    -fx-background-color: "#fff"
+}
+
+.bg-dark {
+    -fx-background-color: "#333"
+}
+
+.bg-gray {
+    -fx-background-color: "#ccc"
 }
