@@ -22,6 +22,7 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class TestController {
 
@@ -104,8 +105,10 @@ public class TestController {
         Platform.runLater(() -> {
             stage = (Stage) questionPane.getScene().getWindow();
             stage.setOnCloseRequest(e -> {
-                e.consume();
-                showSaveAndExitDialog(true);
+                if (App.getLoggedEtudiant() != null) {
+                    e.consume();
+                    showSaveAndExitDialog(true);
+                }
             });
         });
 
@@ -179,20 +182,28 @@ public class TestController {
 
     public void addChoixToReponse(Reponse reponse, int choix) {
         String oldValue = reponse.getValue();
-        HashSet<String> choixArray = new HashSet<>(Arrays.asList(oldValue.split("(?!^)")));
-        choixArray.add(Integer.toString(choix));
-        StringBuilder newValue = new StringBuilder();
-        for (String choixValue : choixArray) {
-            newValue.append(choixValue);
+        String newValue;
+        if (!oldValue.equals("")) {
+            HashSet<String> choixArray = new HashSet<>(Arrays.asList(oldValue.split(",")));
+            choixArray.add(Integer.toString(choix));
+            newValue = choixArray.stream().collect(Collectors.joining(","));
+            System.out.println(oldValue + " => " + newValue);
+        } else {
+            newValue = Integer.toString(choix);
         }
-        reponse.setValue(newValue.toString());
+        reponse.setValue(newValue);
     }
 
     private void removeChoixFromReponse(Reponse reponse, int choix) {
         String oldValue = reponse.getValue();
-        ;
-        String newValue = oldValue.replace(Integer.toString(choix), "");
-        reponse.setValue(newValue);
+        if (!oldValue.equals("")) {
+            HashSet<String> choixArray = new HashSet<>(Arrays.asList(oldValue.split(",")));
+            choixArray.remove(Integer.toString(choix));
+            String newValue = choixArray.stream().collect(Collectors.joining(","));
+            System.out.println(oldValue + " => " + newValue);
+            reponse.setValue(newValue);
+        }
+
     }
 
     private void submitFiche() {

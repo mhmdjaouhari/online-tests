@@ -52,7 +52,10 @@ public class DashboardController {
         Platform.runLater(() -> {
             Stage stage = (Stage) newTestsPane.getScene().getWindow();
             stage.setOnCloseRequest(e -> {
-                if (testController != null && !testController.showSaveAndExitDialog(true)) {
+                if (App.getLoggedEtudiant() != null &&
+                        App.getActiveTest() != null &&
+                        testController != null &&
+                        !testController.showSaveAndExitDialog(true)) {
                     e.consume();
                 }
             });
