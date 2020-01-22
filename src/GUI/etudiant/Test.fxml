@@ -54,7 +54,7 @@
                         <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
                     </padding>
                 </VBox>
-                <JFXButton buttonType="RAISED" prefHeight="300.0" prefWidth="100.0" styleClass="bg-red" text="Envoyer ma fiche" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                <JFXButton fx:id="envoyerFicheButton" buttonType="RAISED" prefHeight="300.0" prefWidth="100.0" styleClass="bg-red" text="Envoyer ma fiche" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                     <HBox.margin>
                         <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                     </HBox.margin>

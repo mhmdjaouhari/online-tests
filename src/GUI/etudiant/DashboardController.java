@@ -1,6 +1,7 @@
 package GUI.etudiant;
 
 import com.jfoenix.controls.JFXButton;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -31,6 +32,8 @@ public class DashboardController {
     @FXML
     private ScrollPane oldTestsPane;
 
+    private TestController testController;
+
     public void initialize() {
         ArrayList<Test> allTests = App.getEmitter().getTests();
 
@@ -45,6 +48,15 @@ public class DashboardController {
             content.getChildren().addAll(createTestRow(test));
         }
         newTestsPane.setContent(content);
+
+        Platform.runLater(() -> {
+            Stage stage = (Stage) newTestsPane.getScene().getWindow();
+            stage.setOnCloseRequest(e -> {
+                if (testController != null && !testController.showSaveAndExitDialog(true)) {
+                    e.consume();
+                }
+            });
+        });
     }
 
     public JFXButton createTestRow(Test test) {
@@ -67,28 +79,36 @@ public class DashboardController {
     }
 
     public void handleLogout() {
-        App.setLoggedEtudiant(null);
-        App.gotoLogin();
+        if (App.getActiveTest() == null || closeTest()) {
+            App.setLoggedEtudiant(null);
+            App.gotoLogin();
+        }
     }
 
     public void openTest(int idTest) {
         try {
             App.setActiveTest(App.getEmitter().getTest(idTest));
-            Stage stage = new Stage();
+            Stage testStage = new Stage();
+            testStage.initOwner(App.getStage());
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("Test.fxml"));
             Parent root;
             root = fxmlLoader.load();
+            testController = fxmlLoader.getController();
             Scene scene = new Scene(root, 1024, 720);
             scene.getStylesheets().add(getClass().getResource("gui.css").toExternalForm());
-            stage.setScene(scene);
-            stage.setTitle("Online Tests");
-            stage.setResizable(false);
-            stage.show();
+            testStage.setScene(scene);
+            testStage.setTitle("Online Tests");
+            testStage.setResizable(false);
+            testStage.show();
         } catch (Exception e) {
             App.showErrorAlert(e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public boolean closeTest() {
+        return testController.showSaveAndExitDialog(true);
     }
 
 

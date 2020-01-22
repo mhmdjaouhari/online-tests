@@ -3,6 +3,7 @@ package GUI.etudiant;
 import client.Client;
 import client.actionEmitters.EtudiantActionEmitter;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -22,27 +23,30 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Client client = new Client(Role.ETUDIANT);
-        if(!client.connect()){
+        if (!client.connect()) {
             showErrorAlert("Server is offline");
             throw new Exception("Server is offline");
         }
         emitter = (EtudiantActionEmitter) client.getEmitter();
-
         stage = primaryStage;
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("Login.fxml"));
         Parent root = fxmlLoader.load();
-        LoginController loginController = fxmlLoader.getController();
         primaryStage.setTitle("Online Tests");
         Scene scene = new Scene(root, 240, 480);
         scene.getStylesheets().add(getClass().getResource("gui.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
+
     }
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static Stage getStage() {
+        return stage;
     }
 
     public static EtudiantActionEmitter getEmitter() {
@@ -81,7 +85,7 @@ public class App extends Application {
         }
     }
 
-    private static Parent replaceSceneContent(String fxml, int v, int v1) throws Exception {
+    private static FXMLLoader replaceSceneContent(String fxml, int v, int v1) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(App.class.getResource(fxml));
         Parent page = fxmlLoader.load();
@@ -97,7 +101,7 @@ public class App extends Application {
         stage.setWidth(v);
         stage.setHeight(v1);
         stage.centerOnScreen();
-        return page;
+        return fxmlLoader;
     }
 
     public static void showErrorAlert(String message) {

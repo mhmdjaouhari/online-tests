@@ -6,19 +6,22 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import models.Question;
-import models.Reponse;
+import javafx.stage.Stage;
+import models.*;
 
 
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TestController {
 
@@ -38,7 +41,10 @@ public class TestController {
     private JFXButton prevQuestionButton;
     @FXML
     private JFXButton nextQuestionButton;
+    @FXML
+    private JFXButton envoyerFicheButton;
 
+    private Stage stage;
 
     private Timer timer;
     private int timerMinutes;
@@ -75,7 +81,7 @@ public class TestController {
                 checkBox.setCheckedColor(Color.web("#046dd5"));
                 int choix = j;
                 checkBox.setOnAction(e -> {
-                    if(checkBox.isSelected())
+                    if (checkBox.isSelected())
                         addChoixToReponse(reponse, choix);
                     else
                         removeChoixFromReponse(reponse, choix);
@@ -91,10 +97,22 @@ public class TestController {
         questionPane.getChildren().setAll(questionBoxesList.get(currentQuestion));
         prevQuestionButton.setDisable(true);
 
+        envoyerFicheButton.setOnAction(e -> {
+            showSaveAndExitDialog(true);
+        });
+
+        Platform.runLater(() -> {
+            stage = (Stage) questionPane.getScene().getWindow();
+            stage.setOnCloseRequest(e -> {
+                e.consume();
+                showSaveAndExitDialog(true);
+            });
+        });
+
         setTimer();
     }
 
-    public void setTimer() {
+    private void setTimer() {
         timer = new Timer();
         timerMinutes = App.getActiveTest().getDuration();
         tempsRestant.setText(LocalTime.MIN.plus(Duration.ofMinutes(timerMinutes)).toString());
@@ -105,11 +123,39 @@ public class TestController {
                     timerMinutes--;
                 } else {
                     timer.cancel();
-                    // INTERRUPT THE TEST, SUBMIT FICHE...
+                    showSaveAndExitDialog(false);
                 }
-
             }
         }, 60 * 1000, 60 * 1000);
+    }
+
+    public boolean showSaveAndExitDialog(boolean isExitVoluntary) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.initOwner(stage);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        dialog.setResizable(true);
+        dialog.getDialogPane().setPrefSize(320, 160);
+        if (isExitVoluntary) {
+            dialog.setTitle("Quitter le test");
+            dialog.setContentText("En quittant le test vous envoyez votre fiche de réponse actuelle. Êtes-vous sûr de vouloir quitter ?");
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.NO);
+        } else {
+            dialog.setTitle("Fin du test");
+            dialog.setContentText("La durée du test est terminée. Votre fiche de réponses sera envoyée au serveur.");
+        }
+        AtomicBoolean returnValue = new AtomicBoolean(false);
+        dialog.setOnCloseRequest(e -> {
+            ButtonType result = dialog.getResult();
+            if (result == ButtonType.OK) {
+                submitFiche();
+                timer.cancel();
+                stage.close();
+                App.setActiveTest(null);
+                returnValue.set(true);
+            }
+        });
+        dialog.showAndWait();
+        return returnValue.get();
     }
 
     public void showPrevQuestion(ActionEvent actionEvent) {
@@ -143,9 +189,22 @@ public class TestController {
     }
 
     private void removeChoixFromReponse(Reponse reponse, int choix) {
-        String oldValue = reponse.getValue();;
+        String oldValue = reponse.getValue();
+        ;
         String newValue = oldValue.replace(Integer.toString(choix), "");
         reponse.setValue(newValue);
+    }
+
+    private void submitFiche() {
+        Fiche fiche = new Fiche();
+        fiche.setIdEtudiant(App.getLoggedEtudiant().getCNE());
+        fiche.setReponses(reponsesList);
+        Test test = new Test();
+        test.setId(App.getActiveTest().getId());
+        fiche.setTest(test);
+
+        // TODO: in client package
+//        App.getEmitter().submitFiche(fiche);
     }
 
 }
