@@ -50,5 +50,4 @@ public class EtudiantActionEmitter extends ActionEmitter {
     }
 
 
-
 }

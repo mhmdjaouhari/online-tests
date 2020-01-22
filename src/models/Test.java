@@ -11,6 +11,7 @@ public class Test implements Serializable {
     private String matriculeProf;
     private String nomProf; // nom & prénom
     private ArrayList<Question> questions;
+    private ArrayList<Groupe> groupes;
 
     public Test(int id, String titre, boolean locked, int duration, String matriculeProf, String nomProf) {
         this.id = id;
@@ -20,8 +21,26 @@ public class Test implements Serializable {
         this.matriculeProf = matriculeProf;
         this.nomProf = nomProf;
     }
+    public Test(int id, String titre, boolean locked, int duration, String matriculeProf, String nomProf, ArrayList<Question> qst, ArrayList<Groupe> grp) {
+        this.id = id;
+        this.titre = titre;
+        this.locked = locked;
+        this.duration = duration;
+        this.matriculeProf = matriculeProf;
+        this.nomProf = nomProf;
+        this.questions=qst;
+        this.groupes=grp;
+    }
 
     public Test() {
+    }
+
+    public ArrayList<Groupe> getGroupes() {
+        return groupes;
+    }
+
+    public void setGroupes(ArrayList<Groupe> groupes) {
+        this.groupes = groupes;
     }
 
     public int getId() {

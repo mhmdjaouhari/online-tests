@@ -1,5 +1,6 @@
 package server.DAOs;
 
+import models.Groupe;
 import models.Professeur;
 import server.DAOs.DataSource;
 import models.Etudiant;
@@ -85,7 +86,7 @@ public class EtudiantDAO {
         }
     }
 
-    // getAll Student by
+    // getAll Students
     public static Response getAll()
     {
         ResultSet resultSet=null;
@@ -95,6 +96,36 @@ public class EtudiantDAO {
             Statement st=conn.createStatement();
             resultSet=st.executeQuery("select * from etudiants;");
             System.out.println("getAllAProf done ! ");
+            while (resultSet.next())
+            {
+                Etudiant fullEtudiant = new Etudiant();
+                fullEtudiant.setCNE(resultSet.getString("CNE"));
+                fullEtudiant.setIdGroupe(resultSet.getInt("id_groupe"));
+                fullEtudiant.setNom(resultSet.getString("nom"));
+                fullEtudiant.setPrenom(resultSet.getString("prenom"));
+                fullEtudiant.setUsername(resultSet.getString("username"));
+                fullEtudiant.setPassword(resultSet.getString("password"));
+                ArrayEtud.add(fullEtudiant);
+            }
+            return new Response(ArrayEtud);
+        }
+        catch (SQLException ex)
+        {
+            System.err.println("Request Error : try to check connextion or Query : "+ex.getMessage());
+            return new Response(1,"Error SQL");
+        }
+    }
+
+    // getAll Student by groupe
+    public Response getAll(int id_grp)
+    {
+        ResultSet resultSet=null;
+        ArrayList<Etudiant> ArrayEtud=new ArrayList<Etudiant>();
+        try
+        {
+            PreparedStatement pst =conn.prepareStatement("select * from etudiants where id_groupe=? ;");
+            pst.setInt(1,id_grp);
+            resultSet = pst.executeQuery();
             while (resultSet.next())
             {
                 Etudiant fullEtudiant = new Etudiant();
