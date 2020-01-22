@@ -11,6 +11,7 @@ public class Test implements Serializable {
     private String matriculeProf;
     private String nomProf; // nom & prénom
     private ArrayList<Question> questions;
+    private ArrayList<Groupe> groupes;
 
     public Test(int id, String titre, boolean locked, int duration, String matriculeProf, String nomProf) {
         this.id = id;
@@ -78,6 +79,14 @@ public class Test implements Serializable {
 
     public void setQuestions(ArrayList<Question> questions) {
         this.questions = questions;
+    }
+
+    public ArrayList<Groupe> getGroupes() {
+        return groupes;
+    }
+
+    public void setGroupes(ArrayList<Groupe> groupes) {
+        this.groupes = groupes;
     }
 
     @Override

@@ -39,7 +39,7 @@ public class DashboardController {
 
     public void initialize() {
         setApp(App.getInstance());
-        ArrayList<Test> allTests = App.getEmitter().getNewTests();
+        ArrayList<Test> allTests = App.getEmitter().getTests();
 
         nomEtudiant.setText(app.getLoggedEtudiant().getPrenom() + " " + app.getLoggedEtudiant().getNom());
         groupeEtudiant.setText("ID Groupe : " + app.getLoggedEtudiant().getIdGroupe());

@@ -38,9 +38,9 @@ public class EtudiantActionEmitter extends ActionEmitter {
     }
 
     // should be implemented on the sever-side
-    public ArrayList<Test> getNewTests(){
+    public ArrayList<Test> getTests(){
         // once implemented in the server uncomment this:
-//        Response response = post(new Request(Action.GET_NEW_TESTS,Role.ETUDIANT));
+//        Response response = post(new Request(Action.GET_TESTS_ETUDIANT,Role.ETUDIANT));
 //        ArrayList<Test> tests = (ArrayList<Test>) response.getData();
         ArrayList<Test> tests = new ArrayList<>();
         tests.add(new Test(1, "Assu qualité ISO 9001", false, 90, "a123", "Chichi"));
