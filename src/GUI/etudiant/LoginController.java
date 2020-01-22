@@ -3,7 +3,6 @@ package GUI.etudiant;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import models.Etudiant;
 
 public class LoginController {
@@ -12,27 +11,17 @@ public class LoginController {
     @FXML
     private JFXPasswordField passwordField;
 
-    private App app;
-
-    public void setApp(App app) {
-        this.app = app;
-    }
-
-    public void initialize(){
-        setApp(App.getInstance());
-    }
-
     public boolean handleLogin() {
         try {
             Etudiant etudiant = new Etudiant();
             etudiant.setUsername(usernameField.getText());
             etudiant.setPassword(passwordField.getText());
             Etudiant responseEtudiant = App.getEmitter().login(etudiant);
-            app.setLoggedEtudiant(responseEtudiant);
-            app.gotoDashboard();
+            App.setLoggedEtudiant(responseEtudiant);
+            App.gotoDashboard();
             return true;
         } catch (Exception e) {
-            App.getInstance().showErrorAlert(e.getMessage());
+            App.showErrorAlert(e.getMessage());
             e.printStackTrace();
             return false;
         }

@@ -16,11 +16,11 @@
          <children>
             <VBox styleClass="bg-gray" HBox.hgrow="ALWAYS">
                <children>
-                  <Label text="nom test">
+                  <Label fx:id="titreTest">
                      <font>
                         <Font size="22.0" />
                      </font></Label>
-                  <Label text="details test" />
+                  <Label fx:id="detailsTest" />
                </children>
                <padding>
                   <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
@@ -40,11 +40,11 @@
             </VBox>
             <VBox styleClass="bg-blue" HBox.hgrow="SOMETIMES">
                <children>
-                  <Label text="nom prenom" textFill="WHITE">
+                  <Label fx:id="nomEtudiant" textFill="WHITE">
                      <font>
                         <Font size="22.0" />
                      </font></Label>
-                  <Label text="nom groupe" textFill="WHITE" />
+                  <Label fx:id="groupeEtudiant" textFill="WHITE" />
                </children>
                <padding>
                   <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />

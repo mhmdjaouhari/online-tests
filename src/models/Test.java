@@ -1,5 +1,7 @@
 package models;
 
+import javafx.scene.control.Label;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -10,8 +12,8 @@ public class Test implements Serializable {
     private int duration;
     private String matriculeProf;
     private String nomProf; // nom & prénom
-    private ArrayList<Question> questions;
-    private ArrayList<Groupe> groupes;
+    private ArrayList<Question> questions = new ArrayList<>();
+    private ArrayList<Groupe> groupes = new ArrayList<>();
 
     public Test(int id, String titre, boolean locked, int duration, String matriculeProf, String nomProf) {
         this.id = id;
@@ -99,5 +101,11 @@ public class Test implements Serializable {
                 ", matriculeProf='" + matriculeProf + '\'' +
                 ", nomProf='" + nomProf + '\'' +
                 '}';
+    }
+
+    public String getDetails() {
+        int hours = (int) Math.floor((float) this.getDuration() / 60);
+        String durationString = "" + hours + "h" + (this.getDuration() - hours * 60);
+        return "Durée : " + durationString + " – Professeur : " + this.getNomProf();
     }
 }
