@@ -1,10 +1,5 @@
 package models;
 
-import server.DAOs.GroupeDAO;
-import server.DAOs.ProfesseurDAO;
-import server.DAOs.QuestionDAO;
-import server.DAOs.TestDAO;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.DateFormat;

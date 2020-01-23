@@ -1,8 +1,6 @@
 package client.actionEmitters;
 
-import models.Etudiant;
-import models.Professeur;
-import models.Test;
+import models.*;
 import util.Action;
 import util.Request;
 import util.Response;
@@ -38,6 +36,35 @@ public class ProfesseurActionEmitter extends ActionEmitter {
     }
 
 
+    public Test getTest(int idTest) {
+        Response response = post(new Request(Action.GET_TEST,idTest, Role.PROFESSEUR));
+        Test test = (Test) response.getData();
+        return test;
+    }
+
+    public ArrayList<Test> getTests(Professeur prof) {
+        Response response = post(new Request(Action.GET_TESTS, prof, Role.PROFESSEUR));
+        ArrayList<Test> test = (ArrayList<Test>) response.getData();
+        return test;
+    }
+
+    public ArrayList<Fiche> getFiches(int idTest) {
+        Response response = post(new Request(Action.GET_FICHES, idTest, Role.PROFESSEUR));
+        ArrayList<Fiche> fiches = (ArrayList<Fiche>) response.getData();
+        return fiches;
+    }
+
+    public String submitTest(Test test) {
+        Response response = post(new Request(Action.SUBMIT_TEST, test, Role.PROFESSEUR));
+        String tt = (String) response.getData();
+        return tt;
+    }
+
+    public ArrayList<Groupe> getGroupes() {
+        Response response = post(new Request(Action.GET_GROUPES, Role.PROFESSEUR));
+        ArrayList<Groupe> groupes = (ArrayList<Groupe>) response.getData();
+        return groupes;
+    }
 
 
 }

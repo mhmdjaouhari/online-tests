@@ -3,6 +3,7 @@ package server.DAOs;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.TextField;
 import models.*;
+import util.Response;
 
 import java.nio.file.attribute.UserPrincipalLookupService;
 import java.sql.*;
@@ -43,7 +44,30 @@ public class TestDAO {
             return null;
         }
     }
-
+    public ArrayList<Test> getTests(Professeur prof){
+        try {
+            PreparedStatement statement = conn.prepareStatement(
+                    "select * from tests where matricule = ?"
+            );
+            statement.setString(1,prof.getMatricule());
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<Test> tests = new ArrayList<>();
+            while (resultSet.next()){
+                Test test = new Test();
+                test.setId(resultSet.getInt("id_test"));
+                test.setMatriculeProf(resultSet.getString("matricule"));
+                test.setNomProf(getNomeProfBydId(resultSet.getString("matricule")));
+                test.setTitre(resultSet.getString("titre"));
+                test.setLocked(resultSet.getBoolean("locked"));
+                test.setDuration(resultSet.getInt("duration"));
+                tests.add(test);
+            }
+            return tests;
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public ArrayList<Fiche> getFiches(String cne){
         try{
@@ -58,6 +82,28 @@ public class TestDAO {
                 fiche.setNomGroupeEtudiant(getNomGroupeEtudiant(cne));
                 fiche.setNote(resultSet.getFloat("note"));
                 fiche.setTest(getTestById(resultSet.getInt("id_test")));
+                fiches.add(fiche);
+            }
+            return fiches;
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ArrayList<Fiche> getFiches(int id_test){
+        try{
+            PreparedStatement statement = conn.prepareStatement("select * from fiches where id_test=?;");
+            statement.setInt(1,id_test);
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<Fiche> fiches = new ArrayList<>();
+            while (resultSet.next()){
+                Fiche fiche = new Fiche();
+                fiche.setId(resultSet.getInt("id_fiche"));
+                fiche.setNomEtudiant(getNomEtudiantById(resultSet.getString("cne")));
+                fiche.setNomGroupeEtudiant(getNomGroupeEtudiant(resultSet.getString("cne")));
+                fiche.setNote(resultSet.getFloat("note"));
+                fiche.setTest(getTestById(id_test));
                 fiches.add(fiche);
             }
             return fiches;
@@ -214,5 +260,78 @@ public class TestDAO {
         }
         return null;
     }
+
+    public ArrayList<Groupe> getAllGroupes(){
+        try {
+            PreparedStatement statement = conn.prepareStatement(
+                    "select * from groupes;"
+            );
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<Groupe> groupes = new ArrayList<>();
+            while(resultSet.next()) {
+                Groupe groupe = new Groupe();
+                groupe.setId(resultSet.getInt("id_groupe"));
+                groupe.setNom(resultSet.getString("nom"));
+                groupes.add(groupe);
+            }
+            return groupes;
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String addTest(Test t)
+    {
+        try
+        {
+            PreparedStatement pst =conn.prepareStatement("insert into Test(id_test,matricule,titre,duration,locked) values(?,?,?,?);");
+            pst.setInt(1, t.getId());
+            pst.setString(2, t.getMatriculeProf());
+            pst.setString(3, t.getTitre());
+            pst.setBoolean(4, t.isLocked());
+            pst.executeUpdate();
+            if(t.getQuestions()!=null)
+            {
+                TestDAO ttDao = new TestDAO();
+                for (Question q : t.getQuestions()) {
+                    ttDao.addQst(q);
+                }
+            }
+            if (t.getGroupes() != null) {
+
+                for (Groupe q : t.getGroupes()) {
+                    PreparedStatement pst1 =conn.prepareStatement("insert into affectations(id_test,id_groupe) values(?,?);");
+                    pst1.setInt(1, t.getId());
+                    pst1.setInt(2, q.getId());
+                    pst1.executeUpdate();
+
+                }
+            }
+            return "test added succesfully";
+        }
+        catch(SQLException ex){
+            System.err.println("problem with add Query !! "+ ex.getMessage());
+            return "probelm adding test";
+        }
+    }
+
+    public void addQst(Question qst)
+    {
+        try
+        {
+            PreparedStatement pst =conn.prepareStatement("insert into questions(id_question,id_test,texte,value) values(?,?,?,?);");
+            pst.setInt(1, qst.getId());
+            pst.setInt(2, qst.getIdTest());
+            pst.setString(3, qst.getTexte());
+            pst.setString(4, qst.getValue());
+            pst.executeUpdate();
+
+        }
+        catch(SQLException ex){
+            System.err.println("problem with add Query !! "+ ex.getMessage());
+        }
+    }
+
 
 }

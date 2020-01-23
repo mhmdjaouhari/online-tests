@@ -1,6 +1,7 @@
 package server.dispatchers;
 
 import models.Professeur;
+import models.Test;
 import server.DAOs.ProfesseurDAO;
 import server.DAOs.TestDAO;
 import util.Action;
@@ -15,6 +16,7 @@ public class ProfesseurDispatcher {
         Action action = request.getAction();
         Professeur professeur;
         Response response;
+        TestDAO testDao;
         switch (action) {
             case LOGIN:
                 professeur= (Professeur) request.getData();
@@ -42,6 +44,27 @@ public class ProfesseurDispatcher {
             case SEARCH_PROF:
                 professeur= (Professeur) request.getData();
                 response = ProfesseurDAO.search(professeur);
+                break;
+            case GET_TEST:
+                int id_test = (Integer)request.getData();
+                testDao = new TestDAO();
+                response = new Response(testDao.getTestById(id_test));
+                break;
+            case GET_TESTS:
+                testDao = new TestDAO();
+                response = new Response(testDao.getTests((Professeur)request.getData()));
+                break;
+            case GET_FICHES:
+                testDao = new TestDAO();
+                response = new Response(testDao.getFiches((Integer)request.getData()));
+                break;
+            case SUBMIT_TEST:
+                testDao = new TestDAO();
+                response = new Response(testDao.addTest((Test)request.getData()));
+                break;
+            case GET_GROUPES:
+                testDao = new TestDAO();
+                response = new Response(testDao.getAllGroupes());
                 break;
 
             default:
