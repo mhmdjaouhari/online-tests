@@ -1,7 +1,6 @@
 package server.dispatchers;
 
 import models.Etudiant;
-import models.Professeur;
 import server.DAOs.EtudiantDAO;
 import util.Action;
 import util.Request;

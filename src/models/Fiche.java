@@ -6,7 +6,7 @@ public class Fiche {
 
     private int id;
     private float note;
-    private String idEtudiant;
+    private String CNE;
     private String nomEtudiant; // nom & prénom
     private String nomGroupeEtudiant;
     private Test test;
@@ -39,12 +39,12 @@ public class Fiche {
         this.note = note;
     }
 
-    public String getIdEtudiant() {
-        return idEtudiant;
+    public String getCNE() {
+        return CNE;
     }
 
-    public void setIdEtudiant(String idEtudiant) {
-        this.idEtudiant = idEtudiant;
+    public void setCNE(String CNE) {
+        this.CNE = CNE;
     }
 
     public String getNomEtudiant() {

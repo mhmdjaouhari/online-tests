@@ -22,7 +22,6 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 public class TestController {
 
@@ -205,7 +204,7 @@ public class TestController {
 
     private void submitFiche() {
         Fiche fiche = new Fiche();
-        fiche.setIdEtudiant(App.getLoggedEtudiant().getCNE());
+        fiche.setCNE(App.getLoggedEtudiant().getCNE());
         fiche.setReponses(reponsesList);
         Test test = new Test();
         test.setId(App.getActiveTest().getId());
