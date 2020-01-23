@@ -171,6 +171,30 @@ public class EtudiantDAO {
             return new Response(1, "SQL ERROR");
         }
     }
+    public static Response search(String cne)
+    {
+        try{
+            PreparedStatement pst =conn.prepareStatement("select * from etudiants where cne=? ;");
+            pst.setString(1,cne);
+            ResultSet resultSet = pst.executeQuery();
+            if (resultSet.next()) {
+                Etudiant fullEtudiant = new Etudiant();
+                fullEtudiant.setCNE(resultSet.getString("CNE"));
+                fullEtudiant.setIdGroupe(resultSet.getInt("id_groupe"));
+                fullEtudiant.setNom(resultSet.getString("nom"));
+                fullEtudiant.setPrenom(resultSet.getString("prenom"));
+                fullEtudiant.setUsername(resultSet.getString("username"));
+                fullEtudiant.setPassword(resultSet.getString("password"));
+                System.out.println("Etudiant exist: "+fullEtudiant);
+                return new Response(fullEtudiant);
+            } else {
+                return new Response(1, "Etudiant doesn't exist ");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return new Response(1, "SQL ERROR");
+        }
+    }
 
     // update Student
     public static Response update(Etudiant oldEtud,Etudiant newEtud)
