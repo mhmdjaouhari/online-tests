@@ -186,8 +186,7 @@ public class TestController {
         if (!oldValue.equals("")) {
             HashSet<String> choixArray = new HashSet<>(Arrays.asList(oldValue.split(",")));
             choixArray.add(Integer.toString(choix));
-            newValue = choixArray.stream().collect(Collectors.joining(","));
-            System.out.println(oldValue + " => " + newValue);
+            newValue = String.join(",", choixArray);
         } else {
             newValue = Integer.toString(choix);
         }
@@ -199,11 +198,9 @@ public class TestController {
         if (!oldValue.equals("")) {
             HashSet<String> choixArray = new HashSet<>(Arrays.asList(oldValue.split(",")));
             choixArray.remove(Integer.toString(choix));
-            String newValue = choixArray.stream().collect(Collectors.joining(","));
-            System.out.println(oldValue + " => " + newValue);
+            String newValue = String.join(",", choixArray);
             reponse.setValue(newValue);
         }
-
     }
 
     private void submitFiche() {

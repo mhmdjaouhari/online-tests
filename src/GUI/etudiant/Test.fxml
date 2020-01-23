@@ -19,7 +19,7 @@
                     <children>
                         <Label fx:id="titreTest">
                             <font>
-                                <Font size="22.0" />
+                                <Font name="Ubuntu" size="22.0" />
                             </font>
                         </Label>
                         <Label fx:id="detailsTest" />
@@ -33,7 +33,7 @@
                         <Label text="Temps restant" textAlignment="CENTER" textFill="WHITE" />
                         <Label fx:id="tempsRestant" textAlignment="CENTER" textFill="WHITE">
                             <font>
-                                <Font size="26.0" />
+                                <Font name="Ubuntu" size="26.0" />
                             </font>
                         </Label>
                     </children>
@@ -45,7 +45,7 @@
                     <children>
                         <Label fx:id="nomEtudiant" textFill="WHITE">
                             <font>
-                                <Font size="22.0" />
+                                <Font name="Ubuntu" size="22.0" />
                             </font>
                         </Label>
                         <Label fx:id="groupeEtudiant" textFill="WHITE" />
@@ -80,7 +80,7 @@
         </HBox>
     </bottom>
     <stylesheets>
-        <URL value="@gui.css" />
+        <URL value="@../gui.css" />
     </stylesheets>
     <center>
             <VBox fx:id="questionPane" prefHeight="200.0" prefWidth="100.0" styleClass="bg-white" BorderPane.alignment="CENTER">

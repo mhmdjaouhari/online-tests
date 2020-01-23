@@ -99,7 +99,7 @@ public class DashboardController {
             root = fxmlLoader.load();
             testController = fxmlLoader.getController();
             Scene scene = new Scene(root, 1024, 720);
-            scene.getStylesheets().add(getClass().getResource("gui.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/GUI/gui.css").toExternalForm());
             testStage.setScene(scene);
             testStage.setTitle("Online Tests");
             testStage.setResizable(false);

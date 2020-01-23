@@ -34,11 +34,10 @@ public class App extends Application {
         Parent root = fxmlLoader.load();
         primaryStage.setTitle("Online Tests");
         Scene scene = new Scene(root, 240, 480);
-        scene.getStylesheets().add(getClass().getResource("gui.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/GUI/gui.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
-
     }
 
     public static void main(String[] args) {
@@ -79,7 +78,7 @@ public class App extends Application {
 
     public static void gotoDashboard() {
         try {
-            replaceSceneContent("Dashboard.fxml", 960, 672);
+            replaceSceneContent("Dashboard.fxml", 960, 640);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -91,15 +90,19 @@ public class App extends Application {
         Parent page = fxmlLoader.load();
         Scene scene = stage.getScene();
 
-        if (scene == null) {
-            scene = new Scene(page, v, v1);
-            scene.getStylesheets().add(App.class.getResource("gui.css").toExternalForm());
-            stage.setScene(scene);
-        } else {
-            stage.getScene().setRoot(page);
-        }
+//        if (scene != null) {
+        //            stage.getScene().setRoot(page);
         stage.setWidth(v);
-        stage.setHeight(v1);
+        stage.setHeight(v1 + 37);
+//        } else {
+        scene = new Scene(page, v, v1);
+        System.out.println("SCENE 1 " + scene.getWidth() + " " + scene.getHeight());
+        scene.getStylesheets().add(App.class.getResource("/GUI/gui.css").toExternalForm());
+        stage.setScene(scene);
+        stage.setResizable(true);
+        stage.sizeToScene();
+        stage.setResizable(false);
+//        }
         stage.centerOnScreen();
         return fxmlLoader;
     }
