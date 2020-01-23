@@ -14,7 +14,6 @@ public enum Action {
     UPDATE_PROF,
     GET_ALL_PROFS,
     SEARCH_PROF,
-    GET_NEW_TESTS,
-    GET_TEST,
-    GET_TESTS
+    GET_TESTS_ETUDIANT,
+    GET_TEST
 }

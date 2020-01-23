@@ -9,18 +9,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import models.Etudiant;
+import models.Test;
 import util.Role;
 
 public class App extends Application {
 
-    private Stage stage;
-    private Etudiant loggedEtudiant;
-    private static App instance;
+    private static Stage stage;
+    private static Etudiant loggedEtudiant;
+    private static Test activeTest;
     private static EtudiantActionEmitter emitter;
-
-    public App() {
-        instance = this;
-    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -36,7 +33,6 @@ public class App extends Application {
         fxmlLoader.setLocation(getClass().getResource("Login.fxml"));
         Parent root = fxmlLoader.load();
         LoginController loginController = fxmlLoader.getController();
-        loginController.setApp(getInstance());
         primaryStage.setTitle("Online Tests");
         Scene scene = new Scene(root, 240, 480);
         scene.getStylesheets().add(getClass().getResource("gui.css").toExternalForm());
@@ -49,23 +45,27 @@ public class App extends Application {
         launch(args);
     }
 
-    public static App getInstance() {
-        return instance;
-    }
-
     public static EtudiantActionEmitter getEmitter() {
         return emitter;
     }
 
-    public Etudiant getLoggedEtudiant() {
+    public static Etudiant getLoggedEtudiant() {
         return loggedEtudiant;
     }
 
-    public void setLoggedEtudiant(Etudiant etudiant) {
-        this.loggedEtudiant = etudiant;
+    public static void setLoggedEtudiant(Etudiant etudiant) {
+        loggedEtudiant = etudiant;
     }
 
-    public void gotoLogin() {
+    public static Test getActiveTest() {
+        return activeTest;
+    }
+
+    public static void setActiveTest(Test test) {
+        activeTest = test;
+    }
+
+    public static void gotoLogin() {
         try {
             replaceSceneContent("Login.fxml", 240, 480);
         } catch (Exception e) {
@@ -73,7 +73,7 @@ public class App extends Application {
         }
     }
 
-    public void gotoDashboard() {
+    public static void gotoDashboard() {
         try {
             replaceSceneContent("Dashboard.fxml", 960, 672);
         } catch (Exception e) {
@@ -81,15 +81,15 @@ public class App extends Application {
         }
     }
 
-    private Parent replaceSceneContent(String fxml, int v, int v1) throws Exception {
+    private static Parent replaceSceneContent(String fxml, int v, int v1) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource(fxml));
+        fxmlLoader.setLocation(App.class.getResource(fxml));
         Parent page = fxmlLoader.load();
         Scene scene = stage.getScene();
 
         if (scene == null) {
             scene = new Scene(page, v, v1);
-            scene.getStylesheets().add(getClass().getResource("gui.css").toExternalForm());
+            scene.getStylesheets().add(App.class.getResource("gui.css").toExternalForm());
             stage.setScene(scene);
         } else {
             stage.getScene().setRoot(page);
@@ -100,7 +100,7 @@ public class App extends Application {
         return page;
     }
 
-    public void showErrorAlert(String message) {
+    public static void showErrorAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(message);
         alert.showAndWait();

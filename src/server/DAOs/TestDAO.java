@@ -1,245 +1,218 @@
 package server.DAOs;
 
-import models.Groupe;
-import models.Professeur;
-import models.Question;
-import models.Test;
-import util.Response;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.TextField;
+import models.*;
 
+import java.nio.file.attribute.UserPrincipalLookupService;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TestDAO {
-    public static Connection conn = DataSource.getInstance().getConnection();
 
-    //find by id
-    public Response search(Test t)
-    {
-        try{
-            PreparedStatement pst =conn.prepareStatement("select * from tests where id_test=? ;");
-            pst.setInt(1,t.getId());
-            ResultSet resultSet = pst.executeQuery();
-            if (resultSet.next()) {
+    private Connection conn;
+
+    public TestDAO(){
+        conn = DataSource.getInstance().getConnection();
+    }
+
+    public ArrayList<Test> getTests(String cne){
+        try {
+            PreparedStatement statement = conn.prepareStatement(
+                    "select * from tests where id_test in(" +
+                            "select a.id_test from etudiants e,affectations a where e.cne=? and a.id_groupe=e.id_groupe" +
+                            "); "
+                    );
+            statement.setString(1,cne);
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<Test> tests = new ArrayList<>();
+            while (resultSet.next()){
                 Test test = new Test();
-                QuestionDAO qstDao = new QuestionDAO();
-                ProfesseurDAO prfDao = new ProfesseurDAO();
                 test.setId(resultSet.getInt("id_test"));
-                test.setTitre(resultSet.getString("titre"));
-                test.setDuration(resultSet.getInt("duration"));
-                test.setLocked(resultSet.getBoolean("locked"));
                 test.setMatriculeProf(resultSet.getString("matricule"));
-                test.setNomProf(((Professeur)(prfDao.search(resultSet.getString("matricule")).getData())).getNom());
-                test.setQuestions((ArrayList<Question>)qstDao.getAll(resultSet.getInt("id_test")).getData());
+                test.setNomProf(getNomeProfBydId(resultSet.getString("matricule")));
+                test.setTitre(resultSet.getString("titre"));
+                test.setLocked(resultSet.getBoolean("locked"));
+                test.setDuration(resultSet.getInt("duration"));
+                tests.add(test);
+            }
+            return tests;
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-                return new Response(test);
-            } else {
-                return new Response(1, "Question doesn't exist ");
+
+    public ArrayList<Fiche> getFiches(String cne){
+        try{
+            PreparedStatement statement = conn.prepareStatement("select * from fiches where cne=?;");
+            statement.setString(1,cne);
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<Fiche> fiches = new ArrayList<>();
+            while (resultSet.next()){
+                Fiche fiche = new Fiche();
+                fiche.setId(resultSet.getInt("id_fiche"));
+                fiche.setNomEtudiant(getNomEtudiantById(cne));
+                fiche.setNomGroupeEtudiant(getNomGroupeEtudiant(cne));
+                fiche.setNote(resultSet.getFloat("note"));
+                fiche.setTest(getTestById(resultSet.getInt("id_test")));
+                fiches.add(fiche);
+            }
+            return fiches;
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Test getFullTestById(int id_test){
+        Test test = getTestById(id_test);
+        test.setQuestions(getQuestionsByTestId(id_test));
+        test.setGroupes(getGroupesByTestId(id_test));
+        return test;
+    }
+
+
+    public Test getTestById(int id_test){
+        try {
+            PreparedStatement statement = conn.prepareStatement("select * from tests where id_test=?;");
+            statement.setInt(1,id_test);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                Test test = new Test();
+                test.setId(resultSet.getInt("id_test"));
+                test.setMatriculeProf(resultSet.getString("matricule"));
+                test.setNomProf(getNomeProfBydId(resultSet.getString("matricule")));
+                test.setTitre(resultSet.getString("titre"));
+                test.setLocked(resultSet.getBoolean("locked"));
+                test.setDuration(resultSet.getInt("duration"));
+                return test;
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return new Response(1, "SQL ERROR");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //not finished yet
+   /* public void submitFiche(Fiche fiche){
+        try{
+            ArrayList<Reponse> reponses = fiche.getReponse();
+            for(Reponse reponse:reponses){
+                submitReponse(reponse);
+            }
+            PreparedStatement statement = conn.prepareStatement(
+                    "insert into fiches(id_test, cne, note) values(?,?,?)"
+            );
+            statement.setInt(1,fiche.getTest().getId());
+            statement.setString(2,fiche.ge);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }*/
+
+    public void submitReponse(Reponse reponse){
+        try {
+            PreparedStatement statement = conn.prepareStatement(
+                    "insert into reponses(id_fiche, id_question,value) values(?,?,?)"
+            );
+            statement.setInt(1,reponse.getIdFiche());
+            statement.setInt(2,reponse.getIdQuestion());
+            statement.setString(3,reponse.getValue());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
-    public Response search(int id_test)
-    {
-        try{
-            PreparedStatement pst =conn.prepareStatement("select * from tests where id_test=? ;");
-            pst.setInt(1,id_test);
-            ResultSet resultSet = pst.executeQuery();
-            if (resultSet.next()) {
-                Test test = new Test();
-                QuestionDAO qstDao = new QuestionDAO();
-                ProfesseurDAO prfDao = new ProfesseurDAO();
-                test.setId(resultSet.getInt("id_test"));
-                test.setTitre(resultSet.getString("titre"));
-                test.setDuration(resultSet.getInt("duration"));
-                test.setLocked(resultSet.getBoolean("locked"));
-                test.setMatriculeProf(resultSet.getString("matricule"));
-                test.setNomProf(((Professeur)(prfDao.search(resultSet.getString("matricule")).getData())).getNom());
-                test.setQuestions((ArrayList<Question>)qstDao.getAll(resultSet.getInt("id_test")).getData());
 
-                return new Response(test);
-            } else {
-                return new Response(1, "Question doesn't exist ");
+    public String getNomeProfBydId(String matricule){
+        try {
+            PreparedStatement statement = conn.prepareStatement("select * from professeurs where matricule=?;");
+            statement.setString(1,matricule);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getString("prenom")+" "+resultSet.getString("nom");
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return new Response(1, "SQL ERROR");
+            e.printStackTrace();
         }
+        return null;
     }
 
-    //add test
-    public static Response add(Test t)
-    {
-        try
-        {
-            PreparedStatement pst =conn.prepareStatement("insert into Test(id_test,matricule,titre,duration,locked) values(?,?,?,?);");
-            pst.setInt(1, t.getId());
-            pst.setString(2, t.getMatriculeProf());
-            pst.setString(3, t.getTitre());
-            pst.setBoolean(4, t.isLocked());
-            pst.executeUpdate();
-            if(t.getQuestions()!=null)
-            {
-                QuestionDAO qstDao = new QuestionDAO();
-                for (Question q : t.getQuestions()) {
-                    qstDao.add(q);
-                }
+    public String getNomEtudiantById(String cne){
+        try {
+            PreparedStatement statement = conn.prepareStatement("select * from etudiants where cne = ?;");
+            statement.setString(1,cne);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getString("prenom")+" "+resultSet.getString("nom");
             }
-            if (t.getGroupes() != null) {
-
-                for (Groupe q : t.getGroupes()) {
-                    PreparedStatement pst1 =conn.prepareStatement("insert into affectations(id_test,id_groupe) values(?,?);");
-                    pst1.setInt(1, t.getId());
-                    pst1.setInt(2, q.getId());
-                    pst1.executeUpdate();
-
-                }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public String getNomGroupeEtudiant(String cne){
+        try {
+            PreparedStatement statement = conn.prepareStatement(
+                    "select * from groupes g,etudiants e where g.id_groupe=e.id_groupe and cne = ?;"
+            );
+            statement.setString(1,cne);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getString("nom");
             }
-            return new Response(0,"test Added "+t.getId());
+        }catch (SQLException e){
+            e.printStackTrace();
         }
-        catch(SQLException ex){
-            System.err.println("problem with add Query !! "+ ex.getMessage());
-            return new Response(1,"SERVER DB ERROR while inserting data");
-        }
+        return null;
     }
 
-    // Update Test
-    public static Response update(Test oldTest,Test newTest)
-    {
-        try{
-            PreparedStatement pst =conn.prepareStatement("update tests set titre=?,duration=?,locked=? where id_test=?;");
-            pst.setString(1, newTest.getTitre());
-            pst.setInt(2, newTest.getDuration());
-            pst.setBoolean(3, newTest.isLocked());
-            pst.setInt(4, oldTest.getId());
-            if(pst.executeUpdate()!=0) {
-                System.out.println("Test updated : " + oldTest.getId());
-                return new Response(0, "You are Updated :" + oldTest.getId());
+    public ArrayList<Question> getQuestionsByTestId(int id_test){
+        try {
+            PreparedStatement statement = conn.prepareStatement(
+                    "select * from questions where id_test=?;"
+            );
+            statement.setInt(1,id_test);
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<Question> questions = new ArrayList<>();
+            while(resultSet.next()) {
+                Question question = new Question();
+                question.setId(resultSet.getInt("id_question"));
+                question.setIdTest(resultSet.getInt("id_test"));
+                question.setTexte(resultSet.getString("texte"));
+                question.setValue(resultSet.getString("value"));
+                questions.add(question);
             }
-            else
-            {
-                return new Response(1,"Test doesn't exist");
-            }
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return new Response(1, "SERVER DB ERROR");
+            return questions;
+        }catch (SQLException e){
+            e.printStackTrace();
         }
+        return null;
     }
 
-
-    // delete test by id_test
-    public static Response delete(Test test)
-    {
-        try
-        {
-            PreparedStatement pst =conn.prepareStatement("delete from Tests where id_test=?;");
-            pst.setInt(1,test.getId());
-            if(pst.executeUpdate()!=0) {
-                System.out.println("Test deleted : " + test.getId());
-                return new Response(0, "You are delete :" + test.getId());
+    public ArrayList<Groupe> getGroupesByTestId(int id_test){
+        try {
+            PreparedStatement statement = conn.prepareStatement(
+                    "select * from groupes g,affectations a where g.id_groupe=a.id_groupe and a.id_test=? ;"
+            );
+            statement.setInt(1,id_test);
+            ResultSet resultSet = statement.executeQuery();
+            ArrayList<Groupe> groupes = new ArrayList<>();
+            while(resultSet.next()) {
+                Groupe groupe = new Groupe();
+                groupe.setId(resultSet.getInt("id_groupe"));
+                groupe.setNom(resultSet.getString("nom"));
+                groupes.add(groupe);
             }
-            else
-            {
-                return new Response(1,"Test doesn't exist");
-            }
+            return groupes;
+        }catch (SQLException e){
+            e.printStackTrace();
         }
-        catch(SQLException ex)
-        {
-            System.err.println("problem with delete Query  : "+ ex.getMessage());
-            return new Response(1,"Server delete Error");
-        }
+        return null;
     }
 
-    // getALl Tests
-    public static Response getAll()
-    {
-        ResultSet resultSet=null;
-        ArrayList<Test> arr=new ArrayList<Test>();
-        try
-        {
-            Statement st=conn.createStatement();
-            resultSet=st.executeQuery("select * from tests;");
-            System.out.println("getAll tests done ! ");
-            while (resultSet.next())
-            {
-                Test test = new Test();
-                ProfesseurDAO prfDao = new ProfesseurDAO();
-                QuestionDAO qstDao = new QuestionDAO();
-                test.setId(resultSet.getInt("id_test"));
-                test.setTitre(resultSet.getString("titre"));
-                test.setDuration(resultSet.getInt("duration"));
-                test.setLocked(resultSet.getBoolean("locked"));
-                test.setMatriculeProf(resultSet.getString("matricule"));
-                test.setNomProf(((Professeur)(prfDao.search(resultSet.getString("matricule")).getData())).getNom());
-                test.setQuestions((ArrayList<Question>)qstDao.getAll(resultSet.getInt("id_test")).getData());
-                arr.add(test);
-            }
-            return new Response(arr);
-        }
-        catch (SQLException ex)
-        {
-            System.err.println("Request Error : try to check connexion or Query : "+ex.getMessage());
-            return new Response(1,"Error SQL");
-        }
-    }
-
-
-    // getALl test of a teacher
-    public static Response getAll(String matricule)
-    {
-        ResultSet resultSet=null;
-        ArrayList<Test> arr=new ArrayList<Test>();
-        try
-        {
-            PreparedStatement pst=conn.prepareStatement("select * from tests where matricule = ?;");
-            pst.setString(1,matricule);
-            resultSet=pst.executeQuery();
-            System.out.println("getAll Tests done ! ");
-            while (resultSet.next())
-            {
-                Test test = new Test();
-                ProfesseurDAO prfDao = new ProfesseurDAO();
-                QuestionDAO qstDao = new QuestionDAO();
-                test.setId(resultSet.getInt("id_test"));
-                test.setTitre(resultSet.getString("titre"));
-                test.setDuration(resultSet.getInt("duration"));
-                test.setLocked(resultSet.getBoolean("locked"));
-                test.setMatriculeProf(resultSet.getString("matricule"));
-                test.setNomProf(((Professeur)(prfDao.search(resultSet.getString("matricule")).getData())).getNom());
-                test.setQuestions((ArrayList<Question>)qstDao.getAll(resultSet.getInt("id_test")).getData());
-                arr.add(test);
-            }
-            return new Response(arr);
-        }
-        catch (SQLException ex)
-        {
-            System.err.println("Request Error : try to check connextion or Query : "+ex.getMessage());
-            return new Response(1,"Error SQL");
-        }
-    }
-
-    //get Maxid
-    public Response maxId()
-    {
-        Test q = new Test();
-        int id=0;
-        ResultSet resultSet = null;
-        try
-        {
-            Statement st=conn.createStatement();
-            resultSet=st.executeQuery("select * from tests Order by id_test Desc;");
-            if (resultSet.next())
-            {
-                id = resultSet.getInt("id_test");
-            }
-            return new Response(id);
-        }
-        catch (SQLException ex)
-        {
-            System.err.println("Request Error : try to check connexion or Query : "+ex.getMessage());
-            return new Response(1,"Error SQL");
-        }
-    }
 }

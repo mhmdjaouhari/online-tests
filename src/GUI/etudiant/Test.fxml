@@ -16,11 +16,11 @@
          <children>
             <VBox styleClass="bg-gray" HBox.hgrow="ALWAYS">
                <children>
-                  <Label text="nom test">
+                  <Label fx:id="titreTest">
                      <font>
                         <Font size="22.0" />
                      </font></Label>
-                  <Label text="details test" />
+                  <Label fx:id="detailsTest" />
                </children>
                <padding>
                   <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
@@ -40,11 +40,11 @@
             </VBox>
             <VBox styleClass="bg-blue" HBox.hgrow="SOMETIMES">
                <children>
-                  <Label text="nom prenom" textFill="WHITE">
+                  <Label fx:id="nomEtudiant" textFill="WHITE">
                      <font>
                         <Font size="22.0" />
                      </font></Label>
-                  <Label text="nom groupe" textFill="WHITE" />
+                  <Label fx:id="groupeEtudiant" textFill="WHITE" />
                </children>
                <padding>
                   <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
@@ -60,12 +60,12 @@
    <bottom>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <JFXButton buttonType="RAISED" prefHeight="200.0" prefWidth="100.0" styleClass="bg-gray" text="precedent" wrapText="true">
+            <JFXButton buttonType="RAISED" prefHeight="200.0" prefWidth="128.0" styleClass="bg-gray" text="Question précédente" textAlignment="CENTER" wrapText="true">
                <HBox.margin>
                   <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                </HBox.margin></JFXButton>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
-            <JFXButton prefHeight="200.0" prefWidth="100.0" styleClass="bg-gray" text="suivant" wrapText="true">
+            <JFXButton buttonType="RAISED" prefHeight="200.0" prefWidth="128.0" styleClass="bg-gray" text="Question suivante" textAlignment="CENTER" wrapText="true">
                <HBox.margin>
                   <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                </HBox.margin></JFXButton>

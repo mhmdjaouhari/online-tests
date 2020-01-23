@@ -2,10 +2,14 @@ package GUI.etudiant;
 
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import models.Test;
 
 import java.util.ArrayList;
@@ -27,56 +31,65 @@ public class DashboardController {
     @FXML
     private ScrollPane oldTestsPane;
 
-    private App app;
-
-    public App getApp() {
-        return app;
-    }
-
-    public void setApp(App app) {
-        this.app = app;
-    }
-
     public void initialize() {
-        setApp(App.getInstance());
-        ArrayList<Test> allTests = App.getEmitter().getNewTests();
+        ArrayList<Test> allTests = App.getEmitter().getTests();
 
-        nomEtudiant.setText(app.getLoggedEtudiant().getPrenom() + " " + app.getLoggedEtudiant().getNom());
-        groupeEtudiant.setText("ID Groupe : " + app.getLoggedEtudiant().getIdGroupe());
+        nomEtudiant.setText(App.getLoggedEtudiant().getPrenom() + " " + App.getLoggedEtudiant().getNom());
+        groupeEtudiant.setText("ID Groupe : " + App.getLoggedEtudiant().getIdGroupe());
         newTestCount.setText(Integer.toString(allTests.size()));
 
         VBox content = new VBox();
         content.setSpacing(8);
         content.setPadding(new Insets(8));
         for (Test test : allTests) {
-            content.getChildren().addAll(createTestRow(test.getTitre(), 90, test.getNomProf()));
+            content.getChildren().addAll(createTestRow(test));
         }
         newTestsPane.setContent(content);
     }
 
-    public JFXButton createTestRow(String title, int duration, String nomProf) {
+    public JFXButton createTestRow(Test test) {
         JFXButton row = new JFXButton();
         row.setButtonType(JFXButton.ButtonType.RAISED);
         row.setStyle("-fx-background-color: #fff");
         row.setPrefHeight(56);
         row.setPrefWidth(320);
         VBox vBox = new VBox();
-        int hours = (int) Math.floor((float) duration / 60);
-        String durationString = "" + hours + "h" + (duration - hours * 60);
-        Label titleLabel = new Label(title);
+        Label subtitleLabel = new Label(test.getDetails());
+        Label titleLabel = new Label(test.getTitre());
         titleLabel.setStyle("-fx-font-weight: bold");
-        Label subtitleLabel = new Label("Durée : " + durationString + " – Professeur : " + nomProf);
         subtitleLabel.setStyle("-fx-font-size: 12");
         vBox.getChildren().addAll(titleLabel, subtitleLabel);
         row.setGraphic(vBox);
+        row.setOnAction(e -> {
+            openTest(test.getId());
+        });
         return row;
     }
 
-    public void handleLogout(){
-        app.setLoggedEtudiant(null);
-        app.gotoLogin();
+    public void handleLogout() {
+        App.setLoggedEtudiant(null);
+        App.gotoLogin();
     }
 
+    public void openTest(int idTest) {
+        try {
+            App.setActiveTest(App.getEmitter().getTest(idTest));
+            Stage stage = new Stage();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("Test.fxml"));
+            Parent root;
+            root = fxmlLoader.load();
+            Scene scene = new Scene(root, 1024, 720);
+            scene.getStylesheets().add(getClass().getResource("gui.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("Online Tests");
+            stage.setResizable(false);
+            stage.show();
+        } catch (Exception e) {
+            App.showErrorAlert(e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
 
 }

@@ -1,6 +1,7 @@
 package client.actionEmitters;
 
 import models.Etudiant;
+import models.Question;
 import models.Test;
 import util.Action;
 import util.Request;
@@ -38,16 +39,26 @@ public class EtudiantActionEmitter extends ActionEmitter {
     }
 
     // should be implemented on the sever-side
-    public ArrayList<Test> getNewTests(){
+    public ArrayList<Test> getTests(){
         // once implemented in the server uncomment this:
-//        Response response = post(new Request(Action.GET_NEW_TESTS,Role.ETUDIANT));
+//        Response response = post(new Request(Action.GET_TESTS_ETUDIANT,Role.ETUDIANT));
 //        ArrayList<Test> tests = (ArrayList<Test>) response.getData();
         ArrayList<Test> tests = new ArrayList<>();
-        tests.add(new Test(1, "Assu qualité ISO 9001", false, 90, "a123", "Chichi"));
-        tests.add(new Test(1, "Assu qualité ISO 9001", false, 90, "a123", "Chichi"));
-        tests.add(new Test(1, "Assu qualité ISO 9001", false, 90, "a123", "Chichi"));
+        tests.add(new Test(0, "Assu qualité ISO 9001", false, 90, "a123", "Chichi"));
+        tests.add(new Test(0, "Assu qualité ISO 9001", false, 90, "a123", "Chichi"));
+        tests.add(new Test(0, "Assu qualité ISO 9001", false, 90, "a123", "Chichi"));
         return tests;
     }
 
-
+    public Test getTest(int idTest) {
+        // once implemented in the server uncomment this:
+//        Response response = post(new Request(Action.GET_TEST,Role.ETUDIANT));
+//        Test test = (Test) response.getData();
+        Test test = new Test(0, "Assu qualité ISO 9001", false, 90, "a123", "Chichi");
+        Question question1 = new Question(0, "C'est quoi la qualité ? \n 1- Qualité \n 2- qualité \n 3-quality \n 4- Kalinti", "1,2,3", 0);
+        Question question2 = new Question(0, "C'est quoi la qualité ? \n 1- Qualité \n 2- qualité \n 3-quality \n 4- Kalinti", "1,2,3", 0);
+        test.getQuestions().add(question1);
+        test.getQuestions().add(question2);
+        return test;
+    }
 }
