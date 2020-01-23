@@ -1,5 +1,7 @@
 package server.DAOs;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import models.Professeur;
 import server.DAOs.DataSource;
 import models.Etudiant;
@@ -56,7 +58,7 @@ public class EtudiantDAO {
         }
         catch(SQLException ex){
             System.err.println("problem with add Query !! "+ ex.getMessage());
-            return new Response(1,"SERVER DB ERROR while inserting data");
+            return new Response(1,"étudiant déja existe dans la BD :\n"+ex.getMessage());
         }
     }
 
@@ -85,28 +87,29 @@ public class EtudiantDAO {
         }
     }
 
-    // getAll Student by
+    // getAll Student
     public static Response getAll()
     {
         ResultSet resultSet=null;
-        ArrayList<Etudiant> ArrayEtud=new ArrayList<Etudiant>();
+        ObservableList<Etudiant> obsEtud= FXCollections.observableArrayList();
         try
         {
             Statement st=conn.createStatement();
-            resultSet=st.executeQuery("select * from etudiants;");
+            resultSet=st.executeQuery("select e.*,g.nom from etudiants e,groupes g where g.id_groupe=e.id_groupe;");
             System.out.println("getAllAProf done ! ");
             while (resultSet.next())
             {
                 Etudiant fullEtudiant = new Etudiant();
                 fullEtudiant.setCNE(resultSet.getString("CNE"));
                 fullEtudiant.setIdGroupe(resultSet.getInt("id_groupe"));
-                fullEtudiant.setNom(resultSet.getString("nom"));
+                fullEtudiant.setNom(resultSet.getString("e.nom"));
                 fullEtudiant.setPrenom(resultSet.getString("prenom"));
                 fullEtudiant.setUsername(resultSet.getString("username"));
                 fullEtudiant.setPassword(resultSet.getString("password"));
-                ArrayEtud.add(fullEtudiant);
+                fullEtudiant.setNomGroupe(resultSet.getString("g.nom"));
+                obsEtud.add(fullEtudiant);
             }
-            return new Response(ArrayEtud);
+            return new Response(obsEtud);
         }
         catch (SQLException ex)
         {
@@ -137,7 +140,7 @@ public class EtudiantDAO {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return new Response(1, "SQL ERROR");
+            return new Response(1, "SQL ERROR"+e.getMessage());
         }
     }
 
@@ -164,6 +167,46 @@ public class EtudiantDAO {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return new Response(1, "SERVER DB ERROR :"+e.getMessage());
+        }
+    }
+
+    public static Response getAllGroups(){
+        ResultSet resultSet=null;
+        ArrayList<String> groups = new  ArrayList<String>();
+        try
+        {
+            Statement st=conn.createStatement();
+            resultSet=st.executeQuery("select * from groupes");
+            String str=null;
+            while (resultSet.next())
+            {
+                str=resultSet.getString("nom");
+                groups.add(str);
+            }
+            return new Response(groups);
+        }
+        catch (SQLException ex)
+        {
+            System.err.println("Request Error : try to check connextion or Query : "+ex.getMessage());
+            return new Response(1,"Error SQL");
+        }
+    }
+
+    // get id group by name
+    public static Response getIdgroup(String nom) {
+        try {
+            PreparedStatement pst = conn.prepareStatement("select id_groupe from groupes where nom=? ;");
+            pst.setString(1, nom);
+            ResultSet resultSet = pst.executeQuery();
+            String str = null;
+            if (resultSet.next()) {
+                return new Response(resultSet.getInt("id_groupe"));
+            } else {
+                return new Response(1, "Invalid group!");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return new Response(1, "SQL ERROR" + e.getMessage());
         }
     }
 }

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="640.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.admin.DashBoardController">
+    <children>
+        <VBox layoutY="40.0" prefHeight="720.0" prefWidth="161.0" style="-fx-background-color: #2A3F54;">
+            <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" opacity="0.73" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Assets/388_dashboard_admin_monitor_monitoring_processing-512.png" />
+               </image>
+            </ImageView>
+
+                <JFXButton fx:id="btnConsole" onAction="#switchConsole" prefHeight="42.0" prefWidth="162.0" text="Console" textFill="#a1aec4">
+                    <font>
+                        <Font name="Roboto Bold" size="14.0" />
+                    </font>
+                </JFXButton>
+
+                <JFXButton fx:id="btnEtudiants" layoutX="10.0" layoutY="67.0" onAction="#switchEtudiants" prefHeight="42.0" prefWidth="164.0" text="Etudiants" textFill="#a1aec4">
+                    <font>
+                        <Font name="Roboto Bold" size="14.0" />
+                    </font>
+
+                </JFXButton>
+                <JFXButton fx:id="btnProfesseurs" layoutX="10.0" layoutY="109.0" onAction="#switchProfesseurs" prefHeight="42.0" prefWidth="163.0" text="Professeur" textFill="#a1aec4">
+                    <font>
+                        <Font name="Roboto Bold" size="14.0" />
+                    </font>
+
+                </JFXButton>
+                <JFXButton fx:id="btnStatistics" layoutX="10.0" layoutY="151.0" onAction="#switchStatistics" prefHeight="42.0" prefWidth="165.0" text="Statistiques" textFill="#a1aec4">
+                    <font>
+                        <Font name="Roboto Bold" size="14.0" />
+                    </font>
+
+                </JFXButton>
+                <JFXButton fx:id="btnProfile" layoutX="10.0" layoutY="193.0" onAction="#switchProfile" prefHeight="42.0" prefWidth="164.0" text="Profile" textFill="#a1aec4">
+                    <font>
+                        <Font name="Roboto Bold" size="14.0" />
+                    </font>
+                </JFXButton>
+            </children>
+        </VBox>
+        <AnchorPane fx:id="holderPane" layoutX="161.0" layoutY="42.0" prefHeight="712.0" prefWidth="1198.0" />
+        <HBox prefHeight="42.0" prefWidth="1359.0" style="-fx-background-color: black;">
+         <children>
+            <JFXButton fx:id="btnPricing1" onAction="#switchConsole" prefHeight="42.0" prefWidth="164.0" text="Admin DashBoard" textAlignment="RIGHT" textFill="#a1aec4">
+               <font>
+                  <Font name="Roboto Bold" size="14.0" />
+               </font>
+            </JFXButton>
+         </children></HBox>
+    </children>
+</AnchorPane>

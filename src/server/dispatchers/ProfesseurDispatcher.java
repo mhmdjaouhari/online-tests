@@ -9,7 +9,6 @@ import util.Response;
 import java.util.ArrayList;
 
 public class ProfesseurDispatcher {
-
     public static Response handle(Request request){
         Action action = request.getAction();
         Professeur professeur;

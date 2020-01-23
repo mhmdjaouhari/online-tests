@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="640.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.admin.ProfesseurController">
+   <children>
+      <Label layoutX="19.0" layoutY="17.0" prefHeight="30.0" prefWidth="392.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #7387A8;" text="Gestion des enseignants" />
+      <Separator layoutX="3.0" layoutY="55.0" prefHeight="4.0" prefWidth="1213.0" />
+      <Label layoutX="40.0" layoutY="124.0" prefHeight="30.0" prefWidth="392.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #7387A8;" text="Ajouter un enseignant " />
+      <Label layoutX="558.0" layoutY="85.0" prefHeight="30.0" prefWidth="392.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #7387A8;" text="Liste des enseignants " />
+      <JFXTextField fx:id="usernameField" labelFloat="true" layoutX="40.0" layoutY="364.0" maxWidth="370.0" minWidth="370.0" prefHeight="31.0" prefWidth="370.0" promptText="Username" />
+      <JFXTextField fx:id="nomField" labelFloat="true" layoutX="40.0" layoutY="234.0" maxWidth="370.0" minWidth="370.0" prefHeight="31.0" prefWidth="370.0" promptText="Nom" />
+      <JFXTextField fx:id="prenomField" labelFloat="true" layoutX="40.0" layoutY="295.0" maxWidth="370.0" minWidth="370.0" prefHeight="31.0" prefWidth="370.0" promptText="Prénom" />
+      <JFXPasswordField fx:id="passwordField" labelFloat="true" layoutX="40.0" layoutY="428.0" maxWidth="370.0" minWidth="370.0" prefHeight="31.0" prefWidth="370.0" promptText="Password" />
+      <JFXTextField fx:id="matriculeField" labelFloat="true" layoutX="40.0" layoutY="172.0" maxWidth="370.0" minWidth="370.0" prefHeight="31.0" prefWidth="370.0" promptText="Matricule" />
+      <TableView fx:id="tab" editable="true" layoutX="558.0" layoutY="126.0" prefHeight="409.0" prefWidth="583.0">
+         <columns>
+            <TableColumn fx:id="cne" prefWidth="114.0" text="CNE" />
+            <TableColumn fx:id="nom" prefWidth="108.0" text="Nom" />
+            <TableColumn fx:id="prenom" prefWidth="131.3333740234375" text="Prenom" />
+            <TableColumn fx:id="username" prefWidth="136.66693115234375" text="Username" />
+            <TableColumn fx:id="groupe" prefWidth="93.999755859375" text="Groupe" />
+         </columns>
+      </TableView>
+      <JFXButton fx:id="btnSave" layoutX="159.0" layoutY="496.0" onAction="#createProf" prefHeight="25.0" prefWidth="55.0" style="-fx-background-color: #c1d5e0;" text="Save" />
+      <JFXButton fx:id="btnUpdate" layoutX="248.0" layoutY="496.0" onAction="#updateProf" style="-fx-background-color: #c1d5e0;" text="Update" />
+      <JFXButton fx:id="btnEdit" layoutX="1008.0" layoutY="562.0" onAction="#updateProf" prefHeight="25.0" prefWidth="55.0" style="-fx-background-color: #c1d5e0;" text="Edite" />
+      <JFXButton fx:id="btnDelete" layoutX="1090.0" layoutY="562.0" onAction="#deleteProf" style="-fx-background-color: #c1d5e0;" text="Delete" />
+   </children>
+
+</AnchorPane>

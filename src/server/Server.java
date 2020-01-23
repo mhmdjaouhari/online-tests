@@ -1,8 +1,10 @@
 package server;
 
 
+import GUI.admin.ConsolleController;
+import javafx.fxml.FXMLLoader;
+
 import java.io.*;
-import java.net.ConnectException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -14,7 +16,6 @@ public class Server implements Runnable{
         Socket socket = null;
         try (ServerSocket serverSocket = new ServerSocket(5000)) {
             while (true) {
-
                 if(!stopServer){
                     System.out.println("Closing server ....");
                     Thread.currentThread().interrupt();
@@ -29,11 +30,6 @@ public class Server implements Runnable{
                 session.start();
             }
         } catch (IOException e) {
-            try {
-                socket.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
             System.out.println(e.getMessage());
         }
     }

@@ -7,6 +7,7 @@ import util.Action;
 import util.Request;
 import util.Response;
 
+import java.text.BreakIterator;
 import java.util.ArrayList;
 
 public class EtudiantDispatcher {
@@ -42,6 +43,12 @@ public class EtudiantDispatcher {
             case SEARCH_ETUDIANT:
                 etudiant=(Etudiant) request.getData();
                 response = EtudiantDAO.search(etudiant);
+                break;
+            case GET_ALL_GROUPS:
+                response = EtudiantDAO.getAllGroups();
+                break;
+            case GET_ID_GROUP:
+                response = EtudiantDAO.getIdgroup((String) request.getData());
                 break;
             default:
                 System.out.println("Action not found");

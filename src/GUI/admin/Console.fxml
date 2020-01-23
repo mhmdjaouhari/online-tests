@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="640.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.admin.ConsolleController">
+   <children>
+      <Label layoutX="19.0" layoutY="17.0" prefHeight="30.0" prefWidth="392.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #7387A8;" text="Gestion de serveur" />
+      <Separator layoutX="3.0" layoutY="55.0" prefHeight="4.0" prefWidth="1213.0" />
+      <JFXButton fx:id="bntStart"  buttonType="RAISED" layoutX="149.0" layoutY="156.0" onAction="#startServer" prefHeight="30.0" prefWidth="106.0" style="-fx-background-color: #00A65A;" text="Start Server" textFill="WHITE">
+         <font>
+            <Font name="Roboto Medium" size="14.0" />
+         </font>
+      </JFXButton>
+      <JFXButton fx:id="btnStop" onAction="#stopServer" buttonType="RAISED" disable="true" layoutX="293.0" layoutY="156.0" prefHeight="30.0" prefWidth="106.0" style="-fx-background-color: #00A65A;" text="Stop Server" textFill="WHITE">
+         <font>
+            <Font name="Roboto Medium" size="14.0" />
+         </font>
+      </JFXButton>
+      <JFXButton fx:id="btnClear" onAction="#ClearLog" buttonType="RAISED" layoutX="436.0" layoutY="156.0" prefHeight="30.0" prefWidth="106.0" style="-fx-background-color: #00A65A;" text="Clean" textFill="WHITE">
+         <font>
+            <Font name="Roboto Medium" size="14.0" />
+         </font>
+      </JFXButton>
+      <TextArea fx:id="log"  cacheShape="false" centerShape="false" editable="false" focusTraversable="false" layoutX="149.0" layoutY="206.0" prefHeight="397.0" prefWidth="835.0" scaleShape="false" style="-fx-control-inner-background:#000000;-fx-font-family: Consolas; -fx-highlight-fill: #00ff00; -fx-highlight-text-fill: #000000; -fx-text-fill: #00ff00;">
+         <font>
+            <Font name="Arial Black" size="14.0" />
+         </font>
+      </TextArea>
+   </children>
+</AnchorPane>

@@ -1,33 +1,39 @@
 package models;
 
+import javafx.beans.property.SimpleStringProperty;
+
 import java.io.Serializable;
 
 public class Etudiant implements Serializable {
-    private String CNE;
-    private String nom;
-    private String prenom;
-    private String username;
-    private String password;
+    private SimpleStringProperty CNE;
+    private SimpleStringProperty nom;
+    private SimpleStringProperty prenom;
+    private SimpleStringProperty username;
+    private SimpleStringProperty password;
     private int idGroupe;
-    private String nomGroupe;
+    private SimpleStringProperty nomGroupe;
 
     public Etudiant(String CNE, String nom, String prenom, String username, String password, int idGroupe) {
-        this.CNE = CNE;
+        this.CNE = new SimpleStringProperty(CNE);
         this.idGroupe = idGroupe;
-        this.nom = nom;
-        this.prenom = prenom;
-        this.username = username;
-        this.password = password;
+        this.nom = new SimpleStringProperty(nom);;
+        this.prenom = new SimpleStringProperty(prenom);;
+        this.username = new SimpleStringProperty(username);;
+        this.password = new SimpleStringProperty(password);;
+    }
+
+    public void setNomGroupe(String nomGroupe) {
+        this.nomGroupe = new SimpleStringProperty(nomGroupe);
     }
 
     public Etudiant(){};
 
     public String getCNE() {
-        return CNE;
+        return CNE.get();
     }
 
     public void setCNE(String CNE) {
-        this.CNE = CNE;
+        this.CNE = new SimpleStringProperty(CNE);
     }
 
     public int getIdGroupe() {
@@ -39,35 +45,35 @@ public class Etudiant implements Serializable {
     }
 
     public String getNom() {
-        return nom;
+        return nom.get();
     }
 
     public void setNom(String nom) {
-        this.nom = nom;
+        this.nom = new SimpleStringProperty(nom);;
     }
 
     public String getPrenom() {
-        return prenom;
+        return prenom.get();
     }
 
     public void setPrenom(String prenom) {
-        this.prenom = prenom;
+        this.prenom =new SimpleStringProperty(prenom);;
     }
 
     public String getUsername() {
-        return username;
+        return username.get();
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username = new SimpleStringProperty(username);
     }
 
     public String getPassword() {
-        return password;
+        return password.get();
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = new SimpleStringProperty(password);;
     }
 
     @Override
