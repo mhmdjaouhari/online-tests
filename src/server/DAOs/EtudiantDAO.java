@@ -1,5 +1,8 @@
 package server.DAOs;
 
+import models.Groupe;
+import models.Professeur;
+import server.DAOs.DataSource;
 import models.Etudiant;
 import util.Response;
 
@@ -83,7 +86,7 @@ public class EtudiantDAO {
         }
     }
 
-    // getAll Student by
+    // getAll Students
     public static Response getAll()
     {
         ResultSet resultSet=null;
@@ -113,12 +116,66 @@ public class EtudiantDAO {
         }
     }
 
+    // getAll Student by groupe
+    public Response getAll(int id_grp)
+    {
+        ResultSet resultSet=null;
+        ArrayList<Etudiant> ArrayEtud=new ArrayList<Etudiant>();
+        try
+        {
+            PreparedStatement pst =conn.prepareStatement("select * from etudiants where id_groupe=? ;");
+            pst.setInt(1,id_grp);
+            resultSet = pst.executeQuery();
+            while (resultSet.next())
+            {
+                Etudiant fullEtudiant = new Etudiant();
+                fullEtudiant.setCNE(resultSet.getString("CNE"));
+                fullEtudiant.setIdGroupe(resultSet.getInt("id_groupe"));
+                fullEtudiant.setNom(resultSet.getString("nom"));
+                fullEtudiant.setPrenom(resultSet.getString("prenom"));
+                fullEtudiant.setUsername(resultSet.getString("username"));
+                fullEtudiant.setPassword(resultSet.getString("password"));
+                ArrayEtud.add(fullEtudiant);
+            }
+            return new Response(ArrayEtud);
+        }
+        catch (SQLException ex)
+        {
+            System.err.println("Request Error : try to check connextion or Query : "+ex.getMessage());
+            return new Response(1,"Error SQL");
+        }
+    }
+
     // Search student by cne
     public static Response search(Etudiant etud)
     {
         try{
             PreparedStatement pst =conn.prepareStatement("select * from etudiants where cne=? ;");
             pst.setString(1,etud.getCNE());
+            ResultSet resultSet = pst.executeQuery();
+            if (resultSet.next()) {
+                Etudiant fullEtudiant = new Etudiant();
+                fullEtudiant.setCNE(resultSet.getString("CNE"));
+                fullEtudiant.setIdGroupe(resultSet.getInt("id_groupe"));
+                fullEtudiant.setNom(resultSet.getString("nom"));
+                fullEtudiant.setPrenom(resultSet.getString("prenom"));
+                fullEtudiant.setUsername(resultSet.getString("username"));
+                fullEtudiant.setPassword(resultSet.getString("password"));
+                System.out.println("Etudiant exist: "+fullEtudiant);
+                return new Response(fullEtudiant);
+            } else {
+                return new Response(1, "Etudiant doesn't exist ");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return new Response(1, "SQL ERROR");
+        }
+    }
+    public static Response search(String cne)
+    {
+        try{
+            PreparedStatement pst =conn.prepareStatement("select * from etudiants where cne=? ;");
+            pst.setString(1,cne);
             ResultSet resultSet = pst.executeQuery();
             if (resultSet.next()) {
                 Etudiant fullEtudiant = new Etudiant();

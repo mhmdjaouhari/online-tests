@@ -15,5 +15,9 @@ public enum Action {
     GET_ALL_PROFS,
     SEARCH_PROF,
     GET_TESTS_ETUDIANT,
-    GET_TEST
+    GET_TEST,
+    GET_TESTS,
+    GET_FICHES,
+    SUBMIT_TEST,
+    GET_GROUPES
 }

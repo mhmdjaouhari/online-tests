@@ -2,6 +2,7 @@ package client;
 
 import client.actionEmitters.ActionEmitter;
 import client.actionEmitters.EtudiantActionEmitter;
+import client.actionEmitters.ProfesseurActionEmitter;
 import javafx.event.ActionEvent;
 import util.Action;
 import util.Role;
@@ -45,6 +46,8 @@ public class Client {
         switch (role){
             case ETUDIANT:
                 return new EtudiantActionEmitter(socket);
+            case PROFESSEUR:
+                return new ProfesseurActionEmitter(socket);
             default: return null;
         }
     }
