@@ -1,5 +1,6 @@
 package GUI.etudiant;
 
+import GUI.GUI;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
@@ -21,7 +22,7 @@ public class LoginController {
             App.gotoDashboard();
             return true;
         } catch (Exception e) {
-            App.showErrorAlert(e.getMessage());
+            GUI.showErrorAlert(e.getMessage());
             e.printStackTrace();
             return false;
         }

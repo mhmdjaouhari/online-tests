@@ -1,13 +1,12 @@
 package GUI.etudiant;
 
+import GUI.GUI;
 import client.Client;
 import client.actionEmitters.EtudiantActionEmitter;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import models.Etudiant;
 import models.Test;
@@ -24,7 +23,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         Client client = new Client(Role.ETUDIANT);
         if (!client.connect()) {
-            showErrorAlert("Server is offline");
+            GUI.showErrorAlert("Server is offline");
             throw new Exception("Server is offline");
         }
         emitter = (EtudiantActionEmitter) client.getEmitter();
@@ -34,9 +33,11 @@ public class App extends Application {
         Parent root = fxmlLoader.load();
         primaryStage.setTitle("Online Tests");
         Scene scene = new Scene(root, 240, 480);
+        primaryStage.setMinWidth(240);
+        primaryStage.setMinHeight(480 + 37);
         scene.getStylesheets().add(getClass().getResource("/GUI/gui.css").toExternalForm());
         primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
         primaryStage.show();
     }
 
@@ -70,7 +71,7 @@ public class App extends Application {
 
     public static void gotoLogin() {
         try {
-            replaceSceneContent("Login.fxml", 240, 480);
+            GUI.replaceSceneContent(stage, App.class.getResource("Login.fxml"), 240, 480);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,38 +79,10 @@ public class App extends Application {
 
     public static void gotoDashboard() {
         try {
-            replaceSceneContent("Dashboard.fxml", 960, 640);
+            GUI.replaceSceneContent(stage, App.class.getResource("Dashboard.fxml"), 960, 480);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static FXMLLoader replaceSceneContent(String fxml, int v, int v1) throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(App.class.getResource(fxml));
-        Parent page = fxmlLoader.load();
-        Scene scene = stage.getScene();
-
-//        if (scene != null) {
-        //            stage.getScene().setRoot(page);
-        stage.setWidth(v);
-        stage.setHeight(v1 + 37);
-//        } else {
-        scene = new Scene(page, v, v1);
-        System.out.println("SCENE 1 " + scene.getWidth() + " " + scene.getHeight());
-        scene.getStylesheets().add(App.class.getResource("/GUI/gui.css").toExternalForm());
-        stage.setScene(scene);
-        stage.setResizable(true);
-        stage.sizeToScene();
-        stage.setResizable(false);
-//        }
-        stage.centerOnScreen();
-        return fxmlLoader;
-    }
-
-    public static void showErrorAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText(message);
-        alert.showAndWait();
-    }
 }

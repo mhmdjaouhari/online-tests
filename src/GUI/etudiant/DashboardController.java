@@ -1,5 +1,6 @@
 package GUI.etudiant;
 
+import GUI.GUI;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -105,7 +106,7 @@ public class DashboardController {
             testStage.setResizable(false);
             testStage.show();
         } catch (Exception e) {
-            App.showErrorAlert(e.getMessage());
+            GUI.showErrorAlert(e.getMessage());
             e.printStackTrace();
         }
     }
