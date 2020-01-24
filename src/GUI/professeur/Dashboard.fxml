@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
+<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-
-<AnchorPane minHeight="640.0" minWidth="960.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.etudiant.DashboardController">
+<?import javafx.scene.text.Font?>
+<AnchorPane minHeight="640.0" minWidth="960.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.professeur.DashboardController">
    <children>
       <BorderPane minHeight="480.0" minWidth="960.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <left>
@@ -18,17 +17,13 @@
                            <VBox.margin>
                               <Insets />
                            </VBox.margin></Label>
-                        <Label fx:id="nomEtudiant" textFill="WHITE" wrapText="true">
+                        <Label fx:id="nomProf" textFill="WHITE" wrapText="true">
                            <VBox.margin>
                               <Insets />
                            </VBox.margin>
                            <font>
                               <Font name="Ubuntu" size="22.0" />
                            </font></Label>
-                        <Label fx:id="groupeEtudiant" textFill="WHITE">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin></Label>
                      </children>
                      <padding>
                         <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />

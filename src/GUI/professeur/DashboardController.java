@@ -1,4 +1,4 @@
-package GUI.etudiant;
+package GUI.professeur;
 
 import GUI.GUI;
 import com.jfoenix.controls.JFXButton;
@@ -22,10 +22,7 @@ public class DashboardController {
     private Label newTestCount;
 
     @FXML
-    private Label nomEtudiant;
-
-    @FXML
-    private Label groupeEtudiant;
+    private Label nomProf;
 
     @FXML
     private ScrollPane newTestsPane;
@@ -36,10 +33,10 @@ public class DashboardController {
     private TestController testController;
 
     public void initialize() {
+        System.out.println(App.getEmitter());
         ArrayList<Test> allTests = App.getEmitter().getTests();
 
-        nomEtudiant.setText(App.getLoggedEtudiant().getPrenom() + " " + App.getLoggedEtudiant().getNom());
-        groupeEtudiant.setText("ID Groupe : " + App.getLoggedEtudiant().getIdGroupe());
+        nomProf.setText(App.getLoggedProfesseur().getPrenom() + " " + App.getLoggedProfesseur().getNom());
         newTestCount.setText(Integer.toString(allTests.size()));
 
         VBox content = new VBox();
@@ -53,10 +50,10 @@ public class DashboardController {
         Platform.runLater(() -> {
             Stage stage = (Stage) newTestsPane.getScene().getWindow();
             stage.setOnCloseRequest(e -> {
-                if (App.getLoggedEtudiant() != null &&
+                if (App.getLoggedProfesseur() != null &&
                         App.getActiveTest() != null &&
                         testController != null &&
-                        !testController.showSaveAndExitDialog(true)) {
+                        !testController.showSaveAndExitDialog()) {
                     e.consume();
                 }
             });
@@ -84,7 +81,7 @@ public class DashboardController {
 
     public void handleLogout() {
         if (App.getActiveTest() == null || closeTest()) {
-            App.setLoggedEtudiant(null);
+            App.setLoggedProfesseur(null);
             App.gotoLogin();
         }
     }
@@ -112,7 +109,7 @@ public class DashboardController {
     }
 
     public boolean closeTest() {
-        return testController.showSaveAndExitDialog(true);
+        return testController.showSaveAndExitDialog();
     }
 
 

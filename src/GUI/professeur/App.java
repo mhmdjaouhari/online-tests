@@ -1,4 +1,4 @@
-package GUI.etudiant;
+package GUI.professeur;
 
 import GUI.GUI;
 import client.Client;
@@ -8,20 +8,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import models.Etudiant;
+import models.Professeur;
 import models.Test;
 import util.Role;
 
 public class App extends Application {
 
     private static Stage stage;
-    private static Etudiant loggedEtudiant;
+    private static Professeur loggedProfesseur;
     private static Test activeTest;
-    private static EtudiantActionEmitter emitter;
+    private static EtudiantActionEmitter emitter; // TODO: should be ProfesseurActionEmitter
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Client client = new Client(Role.ETUDIANT);
+        Client client = new Client(Role.PROFESSEUR);
         if (!client.connect()) {
             GUI.showErrorAlert("Server is offline");
             throw new Exception("Server is offline");
@@ -53,12 +53,12 @@ public class App extends Application {
         return emitter;
     }
 
-    public static Etudiant getLoggedEtudiant() {
-        return loggedEtudiant;
+    public static Professeur getLoggedProfesseur() {
+        return loggedProfesseur;
     }
 
-    public static void setLoggedEtudiant(Etudiant etudiant) {
-        loggedEtudiant = etudiant;
+    public static void setLoggedProfesseur(Professeur professeur) {
+        loggedProfesseur = professeur;
     }
 
     public static Test getActiveTest() {
