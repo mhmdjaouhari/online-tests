@@ -1,10 +1,11 @@
-package GUI.etudiant;
+package GUI.professeur;
 
 import GUI.GUI;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import models.Etudiant;
+import models.Professeur;
 
 public class LoginController {
     @FXML
@@ -14,11 +15,11 @@ public class LoginController {
 
     public boolean handleLogin() {
         try {
-            Etudiant etudiant = new Etudiant();
-            etudiant.setUsername(usernameField.getText());
-            etudiant.setPassword(passwordField.getText());
-            Etudiant responseEtudiant = App.getEmitter().login(etudiant);
-            App.setLoggedEtudiant(responseEtudiant);
+            Professeur professeur = new Professeur();
+            professeur.setUsername(usernameField.getText());
+            professeur.setPassword(passwordField.getText());
+            //Professeur responseProfesseur = App.getEmitter().login(professeur); //TODO
+            //App.setLoggedProfesseur(responseProfesseur);
             App.gotoDashboard();
             return true;
         } catch (Exception e) {

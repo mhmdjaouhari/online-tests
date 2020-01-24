@@ -1,7 +1,5 @@
 package server.DAOs;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import models.Professeur;
 import server.DAOs.DataSource;
 import models.Etudiant;
@@ -87,29 +85,28 @@ public class EtudiantDAO {
         }
     }
 
-    // getAll Student
+    // getAll Students
     public static Response getAll()
     {
         ResultSet resultSet=null;
-        ObservableList<Etudiant> obsEtud= FXCollections.observableArrayList();
+        ArrayList<Etudiant> ArrayEtud=new ArrayList<Etudiant>();
         try
         {
             Statement st=conn.createStatement();
-            resultSet=st.executeQuery("select e.*,g.nom from etudiants e,groupes g where g.id_groupe=e.id_groupe;");
+            resultSet=st.executeQuery("select * from etudiants;");
             System.out.println("getAllAProf done ! ");
             while (resultSet.next())
             {
                 Etudiant fullEtudiant = new Etudiant();
                 fullEtudiant.setCNE(resultSet.getString("CNE"));
                 fullEtudiant.setIdGroupe(resultSet.getInt("id_groupe"));
-                fullEtudiant.setNom(resultSet.getString("e.nom"));
+                fullEtudiant.setNom(resultSet.getString("nom"));
                 fullEtudiant.setPrenom(resultSet.getString("prenom"));
                 fullEtudiant.setUsername(resultSet.getString("username"));
                 fullEtudiant.setPassword(resultSet.getString("password"));
-                fullEtudiant.setNomGroupe(resultSet.getString("g.nom"));
-                obsEtud.add(fullEtudiant);
+                ArrayEtud.add(fullEtudiant);
             }
-            return new Response(obsEtud);
+            return new Response(ArrayEtud);
         }
         catch (SQLException ex)
         {

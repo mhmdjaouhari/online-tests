@@ -133,6 +133,29 @@ public class ProfesseurDAO {
                 return new Response(1, "SQL ERROR");
             }
         }
+    // serch prof
+    public static Response search(String matricule)
+    {
+        try{
+            PreparedStatement pst =conn.prepareStatement("select * from professeurs where matricule=? ;");
+            pst.setString(1,matricule);
+            ResultSet resultSet = pst.executeQuery();
+            if (resultSet.next()) {
+                Professeur professeur = new Professeur();
+                professeur.setMatricule(resultSet.getString("matricule"));
+                professeur.setNom(resultSet.getString("nom"));
+                professeur.setPrenom(resultSet.getString("prenom"));
+                professeur.setUsername(resultSet.getString("username"));
+                professeur.setPassword(resultSet.getString("password"));
+                return new Response(professeur);
+            } else {
+                return new Response(1, "Prof doesn't exist ");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return new Response(1, "SQL ERROR");
+        }
+    }
 
     // Update prof
         public static Response update(Professeur oldProf,Professeur newProf)

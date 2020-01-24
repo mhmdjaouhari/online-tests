@@ -6,10 +6,11 @@ public class Fiche {
 
     private int id;
     private float note;
+    private String CNE;
     private String nomEtudiant; // nom & prénom
     private String nomGroupeEtudiant;
     private Test test;
-    private ArrayList<Reponse> reponse;
+    private ArrayList<Reponse> reponses;
 
     public Fiche() {
     }
@@ -38,6 +39,14 @@ public class Fiche {
         this.note = note;
     }
 
+    public String getCNE() {
+        return CNE;
+    }
+
+    public void setCNE(String CNE) {
+        this.CNE = CNE;
+    }
+
     public String getNomEtudiant() {
         return nomEtudiant;
     }
@@ -62,12 +71,12 @@ public class Fiche {
         this.test = test;
     }
 
-    public ArrayList<Reponse> getReponse() {
-        return reponse;
+    public ArrayList<Reponse> getReponses() {
+        return reponses;
     }
 
-    public void setReponse(ArrayList<Reponse> reponse) {
-        this.reponse = reponse;
+    public void setReponses(ArrayList<Reponse> reponses) {
+        this.reponses = reponses;
     }
 
     @Override
