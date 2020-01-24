@@ -32,7 +32,12 @@ public class DashboardController {
     private ScrollPane oldTestsPane;
 
     public void initialize() {
-        ArrayList<Test> allTests = App.getEmitter().getTests();
+        ArrayList<Test> allTests = null;
+        try {
+            allTests = App.getEmitter().getTests();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         nomEtudiant.setText(App.getLoggedEtudiant().getPrenom() + " " + App.getLoggedEtudiant().getNom());
         groupeEtudiant.setText("ID Groupe : " + App.getLoggedEtudiant().getIdGroupe());
@@ -73,7 +78,7 @@ public class DashboardController {
 
     public void openTest(int idTest) {
         try {
-            App.setActiveTest(App.getEmitter().getTest(idTest));
+            App.setActiveTest(App.getEmitter().getTestById(idTest));
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("Test.fxml"));

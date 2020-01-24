@@ -1,7 +1,5 @@
 package client;
 
-import java.io.*;
-import java.net.Socket;
 import java.util.Scanner;
 
 import client.actionEmitters.EtudiantActionEmitter;

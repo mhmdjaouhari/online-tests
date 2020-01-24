@@ -1,10 +1,6 @@
 package server.DAOs;
 
-import models.Groupe;
-import models.Professeur;
-import server.DAOs.DataSource;
 import models.Etudiant;
-import util.Response;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,117 +11,64 @@ import java.util.ArrayList;
 public class EtudiantDAO {
     public static Connection conn = DataSource.getInstance().getConnection();
 
-    public static Response login(Etudiant etudiant) {
-        try {
-            PreparedStatement statement = conn.prepareStatement("select * from etudiants where username=? and password=?");
-            statement.setString(1, etudiant.getUsername());
-            statement.setString(2, etudiant.getPassword());
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                Etudiant fullEtudiant = new Etudiant();
-                fullEtudiant.setCNE(resultSet.getString("CNE"));
-                fullEtudiant.setIdGroupe(resultSet.getInt("id_groupe"));
-                fullEtudiant.setNom(resultSet.getString("nom"));
-                fullEtudiant.setPrenom(resultSet.getString("prenom"));
-                fullEtudiant.setUsername(resultSet.getString("username"));
-                fullEtudiant.setPassword(resultSet.getString("password"));
-                return new Response(fullEtudiant);
-            } else {
-                 return new Response(1, "Wrong information");
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return new Response(1, "Server error");
+    public static Etudiant login(String username, String password) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement("select * from etudiants where username=? and password=?");
+        statement.setString(1, username);
+        statement.setString(2, password);
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            Etudiant fullEtudiant = new Etudiant();
+            fullEtudiant.setCNE(resultSet.getString("CNE"));
+            fullEtudiant.setIdGroupe(resultSet.getInt("id_groupe"));
+            fullEtudiant.setNom(resultSet.getString("nom"));
+            fullEtudiant.setPrenom(resultSet.getString("prenom"));
+            fullEtudiant.setUsername(resultSet.getString("username"));
+            fullEtudiant.setPassword(resultSet.getString("password"));
+            return fullEtudiant;
+        } else {
+             throw new SQLException("Wrong information");
         }
+
     }
 
     // add Etudiant:
-    public static Response add(Etudiant etud)
-    {
-        try
-        {
-            PreparedStatement pst =conn.prepareStatement("insert into etudiants(cne,id_groupe,username,password,nom,prenom) values(?,?,?,?,?,?);");
-            pst.setString(1, etud.getCNE());
-            pst.setInt(2, etud.getIdGroupe());
-            pst.setString(3, etud.getUsername());
-            pst.setString(4, etud.getPassword());
-            pst.setString(5, etud.getNom());
-            pst.setString(6, etud.getPassword());
-            pst.executeUpdate();
-            System.out.println("Etudiant Added !! ");
-            return new Response(0,"Added succesfully");
+    public static void add(Etudiant etudiant) throws SQLException {
+        PreparedStatement statement =conn.prepareStatement(
+                "insert into etudiants(cne,id_groupe,username,password,nom,prenom) values(?,?,?,?,?,?);"
+        );
+        statement.setString(1, etudiant.getCNE());
+        statement.setInt(2, etudiant.getIdGroupe());
+        statement.setString(3, etudiant.getUsername());
+        statement.setString(4, etudiant.getPassword());
+        statement.setString(5, etudiant.getNom());
+        statement.setString(6, etudiant.getPassword());
+        if(statement.executeUpdate()==0){
+            throw new SQLException("Problem in adding etudian");
         }
-        catch(SQLException ex){
-            System.err.println("problem with add Query !! "+ ex.getMessage());
-            return new Response(1,"SERVER DB ERROR while inserting data");
-        }
+        System.out.println("Etudiant Added !! ");
+
     }
 
     // delete Student by cne
-    public static Response delete(Etudiant etd)
-    {
-        try
+    public static void delete(String cne) throws SQLException {
+        PreparedStatement statement =conn.prepareStatement("delete from etudiants where cne=?;");
+        statement.setString(1,cne);
+        if(statement.executeUpdate()!=0)
         {
-            PreparedStatement pst =conn.prepareStatement("delete from etudiants where cne=?;");
-            pst.setString(1,etd.getCNE());
-            if(pst.executeUpdate()!=0)
-            {
-                System.out.println("Etudiant deleted : "+etd.getCNE());
-                return new Response(0,"You are delete :"+etd.getCNE());
-            }
-            else{
-                System.out.println("Etudiant doesn't exist");
-                return new Response(1,"Etudiant doesn't exist");
-            }
-
+            System.out.println("Etudiant deleted : ");
         }
-        catch(SQLException ex)
-        {
-            System.err.println("problem with delete Query  : "+ ex.getMessage());
-            return new Response(1,"Server delete Error");
+        else{
+            throw new SQLException("Etudiant doesn't exist");
         }
     }
 
     // getAll Students
-    public static Response getAll()
-    {
+    public static ArrayList<Etudiant> getAllEtudiants() throws SQLException {
         ResultSet resultSet=null;
-        ArrayList<Etudiant> ArrayEtud=new ArrayList<Etudiant>();
-        try
-        {
-            Statement st=conn.createStatement();
-            resultSet=st.executeQuery("select * from etudiants;");
-            System.out.println("getAllAProf done ! ");
-            while (resultSet.next())
-            {
-                Etudiant fullEtudiant = new Etudiant();
-                fullEtudiant.setCNE(resultSet.getString("CNE"));
-                fullEtudiant.setIdGroupe(resultSet.getInt("id_groupe"));
-                fullEtudiant.setNom(resultSet.getString("nom"));
-                fullEtudiant.setPrenom(resultSet.getString("prenom"));
-                fullEtudiant.setUsername(resultSet.getString("username"));
-                fullEtudiant.setPassword(resultSet.getString("password"));
-                ArrayEtud.add(fullEtudiant);
-            }
-            return new Response(ArrayEtud);
-        }
-        catch (SQLException ex)
-        {
-            System.err.println("Request Error : try to check connextion or Query : "+ex.getMessage());
-            return new Response(1,"Error SQL");
-        }
-    }
+        ArrayList<Etudiant> etudiants=new ArrayList<Etudiant>();
 
-    // getAll Student by groupe
-    public Response getAll(int id_grp)
-    {
-        ResultSet resultSet=null;
-        ArrayList<Etudiant> ArrayEtud=new ArrayList<Etudiant>();
-        try
-        {
-            PreparedStatement pst =conn.prepareStatement("select * from etudiants where id_groupe=? ;");
-            pst.setInt(1,id_grp);
-            resultSet = pst.executeQuery();
+            Statement statement=conn.createStatement();
+            resultSet=statement.executeQuery("select * from etudiants;");
             while (resultSet.next())
             {
                 Etudiant fullEtudiant = new Etudiant();
@@ -135,90 +78,95 @@ public class EtudiantDAO {
                 fullEtudiant.setPrenom(resultSet.getString("prenom"));
                 fullEtudiant.setUsername(resultSet.getString("username"));
                 fullEtudiant.setPassword(resultSet.getString("password"));
-                ArrayEtud.add(fullEtudiant);
+                etudiants.add(fullEtudiant);
             }
-            return new Response(ArrayEtud);
+            return etudiants;
         }
-        catch (SQLException ex)
-        {
-            System.err.println("Request Error : try to check connextion or Query : "+ex.getMessage());
-            return new Response(1,"Error SQL");
-        }
+
+    // getAll Student in a given groupe
+    public static ArrayList<Etudiant> getAllEtudiantsInGroupe(int id_grp) throws SQLException {
+        ResultSet resultSet=null;
+        ArrayList<Etudiant> etudiants=new ArrayList<Etudiant>();
+            PreparedStatement statement =conn.prepareStatement("select * from etudiants where id_groupe=? ;");
+            statement.setInt(1,id_grp);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Etudiant etudiant = new Etudiant();
+                etudiant.setCNE(resultSet.getString("CNE"));
+                etudiant.setIdGroupe(resultSet.getInt("id_groupe"));
+                etudiant.setNom(resultSet.getString("nom"));
+                etudiant.setPrenom(resultSet.getString("prenom"));
+                etudiant.setUsername(resultSet.getString("username"));
+                etudiant.setPassword(resultSet.getString("password"));
+                etudiants.add(etudiant);
+            }
+            return etudiants;
     }
 
     // Search student by cne
-    public static Response search(Etudiant etud)
-    {
-        try{
-            PreparedStatement pst =conn.prepareStatement("select * from etudiants where cne=? ;");
-            pst.setString(1,etud.getCNE());
-            ResultSet resultSet = pst.executeQuery();
-            if (resultSet.next()) {
-                Etudiant fullEtudiant = new Etudiant();
-                fullEtudiant.setCNE(resultSet.getString("CNE"));
-                fullEtudiant.setIdGroupe(resultSet.getInt("id_groupe"));
-                fullEtudiant.setNom(resultSet.getString("nom"));
-                fullEtudiant.setPrenom(resultSet.getString("prenom"));
-                fullEtudiant.setUsername(resultSet.getString("username"));
-                fullEtudiant.setPassword(resultSet.getString("password"));
-                System.out.println("Etudiant exist: "+fullEtudiant);
-                return new Response(fullEtudiant);
-            } else {
-                return new Response(1, "Etudiant doesn't exist ");
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return new Response(1, "SQL ERROR");
-        }
-    }
-    public static Response search(String cne)
-    {
-        try{
-            PreparedStatement pst =conn.prepareStatement("select * from etudiants where cne=? ;");
-            pst.setString(1,cne);
-            ResultSet resultSet = pst.executeQuery();
-            if (resultSet.next()) {
-                Etudiant fullEtudiant = new Etudiant();
-                fullEtudiant.setCNE(resultSet.getString("CNE"));
-                fullEtudiant.setIdGroupe(resultSet.getInt("id_groupe"));
-                fullEtudiant.setNom(resultSet.getString("nom"));
-                fullEtudiant.setPrenom(resultSet.getString("prenom"));
-                fullEtudiant.setUsername(resultSet.getString("username"));
-                fullEtudiant.setPassword(resultSet.getString("password"));
-                System.out.println("Etudiant exist: "+fullEtudiant);
-                return new Response(fullEtudiant);
-            } else {
-                return new Response(1, "Etudiant doesn't exist ");
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return new Response(1, "SQL ERROR");
+    public static Etudiant getEtudiantById(String cne) throws SQLException {
+        PreparedStatement statement =conn.prepareStatement("select * from etudiants where cne=? ;");
+        statement.setString(1,cne);
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            Etudiant etudiant = new Etudiant();
+            etudiant.setCNE(resultSet.getString("CNE"));
+            etudiant.setIdGroupe(resultSet.getInt("id_groupe"));
+            etudiant.setNom(resultSet.getString("nom"));
+            etudiant.setPrenom(resultSet.getString("prenom"));
+            etudiant.setUsername(resultSet.getString("username"));
+            etudiant.setPassword(resultSet.getString("password"));
+            return etudiant;
+        } else {
+            throw new SQLException("Etudiant not found");
         }
     }
 
+
     // update Student
-    public static Response update(Etudiant oldEtud,Etudiant newEtud)
-    {
-        try{
-            PreparedStatement pst =conn.prepareStatement("update etudiants set cne=?,id_groupe=?,username=?,password=?,nom=?,prenom=? where cne=?;");
-            pst.setString(1, newEtud.getCNE());
-            pst.setInt(2, newEtud.getIdGroupe());
-            pst.setString(3, newEtud.getUsername());
-            pst.setString(4, newEtud.getPassword());
-            pst.setString(5, newEtud.getNom());
-            pst.setString(6, newEtud.getPassword());
-            pst.setString(7, oldEtud.getCNE());
-            if(pst.executeUpdate()!=0) {
-                System.out.println("Prof updated : " + newEtud.getPrenom());
-                return new Response(0, "You are Updated :" + newEtud.getPrenom());
-            }
-            else
-            {
-                return new Response(1,"Prof doesn't exist");
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return new Response(1, "SERVER DB ERROR :"+e.getMessage());
+    public static void update(String oldEtudiantCne, Etudiant newEtudiant) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement(
+                "update etudiants set cne=?,id_groupe=?,username=?,password=?,nom=?,prenom=? where cne=?;"
+        );
+        Etudiant oldEtudiant = getEtudiantById(oldEtudiantCne);
+        if (newEtudiant.getCNE() != null) {
+            statement.setString(1, newEtudiant.getCNE());
+        } else {
+            statement.setString(1, oldEtudiant.getCNE());
+        }
+
+        if (newEtudiant.getIdGroupe() != 0) {
+            statement.setInt(2, newEtudiant.getIdGroupe());
+        } else {
+            statement.setInt(2, oldEtudiant.getIdGroupe());
+        }
+
+        if (newEtudiant.getUsername() != null) {
+            statement.setString(3, newEtudiant.getUsername());
+        } else {
+            statement.setString(3, oldEtudiant.getUsername());
+        }
+
+        if (newEtudiant.getPassword() != null) {
+            statement.setString(4, newEtudiant.getPassword());
+        } else {
+            statement.setString(4, oldEtudiant.getPassword());
+        }
+
+        if (newEtudiant.getNom() != null) {
+            statement.setString(5, newEtudiant.getNom());
+        } else {
+            statement.setString(5, oldEtudiant.getNom());
+        }
+
+        if (newEtudiant.getPrenom() != null) {
+            statement.setString(6, newEtudiant.getPrenom());
+        } else {
+            statement.setString(6, oldEtudiant.getPrenom());
+        }
+        statement.setString(7, oldEtudiantCne);
+        if (statement.executeUpdate() == 0) {
+            throw new SQLException("Etudiant doesn't exist");
         }
     }
 }

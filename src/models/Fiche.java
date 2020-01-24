@@ -7,6 +7,7 @@ public class Fiche {
     private int id;
     private float note;
     private String nomEtudiant; // nom & prénom
+    private String CNE;
     private String nomGroupeEtudiant;
     private Test test;
     private ArrayList<Reponse> reponse;
@@ -14,12 +15,13 @@ public class Fiche {
     public Fiche() {
     }
 
-    public Fiche(int id, float note, String nomEtudiant, String nomGroupeEtudiant, Test test) {
+    public Fiche(int id,String CNE, float note, String nomEtudiant, String nomGroupeEtudiant, Test test) {
         this.id = id;
         this.note = note;
         this.nomEtudiant = nomEtudiant;
         this.nomGroupeEtudiant = nomGroupeEtudiant;
         this.test = test;
+        this.CNE = CNE;
     }
 
     public int getId() {
@@ -68,6 +70,14 @@ public class Fiche {
 
     public void setReponse(ArrayList<Reponse> reponse) {
         this.reponse = reponse;
+    }
+
+    public String getCNE() {
+        return CNE;
+    }
+
+    public void setCNE(String CNE) {
+        this.CNE = CNE;
     }
 
     @Override

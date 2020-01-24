@@ -1,19 +1,18 @@
 package models;
 
-import javafx.scene.control.Label;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Test implements Serializable {
     private int id;
     private String titre;
-    private boolean locked;
+    private Boolean locked;
     private int duration;
     private String matriculeProf;
     private String nomProf; // nom & prénom
-    private ArrayList<Question> questions = new ArrayList<>();
-    private ArrayList<Groupe> groupes = new ArrayList<>();
+    private Boolean penalite;
+    private ArrayList<Question> questions ;
+    private ArrayList<Groupe> groupes;
 
     public Test(int id, String titre, boolean locked, int duration, String matriculeProf, String nomProf) {
         this.id = id;
@@ -23,8 +22,26 @@ public class Test implements Serializable {
         this.matriculeProf = matriculeProf;
         this.nomProf = nomProf;
     }
+    public Test(int id, String titre, boolean locked, int duration, String matriculeProf, String nomProf, ArrayList<Question> qst, ArrayList<Groupe> grp) {
+        this.id = id;
+        this.titre = titre;
+        this.locked = locked;
+        this.duration = duration;
+        this.matriculeProf = matriculeProf;
+        this.nomProf = nomProf;
+        this.questions=qst;
+        this.groupes=grp;
+    }
 
     public Test() {
+    }
+
+    public ArrayList<Groupe> getGroupes() {
+        return groupes;
+    }
+
+    public void setGroupes(ArrayList<Groupe> groupes) {
+        this.groupes = groupes;
     }
 
     public int getId() {
@@ -43,11 +60,11 @@ public class Test implements Serializable {
         this.titre = titre;
     }
 
-    public boolean isLocked() {
+    public Boolean isLocked() {
         return locked;
     }
 
-    public void setLocked(boolean locked) {
+    public void setLocked(Boolean locked) {
         this.locked = locked;
     }
 
@@ -83,12 +100,12 @@ public class Test implements Serializable {
         this.questions = questions;
     }
 
-    public ArrayList<Groupe> getGroupes() {
-        return groupes;
+    public Boolean isPenalite() {
+        return penalite;
     }
 
-    public void setGroupes(ArrayList<Groupe> groupes) {
-        this.groupes = groupes;
+    public void setPenalite(Boolean penalite) {
+        this.penalite = penalite;
     }
 
     @Override
@@ -100,6 +117,9 @@ public class Test implements Serializable {
                 ", duration=" + duration +
                 ", matriculeProf='" + matriculeProf + '\'' +
                 ", nomProf='" + nomProf + '\'' +
+                ", penalite=" + penalite +
+                ", questions=" + questions +
+                ", groupes=" + groupes +
                 '}';
     }
 
