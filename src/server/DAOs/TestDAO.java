@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+
 public class TestDAO {
 
     private static Connection conn = DataSource.getInstance().getConnection();;
@@ -129,7 +131,7 @@ public class TestDAO {
         if(fiche.getReponses() == null){
             throw new SQLException("Reponse Object is Null");
         }
-        PreparedStatement statement = conn.prepareStatement("INSERT into fiches(id_test, cne) values(?,?)",Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement statement = conn.prepareStatement("INSERT into fiches(id_test, cne) values(?,?)", RETURN_GENERATED_KEYS);
         statement.setInt(1,fiche.getTest().getId());
         statement.setString(2,fiche.getCNE());
         statement.executeUpdate();
@@ -381,11 +383,47 @@ public class TestDAO {
 
     /*========================== CREATION ==========================*/
 
+    // add test (please use this version instead -jaouhari)
+    public String addTest(Test t) {
+        try {
+            PreparedStatement pst = conn.prepareStatement(
+                    "insert into tests(matricule, titre, duration, locked, penalite) values (?,?,?,?,?)",
+                    RETURN_GENERATED_KEYS);
+            pst.setString(1, t.getMatriculeProf());
+            pst.setString(2, t.getTitre());
+            pst.setInt(3, t.getDuration());
+            pst.setBoolean(4, t.isLocked());
+            pst.setBoolean(5, t.isPenalite());
+            pst.executeUpdate();
+            ResultSet generatedKeysResultSet = pst.getGeneratedKeys();
+            generatedKeysResultSet.next();
+            int idTest = generatedKeysResultSet.getInt(1);
+            if (t.getQuestions() != null) {
+                for (Question question : t.getQuestions()) {
+                    question.setIdTest(idTest);
+                    addQuestion(question);
+                }
+            }
+            if (t.getGroupes() != null) {
+                for (Groupe groupe : t.getGroupes()) {
+                    PreparedStatement pst1 = conn.prepareStatement("insert into affectations (id_test, id_groupe) values(?,?)");
+                    pst1.setInt(1, idTest);
+                    pst1.setInt(2, groupe.getId());
+                    pst1.executeUpdate();
+                }
+            }
+            return "test added succesfully";
+        } catch (SQLException ex) {
+            System.err.println("problem with addTest Query !! " + ex.getMessage());
+            return "problem adding test";
+        }
+    }
+
     //Add a test to a specific groupe
     public static void addTest(Test test,int id_groupe) throws SQLException {
         PreparedStatement statement =conn.prepareStatement(
                 "insert into Test(matricule,titre,duration,locked) values(?,?,?,?);"
-        ,Statement.RETURN_GENERATED_KEYS);
+        , RETURN_GENERATED_KEYS);
 
         statement.setString(1, test.getMatriculeProf());
         statement.setString(2, test.getTitre());
