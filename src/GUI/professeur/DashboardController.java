@@ -25,8 +25,6 @@ public class DashboardController {
     @FXML
     private JFXButton statsButton;
 
-    private TestController testController;
-
     public void initialize() {
 
         nomProf.setText(App.getLoggedProfesseur().getPrenom() + " " + App.getLoggedProfesseur().getNom());
@@ -72,40 +70,10 @@ public class DashboardController {
     }
 
 
-
     public void handleLogout() {
-        if (App.getActiveTest() == null || closeTest()) {
-            App.setLoggedProfesseur(null);
-            App.gotoLogin();
-        }
+        App.setLoggedProfesseur(null);
+        App.gotoLogin();
     }
-
-    public void openTest(int idTest) {
-        try {
-            App.setActiveTest(App.getEmitter().getTestById(idTest));
-            Stage testStage = new Stage();
-            testStage.initOwner(App.getStage());
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("Test.fxml"));
-            Parent root;
-            root = fxmlLoader.load();
-            testController = fxmlLoader.getController();
-            Scene scene = new Scene(root, 1024, 720);
-            scene.getStylesheets().add(getClass().getResource("/GUI/gui.css").toExternalForm());
-            testStage.setScene(scene);
-            testStage.setTitle("Online Tests");
-            testStage.setResizable(false);
-            testStage.show();
-        } catch (Exception e) {
-            Common.showErrorAlert(e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public boolean closeTest() {
-        return testController.showSaveAndExitDialog();
-    }
-
 
     public AnchorPane getContentPane() {
         return contentPane;

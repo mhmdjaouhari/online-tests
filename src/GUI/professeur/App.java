@@ -16,7 +16,6 @@ public class App extends Application {
 
     private static Stage stage;
     private static Professeur loggedProfesseur;
-    private static Test activeTest;
     private static ProfesseurActionEmitter emitter;
 
     @Override
@@ -59,14 +58,6 @@ public class App extends Application {
 
     public static void setLoggedProfesseur(Professeur professeur) {
         loggedProfesseur = professeur;
-    }
-
-    public static Test getActiveTest() {
-        return activeTest;
-    }
-
-    public static void setActiveTest(Test test) {
-        activeTest = test;
     }
 
     public static void gotoLogin() {
