@@ -8,4 +8,5 @@ module online.tests {
     opens GUI.etudiant;
     opens GUI.professeur;
     opens GUI.professeur.dashboard;
+    opens models;
 }

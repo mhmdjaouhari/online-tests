@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Groupe implements Serializable {
     private int id;
     private String nom;
-    private ArrayList<Etudiant> etudiants;
+    private ArrayList<Etudiant> etudiants = new ArrayList<>();
 
     public Groupe(int id, String nom) {
         this.id = id;

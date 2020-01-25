@@ -35,7 +35,7 @@ public class DashboardController {
             switchToTab("dashboard/Etudiants.fxml", etudiantsButton);
         });
         statsButton.setOnAction(e -> {
-            switchToTab("dashboard/Etudiants.fxml", statsButton);
+            switchToTab("dashboard/Stats.fxml", statsButton);
         });
         switchToTab("dashboard/Tests.fxml", testsButton);
 
