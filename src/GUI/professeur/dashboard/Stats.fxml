@@ -28,19 +28,11 @@
                             <content>
                                 <AnchorPane minHeight="400.0" minWidth="600.0">
                                     <children>
-                                        <VBox spacing="16.0" AnchorPane.bottomAnchor="0.0"
+                                        <VBox fx:id="groupesStatsBox" spacing="16.0" AnchorPane.bottomAnchor="0.0"
                                               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                                               AnchorPane.topAnchor="0.0">
                                             <children>
                                                 <Label text="Moyennes des groupes"/>
-                                                <BarChart>
-                                                    <xAxis>
-                                                        <CategoryAxis side="BOTTOM"/>
-                                                    </xAxis>
-                                                    <yAxis>
-                                                        <NumberAxis side="LEFT"/>
-                                                    </yAxis>
-                                                </BarChart>
                                             </children>
                                             <padding>
                                                 <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
