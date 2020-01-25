@@ -1,6 +1,6 @@
 package GUI.etudiant;
 
-import GUI.GUI;
+import GUI.Common;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -96,7 +96,7 @@ public class DashboardController {
 
     public void openTest(int idTest) {
         try {
-            App.setActiveTest(App.getEmitter().getTest(idTest));
+            App.setActiveTest(App.getEmitter().getTestById(idTest));
             Stage testStage = new Stage();
             testStage.initOwner(App.getStage());
             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -111,7 +111,7 @@ public class DashboardController {
             testStage.setResizable(false);
             testStage.show();
         } catch (Exception e) {
-            GUI.showErrorAlert(e.getMessage());
+            Common.showErrorAlert(e.getMessage());
             e.printStackTrace();
         }
     }

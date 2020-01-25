@@ -9,12 +9,7 @@ import java.util.HashMap;
 
 public class TestDAO {
 
-    private static Connection conn;
-
-    public TestDAO(){
-        conn = DataSource.getInstance().getConnection();
-    }
-
+    private static Connection conn = DataSource.getInstance().getConnection();;
 
     //get tests that a etudiant have to pass
     public static ArrayList<Test> getEtudiantTests(String cne) throws SQLException{
@@ -42,6 +37,7 @@ public class TestDAO {
 
     //get tests created by a given prof
     public static ArrayList<Test> getProfesseurTests(String matricule) throws SQLException{
+        System.out.println(conn);
         PreparedStatement statement = conn.prepareStatement(
                 "select * from tests where matricule = ?"
         );
@@ -130,7 +126,7 @@ public class TestDAO {
 
 
     public static int submitFiche(Fiche fiche) throws SQLException{
-        if(fiche.getReponse() == null){
+        if(fiche.getReponses() == null){
             throw new SQLException("Reponse Object is Null");
         }
         PreparedStatement statement = conn.prepareStatement("INSERT into fiches(id_test, cne) values(?,?)",Statement.RETURN_GENERATED_KEYS);
@@ -145,7 +141,7 @@ public class TestDAO {
             throw new SQLException();
         }
         fiche.setId(id_fiche);
-        ArrayList<Reponse> reponses = fiche.getReponse();
+        ArrayList<Reponse> reponses = fiche.getReponses();
         float note = calculeNote(fiche);
         for(Reponse reponse:reponses){
             submitReponse(reponse);
@@ -176,8 +172,8 @@ public class TestDAO {
         //completing test object
         fiche.setTest(getTestById(fiche.getTest().getId()));
         ArrayList<Reponse> reponses;
-        if(fiche.getReponse() != null){
-            reponses = fiche.getReponse();
+        if(fiche.getReponses() != null){
+            reponses = fiche.getReponses();
         }else{
             reponses = getReponsesOfFiche(fiche.getId());
         }
@@ -451,17 +447,17 @@ public class TestDAO {
             statement.setInt(3,newTest.getDuration());
         }
 
-        if(newTest.isLocked() != null){
+//        if(newTest.isLocked() != null){
             statement.setInt(4,newTest.isLocked()?1:0);
-        }else {
-            statement.setInt(4,newTest.isLocked()?1:0);
-        }
+//        }else {
+//            statement.setInt(4,newTest.isLocked()?1:0);
+//        }
 
-        if(newTest.isPenalite() != null){
+//        if(newTest.isPenalite() != null){
             statement.setInt(5,newTest.isPenalite()?1:0);
-        }else {
-            statement.setInt(5,newTest.isPenalite()?1:0);
-        }
+//        }else {
+//            statement.setInt(5,newTest.isPenalite()?1:0);
+//        }
         statement.setInt(6,oldTestId);
         if(statement.executeUpdate() == 0) {
             throw new SQLException("Test doesn't exist");

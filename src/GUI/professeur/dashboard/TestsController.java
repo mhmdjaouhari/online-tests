@@ -1,6 +1,6 @@
 package GUI.professeur.dashboard;
 
-import GUI.GUI;
+import GUI.Common;
 import GUI.professeur.App;
 import GUI.professeur.TestFormController;
 import com.jfoenix.controls.JFXButton;
@@ -23,15 +23,19 @@ public class TestsController {
     public ScrollPane testsScrollPane;
 
     public void initialize() {
-        ArrayList<Test> allTests = App.getEmitter().getTests(App.getLoggedProfesseur());
-
-        VBox content = new VBox();
-        content.setSpacing(8);
-        content.setPadding(new Insets(8));
-        for (Test test : allTests) {
-            content.getChildren().addAll(createTestRow(test));
+        try {
+            ArrayList<Test> allTests = App.getEmitter().getProfesseursTests(App.getLoggedProfesseur().getMatricule());
+            VBox content = new VBox();
+            content.setSpacing(8);
+            content.setPadding(new Insets(8));
+            for (Test test : allTests) {
+                content.getChildren().addAll(createTestRow(test));
+            }
+            testsScrollPane.setContent(content);
+        } catch (Exception e) {
+            Common.showErrorAlert(e.getMessage());
+            e.printStackTrace();
         }
-        testsScrollPane.setContent(content);
     }
 
     public JFXButton createTestRow(Test test) {
@@ -62,7 +66,7 @@ public class TestsController {
         return row;
     }
 
-    public void showTestForm(){
+    public void showTestForm() {
         showTestForm(null);
     }
 
@@ -81,11 +85,11 @@ public class TestsController {
                 testStage.setTitle("Créer un nouveau test");
             else {
                 testStage.setTitle("Modification de test");
-                controller.setFieldValues(App.getEmitter().getTest(test.getId())); // TODO @achkari: should provide full test with questions!!!!!
+                controller.setFieldValues(App.getEmitter().getTestById(test.getId())); // TODO @achkari: should provide full test with questions!!!!!
             }
             testStage.show();
         } catch (Exception e) {
-            GUI.showErrorAlert(e.getMessage());
+            Common.showErrorAlert(e.getMessage());
             e.printStackTrace();
         }
     }

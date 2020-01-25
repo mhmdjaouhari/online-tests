@@ -9,7 +9,7 @@ public class Fiche implements Serializable {
     private float note;
     private String CNE;
     private String nomEtudiant; // nom & prénom
-    private String CNE;
+
     private String nomGroupeEtudiant;
     private Test test;
     private ArrayList<Reponse> reponses;
@@ -80,14 +80,6 @@ public class Fiche implements Serializable {
 
     public void setReponses(ArrayList<Reponse> reponses) {
         this.reponses = reponses;
-    }
-
-    public String getCNE() {
-        return CNE;
-    }
-
-    public void setCNE(String CNE) {
-        this.CNE = CNE;
     }
 
     @Override

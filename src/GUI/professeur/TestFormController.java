@@ -1,5 +1,6 @@
 package GUI.professeur;
 
+import GUI.Common;
 import com.jfoenix.controls.*;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -47,7 +48,12 @@ public class TestFormController {
             if (testDurationField.getText().length() > 3)
                 testDurationField.setText(testDurationField.getText().substring(0, 3));
         });
-        groupesComboBox.getItems().setAll(App.getEmitter().getGroupes());
+        try {
+            groupesComboBox.getItems().setAll(App.getEmitter().getGroupes());
+        } catch (Exception e) {
+            Common.showErrorAlert(e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void setFieldValues(Test test) {
@@ -192,8 +198,8 @@ public class TestFormController {
             questionsList.get(i).setTexte(questionTextesList.get(i).getText());
         }
         activeTest.setQuestions(questionsList);
-        // TODO @achkari : try catch (submitTest should throw Exception)
-        App.getEmitter().submitTest(activeTest);
+        // TODO: submitTest no longer exists?
+//        App.getEmitter().submitTest(activeTest);
     }
 
 }

@@ -1,8 +1,7 @@
 package GUI.professeur;
 
-import GUI.GUI;
+import GUI.Common;
 import client.Client;
-import client.actionEmitters.EtudiantActionEmitter;
 import client.actionEmitters.ProfesseurActionEmitter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -24,7 +23,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         Client client = new Client(Role.PROFESSEUR);
         if (!client.connect()) {
-            GUI.showErrorAlert("Server is offline");
+            Common.showErrorAlert("Server is offline");
             throw new Exception("Server is offline");
         }
         emitter = (ProfesseurActionEmitter) client.getEmitter();
@@ -72,7 +71,7 @@ public class App extends Application {
 
     public static void gotoLogin() {
         try {
-            GUI.replaceSceneContent(stage, App.class.getResource("Login.fxml"), 240, 480);
+            Common.replaceSceneContent(stage, App.class.getResource("Login.fxml"), 240, 480);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,7 +79,7 @@ public class App extends Application {
 
     public static void gotoDashboard() {
         try {
-            GUI.replaceSceneContent(stage, App.class.getResource("Dashboard.fxml"), 960, 480);
+            Common.replaceSceneContent(stage, App.class.getResource("Dashboard.fxml"), 960, 480);
         } catch (Exception e) {
             e.printStackTrace();
         }
