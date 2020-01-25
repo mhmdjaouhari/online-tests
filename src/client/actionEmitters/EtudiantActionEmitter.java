@@ -1,6 +1,7 @@
 package client.actionEmitters;
 
 import models.Etudiant;
+import models.Fiche;
 import models.Question;
 import models.Test;
 import util.Action;
@@ -20,45 +21,68 @@ public class EtudiantActionEmitter extends ActionEmitter {
         super(socket);
     }
 
-    public Etudiant login(Etudiant etudiant) throws Exception {
+    public Etudiant login(String usernaeme,String password) throws Exception {
         System.out.println("login etudiant...");
-        Request request = new Request(Action.LOGIN, etudiant, Role.ETUDIANT);
+        ArrayList<String> credentials = new ArrayList<>();
+        credentials.add(usernaeme);
+        credentials.add(password);
+        Request request = new Request(Action.LOGIN, credentials, Role.ETUDIANT);
         Response response = post(request);
         if(response == null){
-            return null;
+            throw new Exception("An error has occurred");
         }
-        Etudiant result;
-        if (response.getStatus() == 0) {
-            result = (Etudiant) response.getData();
-            System.out.println("Welcome " + result.getNom() + " " + result.getPrenom());
-        } else {
-            System.out.println(response.getMessage());
+        if(response.getStatus()!=0){
             throw new Exception(response.getMessage());
         }
-        return result;
+        return (Etudiant)response.getData();
     }
 
     // should be implemented on the sever-side
-    public ArrayList<Test> getTests(){
-        // once implemented in the server uncomment this:
-//        Response response = post(new Request(Action.GET_TESTS_ETUDIANT,Role.ETUDIANT));
-//        ArrayList<Test> tests = (ArrayList<Test>) response.getData();
-        ArrayList<Test> tests = new ArrayList<>();
-        tests.add(new Test(0, "Assu qualité ISO 9001", false, 90, "a123", "Chichi"));
-        tests.add(new Test(0, "Assu qualité 2", false, 90, "a123", "Chichi"));
-        tests.add(new Test(0, "Assu qualité 3", false, 90, "a123", "Chichi"));
-        return tests;
+    public ArrayList<Test> getTests() throws Exception {
+        Response response = post(new Request(Action.GET_TESTS_ETUDIANT,Role.ETUDIANT));
+        if(response.getStatus() != 0){
+            throw new Exception(response.getMessage());
+        }
+        return (ArrayList<Test>) response.getData();
     }
 
-    public Test getTest(int idTest) {
-        // once implemented in the server uncomment this:
-//        Response response = post(new Request(Action.GET_TEST,Role.ETUDIANT));
-//        Test test = (Test) response.getData();
-        Test test = new Test(0, "Assu qualité ISO 9001", false, 90, "a123", "Chichi");
-        Question question1 = new Question(0, "C'est quoi la qualité ? \n 1- Qualité \n 2- qualité \n 3-quality \n 4- Kalinti", "123", 0);
-        Question question2 = new Question(0, "C'est quoi la qualitéeeeeeee ? \n 1- Qualité \n 2- qualité \n 3-quality \n 4- Kalintieee", "123", 0);
-        test.getQuestions().add(question1);
-        test.getQuestions().add(question2);
-        return test;
+    public Test getTestById(int idTest) throws Exception {
+        Response response = post(new Request(Action.GET_TEST,Role.ETUDIANT));
+        if(response.getStatus() != 0){
+            throw new Exception(response.getMessage());
+        }
+        return (Test) response.getData();
     }
+
+    public Etudiant getEtudiant(String CNE) throws Exception {
+        Response response = post(new Request(Action.GET_ETUDIANT,CNE,Role.ETUDIANT));
+        if(response.getStatus() != 0){
+            throw new Exception(response.getMessage());
+        }
+        return (Etudiant) response.getData();
+    }
+
+    public void submitFiche(Fiche fiche) throws Exception {
+        Response response = post(new Request(Action.SUBMIT_FICHE,fiche,Role.ETUDIANT));
+        if(response.getStatus() != 0){
+            throw new Exception(response.getMessage());
+        }
+    }
+
+    public ArrayList<Fiche> getFichesEtudiant(String CNE) throws Exception {
+        Response response = post(new Request(Action.GET_FICHES_ETUDIANT,CNE,Role.ETUDIANT));
+        if(response.getStatus() != 0){
+            throw new Exception(response.getMessage());
+        }
+        return (ArrayList<Fiche>) response.getData();
+    }
+
+    public Test getFullTestById(int id_test) throws Exception {
+        Response response = post(new Request(Action.GET_FULL_TEST,Role.ETUDIANT));
+        if(response.getStatus() != 0){
+            throw new Exception(response.getMessage());
+        }
+        return (Test) response.getData();
+    }
+
 }

@@ -3,7 +3,6 @@ package models;
 import javafx.scene.control.Label;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Test implements Serializable {
@@ -24,6 +23,16 @@ public class Test implements Serializable {
         this.duration = duration;
         this.matriculeProf = matriculeProf;
         this.nomProf = nomProf;
+    }
+    public Test(int id, String titre, boolean locked, int duration, String matriculeProf, String nomProf, ArrayList<Question> qst, ArrayList<Groupe> grp) {
+        this.id = id;
+        this.titre = titre;
+        this.locked = locked;
+        this.duration = duration;
+        this.matriculeProf = matriculeProf;
+        this.nomProf = nomProf;
+        this.questions=qst;
+        this.groupes=grp;
     }
 
     public Test() {
@@ -107,6 +116,7 @@ public class Test implements Serializable {
                 "id=" + id +
                 ", titre='" + titre + '\'' +
                 ", locked=" + locked +
+                ", penalite=" + penalite +
                 ", duration=" + duration +
                 ", matriculeProf='" + matriculeProf + '\'' +
                 ", nomProf='" + nomProf + '\'' +

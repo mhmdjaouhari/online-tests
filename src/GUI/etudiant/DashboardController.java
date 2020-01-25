@@ -37,7 +37,12 @@ public class DashboardController {
     private TestController testController;
 
     public void initialize() {
-        ArrayList<Test> allTests = App.getEmitter().getTests();
+        ArrayList<Test> allTests = null;
+        try {
+            allTests = App.getEmitter().getTests();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         nomEtudiant.setText(App.getLoggedEtudiant().getPrenom() + " " + App.getLoggedEtudiant().getNom());
         groupeEtudiant.setText("ID Groupe : " + App.getLoggedEtudiant().getIdGroupe());
@@ -85,10 +90,8 @@ public class DashboardController {
     }
 
     public void handleLogout() {
-        if (App.getActiveTest() == null || closeTest()) {
-            App.setLoggedEtudiant(null);
-            App.gotoLogin();
-        }
+        App.setLoggedEtudiant(null);
+        App.gotoLogin();
     }
 
     public void openTest(int idTest) {

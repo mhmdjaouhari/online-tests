@@ -118,7 +118,7 @@ abstract public class ActionEmitter {
                 outputStream.reset();
                 return null;
             }
-            if(!connectedToServer && isServerOnline()){
+            if(!connectedToServer){
                 System.out.println("switched...");
                 reConnect();
             }
