@@ -1,6 +1,6 @@
 package GUI.etudiant;
 
-import GUI.GUI;
+import GUI.Common;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import models.Test;
 
@@ -36,7 +37,12 @@ public class DashboardController {
     private TestController testController;
 
     public void initialize() {
-        ArrayList<Test> allTests = App.getEmitter().getTests();
+        ArrayList<Test> allTests = null;
+        try {
+            allTests = App.getEmitter().getTests();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         nomEtudiant.setText(App.getLoggedEtudiant().getPrenom() + " " + App.getLoggedEtudiant().getNom());
         groupeEtudiant.setText("ID Groupe : " + App.getLoggedEtudiant().getIdGroupe());
@@ -66,6 +72,7 @@ public class DashboardController {
     public JFXButton createTestRow(Test test) {
         JFXButton row = new JFXButton();
         row.setButtonType(JFXButton.ButtonType.RAISED);
+        row.setRipplerFill(Paint.valueOf("#046dd5"));
         row.setStyle("-fx-background-color: #fff");
         row.setPrefHeight(56);
         row.setPrefWidth(320);
@@ -83,15 +90,13 @@ public class DashboardController {
     }
 
     public void handleLogout() {
-        if (App.getActiveTest() == null || closeTest()) {
-            App.setLoggedEtudiant(null);
-            App.gotoLogin();
-        }
+        App.setLoggedEtudiant(null);
+        App.gotoLogin();
     }
 
     public void openTest(int idTest) {
         try {
-            App.setActiveTest(App.getEmitter().getTest(idTest));
+            App.setActiveTest(App.getEmitter().getTestById(idTest));
             Stage testStage = new Stage();
             testStage.initOwner(App.getStage());
             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -106,7 +111,7 @@ public class DashboardController {
             testStage.setResizable(false);
             testStage.show();
         } catch (Exception e) {
-            GUI.showErrorAlert(e.getMessage());
+            Common.showErrorAlert(e.getMessage());
             e.printStackTrace();
         }
     }

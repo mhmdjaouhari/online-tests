@@ -1,106 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXSnackbar?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<AnchorPane minHeight="640.0" minWidth="960.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.professeur.DashboardController">
-   <children>
-      <BorderPane minHeight="480.0" minWidth="960.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <left>
-            <VBox prefWidth="200.0" BorderPane.alignment="CENTER">
-               <children>
-                  <VBox spacing="4.0" style="-fx-background-color: #046dd5;">
-                     <children>
-                        <Label text="Bienvenue" textFill="WHITE">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin></Label>
-                        <Label fx:id="nomProf" textFill="WHITE" wrapText="true">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                           <font>
-                              <Font name="Ubuntu" size="22.0" />
-                           </font></Label>
-                     </children>
-                     <padding>
-                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-                     </padding>
-                  </VBox>
-                  <VBox style="-fx-background-color: #333;" VBox.vgrow="ALWAYS">
-                     <children>
-                        <Label text="Vous avez" textFill="WHITE" />
-                        <Label fx:id="newTestCount" textFill="WHITE">
-                           <font>
-                              <Font name="Ubuntu Bold" size="28.0" />
-                           </font></Label>
-                        <Label text="tests à passer !" textFill="WHITE" />
-                     </children>
-                     <padding>
-                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-                     </padding>
-                  </VBox>
-                  <VBox style="-fx-background-color: #111;" VBox.vgrow="NEVER">
-                     <children>
-                        <Label text="Serveur" textFill="WHITE">
-                           <padding>
-                              <Insets left="16.0" right="16.0" top="20.0" />
-                           </padding>
-                        </Label>
-                        <Label text="En ligne" textFill="#76ff03">
-                           <padding>
-                              <Insets left="16.0" right="16.0" />
-                           </padding>
-                        </Label>
-                        <JFXButton buttonType="RAISED" onAction="#handleLogout" ripplerFill="WHITE" styleClass="bg-red" text="Se déconnecter" textFill="#ffffff">
-                           <VBox.margin>
-                              <Insets bottom="20.0" left="16.0" right="16.0" top="16.0" />
-                           </VBox.margin>
-                        </JFXButton>
-                     </children>
-                  </VBox>
-               </children>
-            </VBox>
-         </left>
-         <center>
-            <VBox spacing="8.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
-               <children>
-                  <Label text="Mes tests">
-                     <font>
-                        <Font name="Ubuntu" size="28.0" />
-                     </font>
-                  </Label>
-                  <HBox spacing="8.0" VBox.vgrow="ALWAYS">
-                     <children>
-                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label text="À passer" />
-                              <ScrollPane fx:id="newTestsPane" hbarPolicy="NEVER" pannable="true" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #eee;" VBox.vgrow="ALWAYS">
-                                <content>
-                                   <Label text="Chargement..." />
-                                </content>
-                              </ScrollPane>
-                           </children>
+
+<AnchorPane minHeight="640.0" minWidth="960.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.professeur.DashboardController">
+    <children>
+        <BorderPane minHeight="480.0" minWidth="960.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <left>
+                <VBox prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <VBox spacing="4.0" style="-fx-background-color: #046dd5;">
+                            <children>
+                                <Label text="Bienvenue" textFill="WHITE">
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </Label>
+                                <Label fx:id="nomProf" textFill="WHITE" wrapText="true">
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                    <font>
+                                        <Font name="Ubuntu" size="22.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                            <padding>
+                                <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                            </padding>
                         </VBox>
-                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label text="Passés" />
-                              <ScrollPane fx:id="oldTestsPane" hbarPolicy="NEVER" pannable="true" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #eee;" VBox.vgrow="ALWAYS">
-                                <content>
-                                   <Label text="Chargement..." />
-                                </content>
-                              </ScrollPane>
-                           </children>
+                        <VBox spacing="8.0" style="-fx-background-color: #333;" VBox.vgrow="ALWAYS">
+                            <children>
+                                <JFXButton fx:id="testsButton" alignment="BASELINE_LEFT" prefHeight="48.0" prefWidth="200.0" style="-fx-border-radius: 0pt; -fx-background-radius: 0pt;" text="Tests" textFill="WHITE">
+                                    <font>
+                                        <Font name="Ubuntu" size="18.0" />
+                                    </font>
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                    <padding>
+                                        <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+                                    </padding>
+                                </JFXButton>
+                                <JFXButton fx:id="etudiantsButton" alignment="BASELINE_LEFT" prefHeight="48.0" prefWidth="200.0" style="-fx-border-radius: 0pt; -fx-background-radius: 0pt;" text="Etudiants" textFill="WHITE">
+                                    <font>
+                                        <Font name="Ubuntu" size="18.0" />
+                                    </font>
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                    <padding>
+                                        <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+                                    </padding>
+                                </JFXButton>
+                                <JFXButton fx:id="statsButton" alignment="BASELINE_LEFT" prefHeight="48.0" prefWidth="200.0" style="-fx-border-radius: 0pt; -fx-background-radius: 0pt;" text="Statistiques" textFill="WHITE">
+                                    <font>
+                                        <Font name="Ubuntu" size="18.0" />
+                                    </font>
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                                    <padding>
+                                        <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+                                    </padding>
+                                </JFXButton>
+                            </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </padding>
                         </VBox>
-                     </children>
-                  </HBox>
-               </children>
-               <padding>
-                  <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
-               </padding>
-            </VBox>
-         </center></BorderPane>
-   </children>
+                        <VBox style="-fx-background-color: #111;" VBox.vgrow="NEVER">
+                            <children>
+                                <Label text="Serveur" textFill="WHITE">
+                                    <padding>
+                                        <Insets left="16.0" right="16.0" top="20.0" />
+                                    </padding>
+                                </Label>
+                                <Label text="En ligne" textFill="#76ff03">
+                                    <padding>
+                                        <Insets left="16.0" right="16.0" />
+                                    </padding>
+                                </Label>
+                                <JFXButton buttonType="RAISED" onAction="#handleLogout" ripplerFill="WHITE" styleClass="bg-red" text="Se déconnecter" textFill="#ffffff">
+                                    <VBox.margin>
+                                        <Insets bottom="20.0" left="16.0" right="16.0" top="16.0" />
+                                    </VBox.margin>
+                                </JFXButton>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </left>
+            <center>
+                <AnchorPane fx:id="contentPane">
+
+                </AnchorPane>
+            </center>
+
+        </BorderPane>
+    </children>
 </AnchorPane>

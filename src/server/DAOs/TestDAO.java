@@ -7,14 +7,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+
 public class TestDAO {
 
-    private static Connection conn;
-
-    public TestDAO(){
-        conn = DataSource.getInstance().getConnection();
-    }
-
+    private static Connection conn = DataSource.getInstance().getConnection();;
 
     //get tests that a etudiant have to pass
     public static ArrayList<Test> getEtudiantTests(String cne) throws SQLException{
@@ -42,6 +39,7 @@ public class TestDAO {
 
     //get tests created by a given prof
     public static ArrayList<Test> getProfesseurTests(String matricule) throws SQLException{
+        System.out.println(conn);
         PreparedStatement statement = conn.prepareStatement(
                 "select * from tests where matricule = ?"
         );
@@ -130,10 +128,10 @@ public class TestDAO {
 
 
     public static int submitFiche(Fiche fiche) throws SQLException{
-        if(fiche.getReponse() == null){
+        if(fiche.getReponses() == null){
             throw new SQLException("Reponse Object is Null");
         }
-        PreparedStatement statement = conn.prepareStatement("INSERT into fiches(id_test, cne) values(?,?)",Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement statement = conn.prepareStatement("INSERT into fiches(id_test, cne) values(?,?)", RETURN_GENERATED_KEYS);
         statement.setInt(1,fiche.getTest().getId());
         statement.setString(2,fiche.getCNE());
         statement.executeUpdate();
@@ -145,7 +143,7 @@ public class TestDAO {
             throw new SQLException();
         }
         fiche.setId(id_fiche);
-        ArrayList<Reponse> reponses = fiche.getReponse();
+        ArrayList<Reponse> reponses = fiche.getReponses();
         float note = calculeNote(fiche);
         for(Reponse reponse:reponses){
             submitReponse(reponse);
@@ -176,8 +174,8 @@ public class TestDAO {
         //completing test object
         fiche.setTest(getTestById(fiche.getTest().getId()));
         ArrayList<Reponse> reponses;
-        if(fiche.getReponse() != null){
-            reponses = fiche.getReponse();
+        if(fiche.getReponses() != null){
+            reponses = fiche.getReponses();
         }else{
             reponses = getReponsesOfFiche(fiche.getId());
         }
@@ -385,11 +383,47 @@ public class TestDAO {
 
     /*========================== CREATION ==========================*/
 
+    // add test (please use this version instead -jaouhari)
+    public String addTest(Test t) {
+        try {
+            PreparedStatement pst = conn.prepareStatement(
+                    "insert into tests(matricule, titre, duration, locked, penalite) values (?,?,?,?,?)",
+                    RETURN_GENERATED_KEYS);
+            pst.setString(1, t.getMatriculeProf());
+            pst.setString(2, t.getTitre());
+            pst.setInt(3, t.getDuration());
+            pst.setBoolean(4, t.isLocked());
+            pst.setBoolean(5, t.isPenalite());
+            pst.executeUpdate();
+            ResultSet generatedKeysResultSet = pst.getGeneratedKeys();
+            generatedKeysResultSet.next();
+            int idTest = generatedKeysResultSet.getInt(1);
+            if (t.getQuestions() != null) {
+                for (Question question : t.getQuestions()) {
+                    question.setIdTest(idTest);
+                    addQuestion(question);
+                }
+            }
+            if (t.getGroupes() != null) {
+                for (Groupe groupe : t.getGroupes()) {
+                    PreparedStatement pst1 = conn.prepareStatement("insert into affectations (id_test, id_groupe) values(?,?)");
+                    pst1.setInt(1, idTest);
+                    pst1.setInt(2, groupe.getId());
+                    pst1.executeUpdate();
+                }
+            }
+            return "test added succesfully";
+        } catch (SQLException ex) {
+            System.err.println("problem with addTest Query !! " + ex.getMessage());
+            return "problem adding test";
+        }
+    }
+
     //Add a test to a specific groupe
     public static void addTest(Test test,int id_groupe) throws SQLException {
         PreparedStatement statement =conn.prepareStatement(
                 "insert into Test(matricule,titre,duration,locked) values(?,?,?,?);"
-        ,Statement.RETURN_GENERATED_KEYS);
+        , RETURN_GENERATED_KEYS);
 
         statement.setString(1, test.getMatriculeProf());
         statement.setString(2, test.getTitre());
@@ -451,17 +485,17 @@ public class TestDAO {
             statement.setInt(3,newTest.getDuration());
         }
 
-        if(newTest.isLocked() != null){
+//        if(newTest.isLocked() != null){
             statement.setInt(4,newTest.isLocked()?1:0);
-        }else {
-            statement.setInt(4,newTest.isLocked()?1:0);
-        }
+//        }else {
+//            statement.setInt(4,newTest.isLocked()?1:0);
+//        }
 
-        if(newTest.isPenalite() != null){
+//        if(newTest.isPenalite() != null){
             statement.setInt(5,newTest.isPenalite()?1:0);
-        }else {
-            statement.setInt(5,newTest.isPenalite()?1:0);
-        }
+//        }else {
+//            statement.setInt(5,newTest.isPenalite()?1:0);
+//        }
         statement.setInt(6,oldTestId);
         if(statement.executeUpdate() == 0) {
             throw new SQLException("Test doesn't exist");

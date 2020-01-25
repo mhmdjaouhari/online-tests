@@ -1,8 +1,9 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Groupe {
+public class Groupe implements Serializable {
     private int id;
     private String nom;
     private ArrayList<Etudiant> etudiants;
@@ -41,9 +42,6 @@ public class Groupe {
 
     @Override
     public String toString() {
-        return "Groupe{" +
-                "id=" + id +
-                ", nom='" + nom + '\'' +
-                '}';
+        return nom;
     }
 }

@@ -1,6 +1,8 @@
 package models;
 
-public class Reponse {
+import java.io.Serializable;
+
+public class Reponse  implements Serializable {
     private int id;
     private int idFiche;
     private int idQuestion;

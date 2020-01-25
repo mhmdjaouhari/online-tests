@@ -7,4 +7,5 @@ module online.tests {
     opens GUI.admin;
     opens GUI.etudiant;
     opens GUI.professeur;
+    opens GUI.professeur.dashboard;
 }
