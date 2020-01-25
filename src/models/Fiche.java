@@ -1,8 +1,9 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Fiche {
+public class Fiche implements Serializable {
 
     private int id;
     private float note;

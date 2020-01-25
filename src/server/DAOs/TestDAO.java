@@ -10,6 +10,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+
 public class TestDAO {
 
     private Connection conn;
@@ -200,7 +202,7 @@ public class TestDAO {
         }
         return null;
     }
-    
+
     public String getNomGroupeEtudiant(String cne){
         try {
             PreparedStatement statement = conn.prepareStatement(
@@ -281,38 +283,38 @@ public class TestDAO {
         return null;
     }
 
-    public String addTest(Test t)
-    {
-        try
-        {
-            PreparedStatement pst =conn.prepareStatement("insert into Test(id_test,matricule,titre,duration,locked) values(?,?,?,?);");
-            pst.setInt(1, t.getId());
-            pst.setString(2, t.getMatriculeProf());
-            pst.setString(3, t.getTitre());
+    public String addTest(Test t) {
+        try {
+            PreparedStatement pst = conn.prepareStatement(
+                    "insert into tests(matricule, titre, duration, locked, penalite) values (?,?,?,?,?)",
+                    RETURN_GENERATED_KEYS);
+            pst.setString(1, t.getMatriculeProf());
+            pst.setString(2, t.getTitre());
+            pst.setInt(3, t.getDuration());
             pst.setBoolean(4, t.isLocked());
+            pst.setBoolean(5, t.isPenalite());
             pst.executeUpdate();
-            if(t.getQuestions()!=null)
-            {
-                TestDAO ttDao = new TestDAO();
-                for (Question q : t.getQuestions()) {
-                    ttDao.addQst(q);
+            ResultSet generatedKeysResultSet = pst.getGeneratedKeys();
+            generatedKeysResultSet.next();
+            int idTest = generatedKeysResultSet.getInt(1);
+            if (t.getQuestions() != null) {
+                for (Question question : t.getQuestions()) {
+                    question.setIdTest(idTest);
+                    addQst(question);
                 }
             }
             if (t.getGroupes() != null) {
-
-                for (Groupe q : t.getGroupes()) {
-                    PreparedStatement pst1 =conn.prepareStatement("insert into affectations(id_test,id_groupe) values(?,?);");
-                    pst1.setInt(1, t.getId());
-                    pst1.setInt(2, q.getId());
+                for (Groupe groupe : t.getGroupes()) {
+                    PreparedStatement pst1 = conn.prepareStatement("insert into affectations (id_test, id_groupe) values(?,?)");
+                    pst1.setInt(1, idTest);
+                    pst1.setInt(2, groupe.getId());
                     pst1.executeUpdate();
-
                 }
             }
             return "test added succesfully";
-        }
-        catch(SQLException ex){
-            System.err.println("problem with add Query !! "+ ex.getMessage());
-            return "probelm adding test";
+        } catch (SQLException ex) {
+            System.err.println("problem with addTest Query !! " + ex.getMessage());
+            return "problem adding test";
         }
     }
 

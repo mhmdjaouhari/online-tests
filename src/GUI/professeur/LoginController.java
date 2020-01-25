@@ -18,8 +18,8 @@ public class LoginController {
             Professeur professeur = new Professeur();
             professeur.setUsername(usernameField.getText());
             professeur.setPassword(passwordField.getText());
-            //Professeur responseProfesseur = App.getEmitter().login(professeur); //TODO
-            //App.setLoggedProfesseur(responseProfesseur);
+            Professeur responseProfesseur = App.getEmitter().login(professeur);
+            App.setLoggedProfesseur(responseProfesseur);
             App.gotoDashboard();
             return true;
         } catch (Exception e) {

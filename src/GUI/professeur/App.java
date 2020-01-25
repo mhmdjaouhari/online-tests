@@ -3,6 +3,7 @@ package GUI.professeur;
 import GUI.GUI;
 import client.Client;
 import client.actionEmitters.EtudiantActionEmitter;
+import client.actionEmitters.ProfesseurActionEmitter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,7 +18,7 @@ public class App extends Application {
     private static Stage stage;
     private static Professeur loggedProfesseur;
     private static Test activeTest;
-    private static EtudiantActionEmitter emitter; // TODO: should be ProfesseurActionEmitter
+    private static ProfesseurActionEmitter emitter;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -26,7 +27,7 @@ public class App extends Application {
             GUI.showErrorAlert("Server is offline");
             throw new Exception("Server is offline");
         }
-        emitter = (EtudiantActionEmitter) client.getEmitter();
+        emitter = (ProfesseurActionEmitter) client.getEmitter();
         stage = primaryStage;
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("Login.fxml"));
@@ -49,7 +50,7 @@ public class App extends Application {
         return stage;
     }
 
-    public static EtudiantActionEmitter getEmitter() {
+    public static ProfesseurActionEmitter getEmitter() {
         return emitter;
     }
 

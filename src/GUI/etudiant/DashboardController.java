@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import models.Test;
 
@@ -66,6 +67,7 @@ public class DashboardController {
     public JFXButton createTestRow(Test test) {
         JFXButton row = new JFXButton();
         row.setButtonType(JFXButton.ButtonType.RAISED);
+        row.setRipplerFill(Paint.valueOf("#046dd5"));
         row.setStyle("-fx-background-color: #fff");
         row.setPrefHeight(56);
         row.setPrefWidth(320);

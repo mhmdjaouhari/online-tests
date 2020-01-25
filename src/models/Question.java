@@ -1,10 +1,12 @@
 package models;
 
-public class Question {
+import java.io.Serializable;
+
+public class Question implements Serializable {
 
     private int id;
     private String texte;
-    private String value;
+    private String value = "";
     private int idTest;
 
     public Question(int id, String texte, String value, int idTest) {

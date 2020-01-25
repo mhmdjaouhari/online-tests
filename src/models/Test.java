@@ -3,12 +3,14 @@ package models;
 import javafx.scene.control.Label;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Test implements Serializable {
     private int id;
     private String titre;
     private boolean locked;
+    private boolean penalite;
     private int duration;
     private String matriculeProf;
     private String nomProf; // nom & prénom
@@ -49,6 +51,14 @@ public class Test implements Serializable {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    public boolean isPenalite() {
+        return penalite;
+    }
+
+    public void setPenalite(boolean penalite) {
+        this.penalite = penalite;
     }
 
     public int getDuration() {
@@ -103,9 +113,29 @@ public class Test implements Serializable {
                 '}';
     }
 
-    public String getDetails() {
+    public String getDurationString() {
         int hours = (int) Math.floor((float) this.getDuration() / 60);
         String durationString = "" + hours + "h" + (this.getDuration() - hours * 60);
-        return "Durée : " + durationString + " – Professeur : " + this.getNomProf();
+        return durationString;
+    }
+
+    public String getLockedString() {
+        return isLocked() ? "Verouillé" : "Non-verouillé";
+    }
+
+    public String getPenaliteString() {
+        return isPenalite() ? "Avec pénalités" : "Sans pénalités";
+    }
+
+    public String getDetails() {
+        return getDurationString() + "  ·  " + getLockedString() + "  ·  " + getPenaliteString();
+    }
+
+    public String getGroupesString() {
+        ArrayList<String> nomsGroupes = new ArrayList<>();
+        for (Groupe g : groupes) {
+            nomsGroupes.add(g.getNom());
+        }
+        return String.join(", ", nomsGroupes);
     }
 }
