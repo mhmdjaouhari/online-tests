@@ -5,7 +5,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import models.Etudiant;
-import models.Groupe;
+
+import java.util.ArrayList;
 
 public class GroupeTableController {
 
@@ -13,7 +14,7 @@ public class GroupeTableController {
     private TableView<Etudiant> tableEtudiants;
 
 
-    public void loadEtudiants(Groupe groupe){
+    public void loadEtudiants(ArrayList<Etudiant> etudiants) {
         TableColumn<Etudiant, Integer> id = new TableColumn<>("CNE");
         id.setCellValueFactory(new PropertyValueFactory<>("CNE"));
         tableEtudiants.getColumns().add(id);
@@ -23,6 +24,6 @@ public class GroupeTableController {
         TableColumn<Etudiant, String> prenom = new TableColumn<>("Prénom");
         prenom.setCellValueFactory(new PropertyValueFactory<>("prenom"));
         tableEtudiants.getColumns().add(prenom);
-        tableEtudiants.getItems().addAll(groupe.getEtudiants());
+        tableEtudiants.getItems().addAll(etudiants);
     }
 }

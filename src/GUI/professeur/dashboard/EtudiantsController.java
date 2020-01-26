@@ -75,16 +75,7 @@ public class EtudiantsController {
             groupeStage.setScene(scene);
             groupeStage.setTitle("Étudiants du groupe " + groupe.getNom());
             GroupeTableController controller = fxmlLoader.getController();
-//            controller.loadEtudiants(App.getEmitter().getEtudiants(groupe.getId())); // TODO
-            Groupe groupe1 = new Groupe();
-            Etudiant e = new Etudiant();
-            e.setCNE("9832698");
-            e.setNom("simo");
-            e.setPrenom("simohamed");
-            groupe1.getEtudiants().add(e);
-            groupe1.getEtudiants().add(e);
-            groupe1.getEtudiants().add(e);
-            controller.loadEtudiants(groupe1);
+            controller.loadEtudiants(App.getEmitter().getAllEtudiantsInGroupe(groupe.getId()));
             groupeStage.show();
         } catch (Exception e) {
             Common.showErrorAlert(e.getMessage());
