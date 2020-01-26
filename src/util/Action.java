@@ -30,6 +30,7 @@ public enum Action {
         GET_TEST,
         GET_TESTS_PROFESSEUR,
         GET_FULL_TEST,
+        PUBLISH_TEST_RESULTS,
     //Fiche
         GET_FICHES_ETUDIANT,
         GET_FICHE_ETUDIANT,

@@ -199,6 +199,12 @@ public class ProfesseurDispatcher {
                     response = new Response(0,"Moyennes loadded",results);
                     break;
                 }
+                case PUBLISH_TEST_RESULTS:{
+                    int id_test = (int) request.getData();
+                    TestDAO.publishTestResults(id_test);
+                    response = new Response(0,"Test published successfully");
+                    break;
+                }
                 default: {
                     System.out.println(action+" Action not found");
                     response = new Response(0, "Action not found");

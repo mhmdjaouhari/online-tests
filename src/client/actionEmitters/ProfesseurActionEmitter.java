@@ -142,4 +142,11 @@ public class ProfesseurActionEmitter extends ActionEmitter {
         return (ArrayList<Pair<String,Float>>) response.getData();
     }
 
+    public void publishTestResults(int id_test) throws Exception {
+        Response response = post(new Request(Action.PUBLISH_TEST_RESULTS,id_test,Role.PROFESSEUR));
+        if(response.getStatus() != 0){
+            throw new Exception(response.getMessage());
+        }
+    }
+
 }
