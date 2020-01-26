@@ -6,6 +6,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
@@ -14,7 +16,7 @@ public class TestDAO {
     private static Connection conn = DataSource.getInstance().getConnection();;
 
     //get tests that a etudiant have to pass
-    public static ArrayList<Test> getEtudiantTests(String cne) throws SQLException{
+    public static ArrayList<Test> getEtudiantTests(String cne,Boolean newTests) throws SQLException{
         PreparedStatement statement = conn.prepareStatement(
                 "select * from tests where id_test in(" +
                         "select a.id_test from etudiants e,affectations a where e.cne=? and a.id_groupe=e.id_groupe" +
@@ -29,13 +31,23 @@ public class TestDAO {
             test.setMatriculeProf(resultSet.getString("matricule"));
             test.setNomProf(getNomeProfBydId(resultSet.getString("matricule")));
             test.setTitre(resultSet.getString("titre"));
-            test.setLocked(resultSet.getBoolean("locked"));
+            test.setLocked(resultSet.getInt("locked") == 1);
             test.setDuration(resultSet.getInt("duration"));
+            test.setPenalite(resultSet.getInt("penalite") == 1);
             tests.add(test);
         }
+        if(newTests){
+            Stream<Test> stream = tests.stream().filter(test-> etudiantHaveToPassTest(cne,test.getId()));
+            tests = stream.collect(Collectors.toCollection(ArrayList::new));
+        }else if(!newTests) {
+            Stream<Test> stream = tests.stream().filter(test-> !etudiantHaveToPassTest(cne,test.getId()));
+            tests = stream.collect(Collectors.toCollection(ArrayList::new));
+        }
         return tests;
-
     }
+
+    //Get tests passed by etudiants
+
 
     //get tests created by a given prof
     public static ArrayList<Test> getProfesseurTests(String matricule) throws SQLException{
@@ -52,8 +64,9 @@ public class TestDAO {
             test.setMatriculeProf(resultSet.getString("matricule"));
             test.setNomProf(getNomeProfBydId(resultSet.getString("matricule")));
             test.setTitre(resultSet.getString("titre"));
-            test.setLocked(resultSet.getBoolean("locked"));
+            test.setLocked(resultSet.getInt("locked") == 1);
             test.setDuration(resultSet.getInt("duration"));
+            test.setPenalite(resultSet.getInt("penalite") == 1);
             tests.add(test);
         }
         return tests;
@@ -96,6 +109,24 @@ public class TestDAO {
         }
         return fiches;
 
+    }
+
+    //get fiche by id test and cne
+    public static Fiche getEtudiantFiche(String cne,int id_test) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement("select * from fiches where cne=? and id_test=?");
+        statement.setString(1,cne);
+        statement.setInt(2,id_test);
+        ResultSet resultSet = statement.executeQuery();
+        if(resultSet.next()){
+            Fiche fiche = new Fiche();
+            fiche.setId(resultSet.getInt("id_fiche"));
+            fiche.setNomEtudiant(getNomEtudiantById(resultSet.getString("cne")));
+            fiche.setNomGroupeEtudiant(getNomGroupeEtudiant(resultSet.getString("cne")));
+            fiche.setNote(resultSet.getFloat("note"));
+            fiche.setTest(getTestById(id_test));
+            return fiche;
+        }
+        throw new SQLException("Fiche doesn't exist");
     }
 
     //get test with questions by ID
@@ -146,6 +177,7 @@ public class TestDAO {
         ArrayList<Reponse> reponses = fiche.getReponses();
         float note = calculeNote(fiche);
         for(Reponse reponse:reponses){
+            reponse.setIdFiche(id_fiche);
             submitReponse(reponse);
         }
         System.out.println("id fiche : "+id_fiche+" note : "+note);
@@ -212,7 +244,7 @@ public class TestDAO {
                 }
             }
         }
-        //System.out.println("score : "+score+" number of correct answers :"+numberOfCorrectAnswers);
+        System.out.println("score : "+score+" number of correct answers :"+numberOfCorrectAnswers);
         if(score <= 0) return 0;
         float note = ((float)score/numberOfCorrectAnswers)*20;
         return note;
@@ -317,6 +349,7 @@ public class TestDAO {
             question.setIdTest(resultSet.getInt("id_test"));
             question.setTexte(resultSet.getString("texte"));
             question.setValue(resultSet.getString("value"));
+            question.setAnswersTexte(resultSet.getString("answers_texte"));
             questions.add(question);
         }
         return questions;
@@ -363,6 +396,28 @@ public class TestDAO {
         return groupe;
     }
 
+    //get tests of groupe
+    public static  ArrayList<Test> getTestsGroupe(int id_groupe) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement(
+                "select * from tests t,affectations a where t.id_test=a.id_test and a.id_groupe=?;"
+        );
+        statement.setInt(1,id_groupe);
+        ResultSet resultSet = statement.executeQuery();
+        ArrayList<Test> tests = new ArrayList<>();
+        while (resultSet.next()){
+            Test test = new Test();
+            test.setId(resultSet.getInt("id_test"));
+            test.setMatriculeProf(resultSet.getString("matricule"));
+            test.setNomProf(getNomeProfBydId(resultSet.getString("matricule")));
+            test.setTitre(resultSet.getString("titre"));
+            test.setLocked(resultSet.getInt("locked") == 1);
+            test.setDuration(resultSet.getInt("duration"));
+            test.setPenalite(resultSet.getInt("penalite") == 1);
+            tests.add(test);
+        }
+        return tests;
+    }
+
 
     //get all existed groupes
     public static ArrayList<Groupe> getAllGroupes() throws SQLException {
@@ -380,47 +435,59 @@ public class TestDAO {
         return groupes;
     }
 
+    //check if an etudiant has passed a test
+    public static Boolean etudiantHaveToPassTest(String cne, int id_test){
+        try{
+            PreparedStatement statement = conn.prepareStatement("select * from fiches where cne=? and id_test=?");
+            statement.setString(1,cne);
+            statement.setInt(2,id_test);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()) return false;
+            return true;
+        }catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     /*========================== CREATION ==========================*/
 
     // add test (please use this version instead -jaouhari)
-    public String addTest(Test t) {
-        try {
-            PreparedStatement pst = conn.prepareStatement(
-                    "insert into tests(matricule, titre, duration, locked, penalite) values (?,?,?,?,?)",
-                    RETURN_GENERATED_KEYS);
-            pst.setString(1, t.getMatriculeProf());
-            pst.setString(2, t.getTitre());
-            pst.setInt(3, t.getDuration());
-            pst.setBoolean(4, t.isLocked());
-            pst.setBoolean(5, t.isPenalite());
-            pst.executeUpdate();
-            ResultSet generatedKeysResultSet = pst.getGeneratedKeys();
-            generatedKeysResultSet.next();
-            int idTest = generatedKeysResultSet.getInt(1);
-            if (t.getQuestions() != null) {
-                for (Question question : t.getQuestions()) {
-                    question.setIdTest(idTest);
-                    addQuestion(question);
-                }
+    public static void createTest(Test test) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement(
+                "insert into tests(matricule, titre, duration, locked, penalite) values (?,?,?,?,?)",
+                RETURN_GENERATED_KEYS);
+        statement.setString(1, test.getMatriculeProf());
+        statement.setString(2, test.getTitre());
+        statement.setInt(3, test.getDuration());
+        statement.setBoolean(4, test.isLocked());
+        statement.setBoolean(5, test.isPenalite());
+        statement.executeUpdate();
+        ResultSet generatedKeysResultSet = statement.getGeneratedKeys();
+        generatedKeysResultSet.next();
+        int idTest = generatedKeysResultSet.getInt(1);
+        if (test.getQuestions() != null) {
+            for (Question question : test.getQuestions()) {
+                question.setIdTest(idTest);
+                addQuestion(question);
             }
-            if (t.getGroupes() != null) {
-                for (Groupe groupe : t.getGroupes()) {
-                    PreparedStatement pst1 = conn.prepareStatement("insert into affectations (id_test, id_groupe) values(?,?)");
-                    pst1.setInt(1, idTest);
-                    pst1.setInt(2, groupe.getId());
-                    pst1.executeUpdate();
-                }
+        }else{
+            throw new SQLException("Invalid Test Object");
+        }
+        if (test.getGroupes() != null) {
+            for (Groupe groupe : test.getGroupes()) {
+                PreparedStatement pst1 = conn.prepareStatement("insert into affectations (id_test, id_groupe) values(?,?)");
+                pst1.setInt(1, idTest);
+                pst1.setInt(2, groupe.getId());
+                pst1.executeUpdate();
             }
-            return "test added succesfully";
-        } catch (SQLException ex) {
-            System.err.println("problem with addTest Query !! " + ex.getMessage());
-            return "problem adding test";
+        }else {
+            throw new SQLException("Invalid Test Object");
         }
     }
 
-    //Add a test to a specific groupe
-    public static void addTest(Test test,int id_groupe) throws SQLException {
+    //Create new  test in a specific groupe
+    public static void createTest2(Test test, int id_groupe) throws SQLException {
         PreparedStatement statement =conn.prepareStatement(
                 "insert into Test(matricule,titre,duration,locked) values(?,?,?,?);"
         , RETURN_GENERATED_KEYS);
@@ -442,6 +509,21 @@ public class TestDAO {
 
     }
 
+
+    //Add a test to a specific groupe
+    public static void addTestToGroupe(int id_test,int id_groupe) throws SQLException {
+        //chec if test exist
+        getTestById(id_test);
+        //check if groupe exist
+        getGroupeById(id_groupe);
+        PreparedStatement statement =conn.prepareStatement("insert into affectations(id_test,id_groupe) values(?,?);");
+        statement.setInt(1, id_test);
+        statement.setInt(2, id_groupe);
+        if(statement.executeUpdate() == 0){
+            throw new SQLException("Problem in adding test to the groupe");
+        }
+    }
+
     //Add question to a test
     public static void addQuestion(Question question) throws SQLException {
         int id_test = question.getIdTest();
@@ -451,15 +533,28 @@ public class TestDAO {
         if(!resultSet.next()){
             throw new SQLException("Invalid test id");
         }
-        statement =conn.prepareStatement("insert into questions(id_test,texte,value) values(?,?,?);");
+        statement =conn.prepareStatement("insert into questions(id_test,texte,value,answers_texte) values(?,?,?,?);");
         statement.setInt(1, question.getIdTest());
         statement.setString(2, question.getTexte());
         statement.setString(3, question.getValue());
+        statement.setString(4,question.getAnswersTexte());
         if(statement.executeUpdate() == 0){
             throw new SQLException("Problem when adding question");
         }
     }
-    
+
+    //Create new test in multiple groupes
+    public static void createTestInGroupes(Test test,ArrayList<Integer> test_ids) throws SQLException {
+        if(test_ids.size() == 0){
+            throw new SQLException("Groupes list is empty");
+        }
+        createTest2(test,test_ids.get(0));
+        test_ids.remove(0);
+        for(Integer id:test_ids){
+            addTestToGroupe(test.getId(),id);
+        }
+    }
+
     /*=========================== UPDATE ========================= */
     public static void updateTest(int oldTestId,Test newTest) throws SQLException {
         Test oldTest = getTestById(oldTestId);
@@ -484,18 +579,9 @@ public class TestDAO {
         }else {
             statement.setInt(3,newTest.getDuration());
         }
+        statement.setInt(4,newTest.isLocked()?1:0);
+        statement.setInt(5,newTest.isPenalite()?1:0);
 
-//        if(newTest.isLocked() != null){
-            statement.setInt(4,newTest.isLocked()?1:0);
-//        }else {
-//            statement.setInt(4,newTest.isLocked()?1:0);
-//        }
-
-//        if(newTest.isPenalite() != null){
-            statement.setInt(5,newTest.isPenalite()?1:0);
-//        }else {
-//            statement.setInt(5,newTest.isPenalite()?1:0);
-//        }
         statement.setInt(6,oldTestId);
         if(statement.executeUpdate() == 0) {
             throw new SQLException("Test doesn't exist");

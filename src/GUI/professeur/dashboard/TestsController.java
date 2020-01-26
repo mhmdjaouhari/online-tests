@@ -4,6 +4,8 @@ import GUI.Common;
 import GUI.professeur.App;
 import GUI.professeur.TestFormController;
 import com.jfoenix.controls.JFXButton;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
@@ -22,15 +24,25 @@ public class TestsController {
 
     public ScrollPane testsScrollPane;
 
+    private ObservableList<JFXButton> testsRows = FXCollections.observableArrayList();
+
     public void initialize() {
         try {
+//            Just testing emitters
+//            System.out.println(App.getEmitter().getGroupesMoyennes());
+//            System.out.println(App.getEmitter().getTestsMoyennes(App.getLoggedProfesseur().getMatricule()));
+
             ArrayList<Test> allTests = App.getEmitter().getProfesseursTests(App.getLoggedProfesseur().getMatricule());
             VBox content = new VBox();
             content.setSpacing(8);
             content.setPadding(new Insets(8));
+            ArrayList<JFXButton> arrTest = new ArrayList<>();
             for (Test test : allTests) {
-                content.getChildren().addAll(createTestRow(test));
+                arrTest.add(createTestRow(test));
+                //content.getChildren().addAll(createTestRow(test));
             }
+            testsRows.setAll(arrTest);
+            content.getChildren().setAll(testsRows);
             testsScrollPane.setContent(content);
         } catch (Exception e) {
             Common.showErrorAlert(e.getMessage());
@@ -85,7 +97,7 @@ public class TestsController {
                 testStage.setTitle("Créer un nouveau test");
             else {
                 testStage.setTitle("Modification de test");
-                controller.setFieldValues(App.getEmitter().getTestById(test.getId())); // TODO @achkari: should provide full test with questions!!!!!
+                controller.setFieldValues(App.getEmitter().getFullTestById(test.getId()));
             }
             testStage.show();
         } catch (Exception e) {

@@ -76,9 +76,23 @@ public class EtudiantDispatcher {
                     response = new Response(0, "Test loaded successfully", test);
                     break;
                 }
-                case GET_TESTS_ETUDIANT: {
+                case GET_NEW_TESTS_ETUDIANT: {
                     String cne = (String) request.getData();
-                    ArrayList<Test> etudiantTests = TestDAO.getEtudiantTests(cne);
+                    ArrayList<Test> etudiantTests = TestDAO.getEtudiantTests(cne,true);
+                    String message = etudiantTests.size() + " Tests loaded successfully";
+                    response = new Response(0, message, etudiantTests);
+                    break;
+                }
+                case GET_OLD_TESTS_ETUDIANT: {
+                    String cne = (String) request.getData();
+                    ArrayList<Test> etudiantTests = TestDAO.getEtudiantTests(cne,false);
+                    String message = etudiantTests.size() + " Tests loaded successfully";
+                    response = new Response(0, message, etudiantTests);
+                    break;
+                }
+                case GET_ALL_TESTS_ETUDIANT: {
+                    String cne = (String) request.getData();
+                    ArrayList<Test> etudiantTests = TestDAO.getEtudiantTests(cne,null);
                     String message = etudiantTests.size() + " Tests loaded successfully";
                     response = new Response(0, message, etudiantTests);
                     break;
@@ -94,6 +108,25 @@ public class EtudiantDispatcher {
                     ArrayList<Fiche> fichesEtudiants = TestDAO.getEtudiantFiches(cne);
                     String message = fichesEtudiants.size() + " Tests loaded successfully";
                     response = new Response(0,message,fichesEtudiants);
+                    break;
+                }
+                case GET_FICHE_ETUDIANT: {
+                    ArrayList<Object> data = (ArrayList<Object>)request.getData();
+                    String cne = "";
+                    int id_test = 0;
+                    for(Object elm:data){
+                        if(elm instanceof Integer){
+                            id_test = (int) elm;
+                        }
+                        else if(elm instanceof String){
+                            cne = (String) elm;
+                        }
+                        else{
+                            throw new IOException("Invalid request");
+                        }
+                    }
+                    Fiche fiche = TestDAO.getEtudiantFiche(cne,id_test);
+                    response = new Response(0,"fiche loadded successfully",fiche);
                     break;
                 }
                 case GET_FULL_TEST:{
