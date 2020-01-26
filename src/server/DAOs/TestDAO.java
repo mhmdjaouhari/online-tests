@@ -450,6 +450,13 @@ public class TestDAO {
         }
     }
 
+    public static Boolean isQuestionExist(int id_question) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement("select * from questions where id_question=?");
+        statement.setInt(1,id_question);
+        ResultSet resultSet = statement.executeQuery();
+        return resultSet.next();
+    }
+
     /*========================== CREATION ==========================*/
 
     // add test (please use this version instead -jaouhari)
@@ -471,7 +478,8 @@ public class TestDAO {
                 question.setIdTest(idTest);
                 addQuestion(question);
             }
-        }else{
+        }
+        else{
             throw new SQLException("Invalid Test Object");
         }
         if (test.getGroupes() != null) {
@@ -533,14 +541,17 @@ public class TestDAO {
         if(!resultSet.next()){
             throw new SQLException("Invalid test id");
         }
-        statement =conn.prepareStatement("insert into questions(id_test,texte,value,answers_texte) values(?,?,?,?);");
-        statement.setInt(1, question.getIdTest());
-        statement.setString(2, question.getTexte());
-        statement.setString(3, question.getValue());
-        statement.setString(4,question.getAnswersTexte());
-        if(statement.executeUpdate() == 0){
+        System.out.println(question);
+        PreparedStatement statement1 =conn.prepareStatement("insert into questions(id_test,texte,value,answers_texte) values(?,?,?,?);");
+        statement1.setInt(1, question.getIdTest());
+        statement1.setString(2, question.getTexte());
+        statement1.setString(3, question.getValue());
+        statement1.setString(4,question.getAnswersTexte());
+        if(statement1.executeUpdate()==0){
             throw new SQLException("Problem when adding question");
         }
+
+
     }
 
     //Create new test in multiple groupes
@@ -554,6 +565,8 @@ public class TestDAO {
             addTestToGroupe(test.getId(),id);
         }
     }
+
+
 
     /*=========================== UPDATE ========================= */
     public static void updateTest(int oldTestId,Test newTest) throws SQLException {
@@ -583,19 +596,127 @@ public class TestDAO {
         statement.setInt(5,newTest.isPenalite()?1:0);
 
         statement.setInt(6,oldTestId);
+
+        //Update groupes
+        ArrayList<Groupe> newGroupes = newTest.getGroupes();
+        ArrayList<Groupe> oldGroupes = getGroupesByTestId(oldTestId);
+        if(newGroupes!=null){
+            for(Groupe groupe:newGroupes){
+                //check if groupe added to the list
+                if(!searchInGroupesById(groupe.getId(),oldGroupes)){
+                    addTestToGroupe(newTest.getId(),groupe.getId());
+                }
+            }
+            for(Groupe groupe:oldGroupes){
+                //check if groupe removed from the list
+                if(!searchInGroupesById(groupe.getId(),newGroupes)){
+                    removeTestFromGroupe(newTest.getId(),groupe.getId());
+                }
+            }
+        }
+
+
+        //Update questions
+        ArrayList<Question> questions = newTest.getQuestions();
+        ArrayList<Question> oldQuestions = getQuestionsByTestId(oldTestId);
+        if(questions != null){
+            for(Question question:questions){
+                //check if question already exist
+                if(question.getId()!=0){
+                    updateQuestion(question);
+                }else{
+                    question.setIdTest(newTest.getId());
+                    //System.out.println(question);
+                    addQuestion(question);
+                }
+            }
+            //delete removed question
+            for(Question question:oldQuestions){
+                if(!searchInQuestionsById(question.getId(),questions)){
+                    deleteQuestion(question.getId());
+                }
+            }
+        }
         if(statement.executeUpdate() == 0) {
             throw new SQLException("Test doesn't exist");
         }
     }
 
+    public static void updateQuestion(Question question) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement(
+                "update questions set id_test = ?,texte=?,value=?,answers_texte=? where id_question=?;"
+        );
+        statement.setInt(1,question.getIdTest());
+        statement.setString(2,question.getTexte());
+        statement.setString(3,question.getValue());
+        statement.setString(4,question.getAnswersTexte());
+        statement.setInt(5,question.getId());
+        if(statement.executeUpdate() == 0){
+            throw new SQLException("Question Not found");
+        }
+    }
+
+    public static void publishTestResults(int id_test) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement("update tests set results_published=1 where id_test=?");
+        statement.setInt(1,id_test);
+        if(statement.executeUpdate() == 0){
+            throw new SQLException("Test not found");
+        }
+    }
+
     /* ====================== Delete Test ======================== */
     public static void deleteTest(int id_test) throws SQLException{
+        removeTestFromAllGroupes(id_test);
+        deleteAllQuestionOfTest(id_test);
         PreparedStatement statement = conn.prepareStatement("delete from tests where id_test=?");
         statement.setInt(1,id_test);
         if(statement.executeUpdate() == 0){
             throw new SQLException("Test doesn't exist");
         }
     }
+
+    public static void deleteQuestion(int id_question) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement("delete from questions where id_question=?");
+        statement.setInt(1,id_question);
+        if(statement.executeUpdate()==0){
+            throw new SQLException("Question Not found");
+        }
+    }
+
+    private static void removeTestFromAllGroupes(int id_test) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement("delete from affectations where id_test=?");
+        statement.setInt(1,id_test);
+        int res = statement.executeUpdate();
+        if(res==0){
+            throw new SQLException("Test not found");
+        }else{
+            System.out.println(res+" affectations removed");
+        }
+    }
+
+    public static void deleteAllQuestionOfTest(int id_test) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement("delete from questions where id_test=?");
+        statement.setInt(1,id_test);
+        int res = statement.executeUpdate();
+        if(res==0){
+            throw new SQLException("Test not found");
+        }else{
+            System.out.println(res+" Questions removed");
+        }
+    }
+
+    public static void removeTestFromGroupe(int id_test,int id_groupe) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement(
+                "delete from affectations where id_test=? and id_groupe=?"
+        );
+        statement.setInt(1,id_test);
+        statement.setInt(2,id_groupe);
+        if(statement.executeUpdate() == 0){
+            throw new SQLException("Test doens't belong to the groupe");
+        }
+    }
+
+
 
     //USELESS OF NOW
     private static HashMap<String,Integer> getFrequencies(String[] s){
@@ -604,6 +725,24 @@ public class TestDAO {
             freq.put(s[0],freq.get(s[0])+1);
         }
         return freq;
+    }
+
+    private static Boolean searchInQuestionsById(int id_question, ArrayList<Question>questions){
+        for(Question question:questions){
+            if(question.getId() == id_question){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static Boolean searchInGroupesById(int id_groupe,ArrayList<Groupe> groupes){
+        for(Groupe groupe:groupes){
+            if(groupe.getId() == id_groupe){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

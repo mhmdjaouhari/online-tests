@@ -48,6 +48,7 @@ public class TestFormController {
     private Test activeTest = new Test();
 
     private Boolean choicesSaved = true;
+    private Boolean isUpdate = false;
 
     public void initialize() {
         // force the field to be numeric only & limit length to 3 digits
@@ -69,6 +70,7 @@ public class TestFormController {
     }
 
     public void setFieldValues(Test test) {
+        isUpdate = true;
         activeTest = test;
         testDurationField.setText(Integer.toString(test.getDuration()));
         titreTestField.setText(test.getTitre());
@@ -79,7 +81,6 @@ public class TestFormController {
         }
         for (Question question : test.getQuestions()) {
             addQuestion(question,true);
-            questionsList.add(question);
         }
     }
 
@@ -114,9 +115,11 @@ public class TestFormController {
 
     public void addQuestion() {
         addQuestion(new Question(),false);
+        System.out.println(questionsList);
     }
 
     public void addQuestion(Question question,Boolean isUpdate) {
+        //System.out.println(question);
         JFXTextArea questionText = new JFXTextArea();
         questionText.setFocusColor(Paint.valueOf("#046dd5"));
         questionText.setPromptText("Texte de la question");
@@ -132,6 +135,7 @@ public class TestFormController {
         addChoiceButton.setButtonType(JFXButton.ButtonType.RAISED);
         addChoiceButton.setAlignment(Pos.BOTTOM_CENTER);
         VBox questionControls = new VBox(deleteQuestionButton,choixLabel,addChoiceButton);
+
         questionControls.setSpacing(12);
         questionControls.setMinWidth(160);
         questionControls.setPrefHeight(200);
@@ -140,12 +144,12 @@ public class TestFormController {
             ArrayList<String> choicesText = new ArrayList<>();
             Collections.addAll(choicesText,question.getAnswersTexte().split(",",0));
             for(String choiceText:choicesText){
-                addChoix(question,choiceText,choiceId,questionControls, true);
+                addChoix(question,choiceText,choiceId,questionControls, true,addChoiceButton);
                 choiceId++;
             }
         }else {
             int numberOfChoices = question.getAnswersTexte().split(",",0).length;
-            addChoix(question,"",numberOfChoices+1,questionControls, false);
+            addChoix(question,"",numberOfChoices+1,questionControls, false,addChoiceButton);
         }
 
         HBox questionRow = new HBox(questionText, questionControls);
@@ -161,13 +165,20 @@ public class TestFormController {
         });
         addChoiceButton.setOnAction((e)->{
             int numberOfChoices = question.getAnswersTexte().split(",",0).length;
-            addChoix(question,"",numberOfChoices+1,questionControls,isUpdate);
+            addChoix(question,"",numberOfChoices+1,questionControls,false,addChoiceButton);
+            addChoiceButton.setDisable(true);
+
         });
     }
 
-    private void addChoix(Question question,String choiceText,Integer choiceId,VBox questionControls,Boolean isUpdate){
+    private void addChoix(
+            Question question,String choiceText,Integer choiceId,
+            VBox questionControls,Boolean isUpdate,JFXButton addChoiceButton
+    ){
+       // System.out.println("id_qst: "+question.getId()+" | choiceId: "+choiceId+" | answerText: "+choiceText+" | Value: "+question.getValue());
         JFXCheckBox checkBox = new JFXCheckBox();
         TextField choiceField = new TextField(choiceText);
+
         choiceField.setStyle("-fx-background-color: #ccc");
         JFXButton editButton = null;
         JFXButton deleteButton = new JFXButton("Delete");
@@ -180,28 +191,43 @@ public class TestFormController {
         else{
             deleteButton.setDisable(true);
             editButton = new JFXButton("Save");
-            editButton.setDisable(false);
+            editButton.setDisable(true);
             choicesSaved = false;
         }
 
         JFXButton finalEditButton = editButton;
+        choiceField.setOnKeyTyped(e->{
+            if(choiceField.getText().trim().equals("")){
+                finalEditButton.setDisable(true);
+            }else {
+                finalEditButton.setDisable(false);
+            }
+        });
         editButton.setOnAction((e)->{
             if(choiceField.isDisable()){
                 choiceField.setDisable(false);
                 checkBox.setDisable(false);
                 deleteButton.setDisable(true);
                 finalEditButton.setText("Save");
+                addChoiceButton.setDisable(true);
                 choicesSaved = false;
+                removeAnswerFromText(question,choiceField.getText());
             }else{
                 choiceField.setDisable(true);
                 finalEditButton.setText("Edit");
                 checkBox.setDisable(true);
                 deleteButton.setDisable(false);
-                choicesSaved = true;
-                if(question.getAnswersTexte().equals("")){
-                    question.setAnswersTexte(choiceField.getText());
-                }else{
-                    question.setAnswersTexte(question.getAnswersTexte()+","+choiceField.getText());
+                int numberOfAnswers = question.getAnswersTexte().split(",",0).length;
+                if(isColumnSaved(questionControls)){
+                    choicesSaved = true;
+                }
+                if(numberOfAnswers<4){
+                    addChoiceButton.setDisable(false);
+                }
+                if(!addAnswerToAnswersTexte(question,choiceField.getText())){
+                    choiceField.setDisable(false);
+                    checkBox.setDisable(false);
+                    deleteButton.setDisable(true);
                 }
             }
         });
@@ -211,23 +237,40 @@ public class TestFormController {
             int index = parentSource.getChildren().indexOf(source);
             ArrayList<String> answers = new ArrayList<>();
             Collections.addAll(answers,question.getAnswersTexte().split(",",0));
-            answers.remove(index-3);
+            answers.remove(choiceField.getText());
             question.setAnswersTexte(String.join(",",answers));
 
             questionsBox.getChildren().remove(new HBox(checkBox,choiceField,finalEditButton,deleteButton));
             removeChoixFromQuestion(question,choiceId);
+
+            addChoiceButton.setDisable(false);
+
+            int numberOfAnswers = question.getAnswersTexte().split(",",0).length;
+            System.out.println(numberOfAnswers);
+            if(numberOfAnswers == 1){
+                //deleteButton.setDisable(true);
+                ((JFXButton)(((HBox)(questionControls.getChildren().get(3))).getChildren().get(3))).setDisable(true);
+            }
+            //System.out.println("238# values : "+question.getValue());
         });
         HBox choiceRow = new HBox(checkBox,choiceField,editButton,deleteButton);
         choiceRow.setAlignment(Pos.CENTER);
         checkBox.setCheckedColor(Color.web("#046dd5"));
         checkBox.setOnAction(e -> {
-            if (checkBox.isSelected())
+            if (checkBox.isSelected()){
                 addChoixToQuestion(question, choiceId);
-            else
+            }
+            else{
                 removeChoixFromQuestion(question, choiceId);
+            }
         });
+        ArrayList<String> values = new ArrayList<>();
+        Collections.addAll(values,question.getValue().split(",",0));
+        if(values.contains(Integer.toString(choiceId))){
+            checkBox.setSelected(true);
+        }
         questionControls.getChildren().add(choiceRow);
-        addChoixToQuestion(question,choiceId);
+        //addChoixToQuestion(question,choiceId);
     }
 
     private void deleteQuestion(Question question, HBox questionRow, JFXTextArea questionText) {
@@ -249,17 +292,77 @@ public class TestFormController {
         question.setValue(newValue);
     }
 
-    private void removeChoixFromQuestion(Question question, int choix) {
-        String oldValue = question.getValue();
-        String newValue;
-        if (!oldValue.equals("")) {
-            HashSet<String> choixArray = new HashSet<>(Arrays.asList(oldValue.split(",")));
-            choixArray.add(Integer.toString(choix));
-            newValue = String.join(",", choixArray);
-        } else {
-            newValue = Integer.toString(choix);
+    private void removeChoixFromQuestion(Question question, int choiceId) {
+        ArrayList<String> values = new ArrayList<>();
+        Collections.addAll(values,question.getValue().split(",",0));
+        if(values.remove(Integer.toString(choiceId))){
+            String newValue = String.join(",",values);
+            System.out.println(newValue);
+            question.setValue(newValue);
+            if(!question.getValue().equals("")){
+                shiftValues(question,choiceId);
+            }
         }
-        question.setValue(newValue);
+    }
+
+    private Boolean addAnswerToAnswersTexte(Question question,String answer){
+        ArrayList<String> answers = new ArrayList<>();
+        Collections.addAll(answers,question.getAnswersTexte().split(",",0));
+        //System.out.println("## answers : "+answers);
+        if(answers.contains(answer)){
+            Common.showErrorAlert("Ce choix existe déja, veuillez le modifier");
+
+            return false;
+        }
+        if(question.getAnswersTexte().equals("")){
+            question.setAnswersTexte(answer);
+        }else{
+            question.setAnswersTexte(question.getAnswersTexte()+","+answer);
+        }
+        return true;
+    }
+
+    private void removeAnswerFromText(Question question,String answer){
+        ArrayList<String> answers = new ArrayList<>();
+        Collections.addAll(answers,question.getAnswersTexte().split(",",0));
+        //System.out.println("## answers : "+answers);
+        if(!answers.contains(answer)){
+            Common.showErrorAlert("choix n'existe pas");
+            return;
+        }
+        answers.remove(answer);
+        question.setAnswersTexte(String.join(",",answers));
+
+    }
+
+    private Boolean isColumnSaved(VBox questionControls){
+        for(Object children:questionControls.getChildren()){
+            if(children instanceof HBox){
+                for(Object subChild:((HBox) children).getChildren()){
+                    if(subChild instanceof TextField){
+                        if(!((TextField) subChild).isDisable()){
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+
+
+
+
+    private void shiftValues(Question question,int start){
+        String[] values = question.getValue().split(",",0);
+        System.out.println("#352# values : "+String.join(",",values));
+        for(int i=0;i<values.length;i++){
+            if(Integer.parseInt(values[i])>start){
+                values[i] = Integer.toString(Integer.parseInt(values[i])-1);
+            }
+        }
+        question.setValue(String.join(",",values));
     }
 
     private void removeChoixFromReponse(Reponse reponse, int choix) {
@@ -305,12 +408,21 @@ public class TestFormController {
             activeTest.setMatriculeProf(App.getLoggedProfesseur().getMatricule());
             activeTest.setTitre(titreTestField.getText());
             activeTest.setGroupes(groupesList);
+            System.out.println(questionsList.size());
             for (int i = 0; i < questionsList.size(); i++) {
-                System.out.println(questionsList.get(i));
+                //System.out.println(questionsList.get(i));
                 questionsList.get(i).setTexte(questionTextesList.get(i).getText());
             }
+            System.out.println(questionsList);
+//            for(Question question:questionsList){
+//                question.setTexte(que);
+//            }
             activeTest.setQuestions(questionsList);
-            App.getEmitter().createTest(activeTest);
+            if(isUpdate){
+                App.getEmitter().updateTest(activeTest.getId(),activeTest);
+            }else{
+                App.getEmitter().createTest(activeTest);
+            }
             Stage stage = (Stage)submitButton.getScene().getWindow();
             stage.close();
         } catch (Exception e) {
