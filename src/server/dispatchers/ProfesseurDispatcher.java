@@ -1,7 +1,10 @@
 package server.dispatchers;
 
+import javafx.util.Pair;
 import models.*;
+import server.DAOs.EtudiantDAO;
 import server.DAOs.ProfesseurDAO;
+import server.DAOs.StatisticsDAO;
 import server.DAOs.TestDAO;
 import util.Action;
 import util.Request;
@@ -16,7 +19,6 @@ public class ProfesseurDispatcher {
     public static Response handle(Request request){
         Action action = request.getAction();
         Response response;
-        TestDAO testDao;
         try{
             switch (action) {
                 case LOGIN:{
@@ -84,9 +86,23 @@ public class ProfesseurDispatcher {
                     response = new Response(0, "Test loaded successfully", test);
                     break;
                 }
-                case GET_TESTS_ETUDIANT: {
+                case GET_NEW_TESTS_ETUDIANT: {
                     String cne = (String) request.getData();
-                    ArrayList<Test> etudiantTests = TestDAO.getEtudiantTests(cne);
+                    ArrayList<Test> etudiantTests = TestDAO.getEtudiantTests(cne,true);
+                    String message = etudiantTests.size() + " Tests loaded successfully";
+                    response = new Response(0, message, etudiantTests);
+                    break;
+                }
+                case GET_OLD_TESTS_ETUDIANT: {
+                    String cne = (String) request.getData();
+                    ArrayList<Test> etudiantTests = TestDAO.getEtudiantTests(cne,false);
+                    String message = etudiantTests.size() + " Tests loaded successfully";
+                    response = new Response(0, message, etudiantTests);
+                    break;
+                }
+                case GET_ALL_TESTS_ETUDIANT: {
+                    String cne = (String) request.getData();
+                    ArrayList<Test> etudiantTests = TestDAO.getEtudiantTests(cne,null);
                     String message = etudiantTests.size() + " Tests loaded successfully";
                     response = new Response(0, message, etudiantTests);
                     break;
@@ -105,7 +121,13 @@ public class ProfesseurDispatcher {
                     response = new Response(0,message,fichesTests);
                     break;
                 }
-                case ADD_TEST: {
+                case ADD_TEST:{
+                    Test test = (Test) request.getData();
+                    TestDAO.createTest(test);
+                    response = new Response(0,"Test created successfully");
+                    break;
+                }
+                case ADD_TEST_2: {
                     ArrayList<Object> data = (ArrayList<Object>) request.getData();
                     Integer idGroupe = 0;
                     Test test = new Test();
@@ -120,13 +142,15 @@ public class ProfesseurDispatcher {
                             throw new IOException("Invalid request data");
                         }
                     }
-                    TestDAO.addTest(test,idGroupe);
+                    TestDAO.createTest2(test,idGroupe);
                     response = new Response(0,"Test added successfully");
+                    break;
                 }
                 case DELETE_TEST:{
                     int idTest = (int)request.getData();
                     TestDAO.deleteTest(idTest);
                     response = new Response(0,"Test deleted successfully");
+                    break;
                 }
                 case UPDATE_TEST:{
                     ArrayList<Object> data = (ArrayList<Object>) request.getData();
@@ -152,8 +176,31 @@ public class ProfesseurDispatcher {
                     response = new Response(0,"Groupes loadded successfully",groupes);
                     break;
                 }
+                case GET_ETUDIANTS_GROUPE:{
+                    int id_groupe = (int) request.getData();
+                    ArrayList<Etudiant> etudiants = EtudiantDAO.getAllEtudiantsInGroupe(id_groupe);
+                    response = new Response(0,"Etudiants loadded successfully",etudiants);
+                    break;
+                }
+                case GET_FULL_TEST:{
+                    int id_test = (int) request.getData();
+                    Test test = TestDAO.getFullTestById(id_test);
+                    response = new Response(0,"Test loaded successfully",test);
+                    break;
+                }
+                case GET_MOYENNES_GROUPES:{
+                    ArrayList<Pair<String,Float>> results = StatisticsDAO.getGroupesMoyennes();
+                    response = new Response(0,"Moyennes loadded",results);
+                    break;
+                }
+                case GET_TESTS_MOYENNE:{
+                    String matricule = (String) request.getData();
+                    ArrayList<Pair<String,Float>> results = StatisticsDAO.getTestsMoyennes(matricule);
+                    response = new Response(0,"Moyennes loadded",results);
+                    break;
+                }
                 default: {
-                    System.out.println("Action not found");
+                    System.out.println(action+" Action not found");
                     response = new Response(0, "Action not found");
                 }
             }

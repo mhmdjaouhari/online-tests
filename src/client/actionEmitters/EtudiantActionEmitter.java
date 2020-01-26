@@ -2,7 +2,6 @@ package client.actionEmitters;
 
 import models.Etudiant;
 import models.Fiche;
-import models.Question;
 import models.Test;
 import util.Action;
 import util.Request;
@@ -37,9 +36,23 @@ public class EtudiantActionEmitter extends ActionEmitter {
         return (Etudiant)response.getData();
     }
 
-    // should be implemented on the sever-side
-    public ArrayList<Test> getTests() throws Exception {
-        Response response = post(new Request(Action.GET_TESTS_ETUDIANT,Role.ETUDIANT));
+
+    public ArrayList<Test> getNewEtudiantTests(String CNE) throws Exception {
+        Response response = post(new Request(Action.GET_NEW_TESTS_ETUDIANT,CNE,Role.ETUDIANT));
+        if(response.getStatus() != 0){
+            throw new Exception(response.getMessage());
+        }
+        return (ArrayList<Test>) response.getData();
+    }
+    public ArrayList<Test> getOldEtudiantTests(String CNE) throws Exception {
+        Response response = post(new Request(Action.GET_OLD_TESTS_ETUDIANT,CNE,Role.ETUDIANT));
+        if(response.getStatus() != 0){
+            throw new Exception(response.getMessage());
+        }
+        return (ArrayList<Test>) response.getData();
+    }
+    public ArrayList<Test> getAllEtudiantTests(String CNE) throws Exception {
+        Response response = post(new Request(Action.GET_ALL_TESTS_ETUDIANT,CNE,Role.ETUDIANT));
         if(response.getStatus() != 0){
             throw new Exception(response.getMessage());
         }
@@ -47,7 +60,7 @@ public class EtudiantActionEmitter extends ActionEmitter {
     }
 
     public Test getTestById(int idTest) throws Exception {
-        Response response = post(new Request(Action.GET_TEST,Role.ETUDIANT));
+        Response response = post(new Request(Action.GET_TEST,idTest,Role.ETUDIANT));
         if(response.getStatus() != 0){
             throw new Exception(response.getMessage());
         }
@@ -77,12 +90,25 @@ public class EtudiantActionEmitter extends ActionEmitter {
         return (ArrayList<Fiche>) response.getData();
     }
 
-    public Test getFullTestById(int id_test) throws Exception {
-        Response response = post(new Request(Action.GET_FULL_TEST,Role.ETUDIANT));
+    public Fiche getFicheEtudiant(String cne,int id_test) throws Exception {
+        ArrayList<Object> data = new ArrayList<>();
+        data.add(cne);
+        data.add(id_test);
+        Response response = post(new Request(Action.GET_FICHE_ETUDIANT,data,Role.ETUDIANT));
         if(response.getStatus() != 0){
             throw new Exception(response.getMessage());
         }
+        return (Fiche) response.getData();
+    }
+
+    public Test getFullTestById(int id_test) throws Exception {
+        Response response = post(new Request(Action.GET_FULL_TEST,id_test,Role.ETUDIANT));
+        if(response.getStatus() != 0){
+            throw new Exception(response.getMessage());
+        }
+        Test test = (Test) response.getData();
         return (Test) response.getData();
     }
+
 
 }

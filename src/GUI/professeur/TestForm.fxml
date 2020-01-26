@@ -68,7 +68,7 @@
                         <JFXButton fx:id="addQuestionButton" buttonType="RAISED" onAction="#addQuestion" styleClass="bg-gray" text="Ajouter nouvelle question" />
                      </children>
                   </VBox>
-                  <JFXButton alignment="CENTER_RIGHT" buttonType="RAISED" onAction="#submitTest" styleClass="bg-blue" text="Envoyer" textFill="WHITE">
+                  <JFXButton fx:id="submitButton" alignment="CENTER_RIGHT" buttonType="RAISED" onAction="#submitTest" styleClass="bg-blue" text="Envoyer" textFill="WHITE">
                      <font>
                         <Font name="Ubuntu" size="20.0" />
                      </font>

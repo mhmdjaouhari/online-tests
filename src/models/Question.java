@@ -8,6 +8,7 @@ public class Question implements Serializable {
     private String texte;
     private String value = "";
     private int idTest;
+    private String answersTexte = "";
 
     public Question(int id, String texte, String value, int idTest) {
         this.id = id;
@@ -51,6 +52,14 @@ public class Question implements Serializable {
         this.idTest = idTest;
     }
 
+    public String getAnswersTexte() {
+        return answersTexte;
+    }
+
+    public void setAnswersTexte(String answersTexte) {
+        this.answersTexte = answersTexte;
+    }
+
     @Override
     public String toString() {
         return "Question{" +
@@ -58,6 +67,7 @@ public class Question implements Serializable {
                 ", texte='" + texte + '\'' +
                 ", value='" + value + '\'' +
                 ", idTest=" + idTest +
+                ", answersTexte='" + answersTexte + '\'' +
                 '}';
     }
 }
