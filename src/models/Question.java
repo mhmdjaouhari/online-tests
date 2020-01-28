@@ -5,10 +5,10 @@ import java.io.Serializable;
 public class Question implements Serializable {
 
     private int id;
-    private String texte;
+    private String texte = "";
     private String value = "";
     private int idTest;
-    private String answersTexte = "";
+    private int nombreChoix;
 
     public Question(int id, String texte, String value, int idTest) {
         this.id = id;
@@ -52,12 +52,12 @@ public class Question implements Serializable {
         this.idTest = idTest;
     }
 
-    public String getAnswersTexte() {
-        return answersTexte;
+    public int getNombreChoix() {
+        return nombreChoix;
     }
 
-    public void setAnswersTexte(String answersTexte) {
-        this.answersTexte = answersTexte;
+    public void setNombreChoix(int nombreChoix) {
+        this.nombreChoix = nombreChoix;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class Question implements Serializable {
                 ", texte='" + texte + '\'' +
                 ", value='" + value + '\'' +
                 ", idTest=" + idTest +
-                ", answersTexte='" + answersTexte + '\'' +
+                ", nombreChoix=" + nombreChoix +
                 '}';
     }
 }

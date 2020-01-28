@@ -349,7 +349,7 @@ public class TestDAO {
             question.setIdTest(resultSet.getInt("id_test"));
             question.setTexte(resultSet.getString("texte"));
             question.setValue(resultSet.getString("value"));
-            question.setAnswersTexte(resultSet.getString("answers_texte"));
+            question.setNombreChoix(resultSet.getInt("nombre_choix"));
             questions.add(question);
         }
         return questions;
@@ -542,11 +542,11 @@ public class TestDAO {
             throw new SQLException("Invalid test id");
         }
         System.out.println(question);
-        PreparedStatement statement1 =conn.prepareStatement("insert into questions(id_test,texte,value,answers_texte) values(?,?,?,?);");
+        PreparedStatement statement1 =conn.prepareStatement("insert into questions(id_test,texte,value,nombre_choix) values(?,?,?,?);");
         statement1.setInt(1, question.getIdTest());
         statement1.setString(2, question.getTexte());
         statement1.setString(3, question.getValue());
-        statement1.setString(4,question.getAnswersTexte());
+        statement1.setInt(4,question.getNombreChoix());
         if(statement1.executeUpdate()==0){
             throw new SQLException("Problem when adding question");
         }
@@ -644,12 +644,12 @@ public class TestDAO {
 
     public static void updateQuestion(Question question) throws SQLException {
         PreparedStatement statement = conn.prepareStatement(
-                "update questions set id_test = ?,texte=?,value=?,answers_texte=? where id_question=?;"
+                "update questions set id_test = ?,texte=?,value=?,nombre_choix=? where id_question=?;"
         );
         statement.setInt(1,question.getIdTest());
         statement.setString(2,question.getTexte());
         statement.setString(3,question.getValue());
-        statement.setString(4,question.getAnswersTexte());
+        statement.setInt(4,question.getNombreChoix());
         statement.setInt(5,question.getId());
         if(statement.executeUpdate() == 0){
             throw new SQLException("Question Not found");

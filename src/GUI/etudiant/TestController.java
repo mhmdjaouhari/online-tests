@@ -77,14 +77,10 @@ public class TestController {
             Reponse reponse = new Reponse();
             reponse.setIdQuestion(question.getId());
 
-            ArrayList<String> answers = new ArrayList<>();
-            Collections.addAll(answers,question.getAnswersTexte().split(",",0));
-
-            int k=1;
-            for(String answer:answers){
-                JFXCheckBox checkBox = new JFXCheckBox(answer);
+            for (int j = 1; j <= question.getNombreChoix(); j++) {
+                JFXCheckBox checkBox = new JFXCheckBox(Integer.toString(j));
                 checkBox.setCheckedColor(Color.web("#046dd5"));
-                int choix = k;
+                int choix = j;
                 checkBox.setOnAction(e -> {
                     if (checkBox.isSelected())
                         addChoixToReponse(reponse, choix);
@@ -92,30 +88,17 @@ public class TestController {
                         removeChoixFromReponse(reponse, choix);
                 });
                 checkboxes.getChildren().add(checkBox);
-                k++;
             }
 
-//            for (int j = 1; j <= 4; j++) {
-//                JFXCheckBox checkBox = new JFXCheckBox(Integer.toString(j));
-//                checkBox.setCheckedColor(Color.web("#046dd5"));
-//                int choix = j;
-//                checkBox.setOnAction(e -> {
-//                    if (checkBox.isSelected())
-//                        addChoixToReponse(reponse, choix);
-//                    else
-//                        removeChoixFromReponse(reponse, choix);
-//                });
-//                checkboxes.getChildren().add(checkBox);
-//            }
             questionBox.getChildren().addAll(questionNumber, questionText, checkboxes);
             questionBoxesList.add(questionBox);
 
             reponsesList.add(reponse);
         }
         currentQuestion = 0;
-//        System.out.println("size of question boxe: "+questionBoxesList.size());
         questionPane.getChildren().setAll(questionBoxesList.get(currentQuestion));
         prevQuestionButton.setDisable(true);
+        if (questionBoxesList.size() == 1) nextQuestionButton.setDisable(true);
 
         envoyerFicheButton.setOnAction(e -> {
             showSaveAndExitDialog(true);
