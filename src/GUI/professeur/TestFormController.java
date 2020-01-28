@@ -118,7 +118,6 @@ public class TestFormController {
         deleteQuestionButton.setFocusTraversable(false);
         Label nombreChoixLabel = new Label("Nombre de choix :");
 
-
         Label choixLabel = new Label("Choix correct(s) :");
 
         AtomicReference<ArrayList<String>> correctChoixList = new AtomicReference<>(new ArrayList<>(Arrays.asList(question.getValue().split(","))));
@@ -235,6 +234,15 @@ public class TestFormController {
             activeTest.setGroupes(groupesList);
             for (int i = 0; i < questionsList.size(); i++) {
                 questionsList.get(i).setTexte(questionTextesList.get(i).getText());
+                String oldValue = questionsList.get(i).getValue();
+                ArrayList<String> choixArray = new ArrayList<>(Arrays.asList(oldValue.split(",")));
+                ArrayList<String> newChoixArray = new ArrayList<>();
+                for (String s : choixArray) {
+                    if (Integer.parseInt(s) <= questionsList.get(i).getNombreChoix())
+                        newChoixArray.add(s);
+                }
+                String newValue = String.join(",", newChoixArray);
+                questionsList.get(i).setValue(newValue);
                 System.out.println(questionsList.get(i));
             }
             activeTest.setQuestions(questionsList);
