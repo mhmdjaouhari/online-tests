@@ -67,6 +67,9 @@ public class TestDAO {
             test.setLocked(resultSet.getInt("locked") == 1);
             test.setDuration(resultSet.getInt("duration"));
             test.setPenalite(resultSet.getInt("penalite") == 1);
+
+            test.setGroupes(getGroupesByTestId(test.getId()));
+
             tests.add(test);
         }
         return tests;

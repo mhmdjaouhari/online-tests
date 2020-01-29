@@ -1,6 +1,7 @@
 package GUI.professeur;
 
 import GUI.Common;
+import GUI.professeur.dashboard.TestsController;
 import com.jfoenix.controls.*;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -34,6 +35,8 @@ public class TestFormController {
     private HBox groupesBox;
     @FXML
     private VBox questionsBox;
+
+    private TestsController testsController;
 
     private ArrayList<Groupe> groupesList = new ArrayList<>();
     private ArrayList<Question> questionsList = new ArrayList<>();
@@ -70,6 +73,10 @@ public class TestFormController {
             addQuestion(question);
             questionsList.add(question);
         }
+    }
+
+    public void setTestsController(TestsController testsController) {
+        this.testsController = testsController;
     }
 
     public void addGroupe() {
@@ -254,7 +261,12 @@ public class TestFormController {
             }
             Stage stage = (Stage)titreTestField.getScene().getWindow();
             stage.close();
-        } catch (Exception e) {
+            testsController.loadTests();
+        }
+        catch (NumberFormatException nfe){
+            Common.showErrorAlert("Il doit y avoir au moins une réponse juste");
+        }
+        catch (Exception e) {
             Common.showErrorAlert(e.getMessage());
             e.printStackTrace();
         }

@@ -70,6 +70,14 @@ public class Etudiant implements Serializable {
         this.password = password;
     }
 
+    public String getNomGroupe() {
+        return nomGroupe;
+    }
+
+    public void setNomGroupe(String nomGroupe) {
+        this.nomGroupe = nomGroupe;
+    }
+
     @Override
     public String toString() {
         return "Etudiant{" +

@@ -1,15 +1,17 @@
 package GUI.professeur;
 
-import GUI.Common;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class DashboardController {
@@ -39,6 +41,18 @@ public class DashboardController {
         });
         switchToTab("dashboard/Tests.fxml", testsButton);
 
+        Image fileIcon = new Image(getClass().getResourceAsStream("icon-file.png"));
+        ImageView fileIconView = new ImageView(fileIcon);
+        testsButton.setGraphic(fileIconView);
+
+        Image personIcon = new Image(getClass().getResourceAsStream("icon-person.png"));
+        ImageView personIconView = new ImageView(personIcon);
+        etudiantsButton.setGraphic(personIconView);
+
+        Image barChartIcon = new Image(getClass().getResourceAsStream("icon-bar-chart.png"));
+        ImageView barChartIconView = new ImageView(barChartIcon);
+        statsButton.setGraphic(barChartIconView);
+
 
 //
 //        Platform.runLater(() -> {
@@ -52,6 +66,10 @@ public class DashboardController {
 //                }
 //            });
 //        });
+    }
+
+    public void switchToTests() {
+        switchToTab("dashboard/Tests.fxml", testsButton);
     }
 
     private void switchToTab(String fxml, JFXButton relatedButton) {

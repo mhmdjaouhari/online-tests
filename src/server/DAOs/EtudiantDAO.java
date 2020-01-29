@@ -24,6 +24,11 @@ public class EtudiantDAO {
             fullEtudiant.setPrenom(resultSet.getString("prenom"));
             fullEtudiant.setUsername(resultSet.getString("username"));
             fullEtudiant.setPassword(resultSet.getString("password"));
+            PreparedStatement statement2 = conn.prepareStatement("select * from groupes where id_groupe=?");
+            statement2.setInt(1, fullEtudiant.getIdGroupe());
+            ResultSet resultSet2 = statement2.executeQuery();
+            resultSet2.next();
+            fullEtudiant.setNomGroupe(resultSet2.getString("nom"));
             return fullEtudiant;
         } else {
              throw new SQLException("Wrong information");

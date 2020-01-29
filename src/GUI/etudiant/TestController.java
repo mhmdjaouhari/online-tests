@@ -57,7 +57,7 @@ public class TestController {
 
     public void initialize() {
         nomEtudiant.setText(App.getLoggedEtudiant().getPrenom() + " " + App.getLoggedEtudiant().getNom());
-        groupeEtudiant.setText("ID Groupe : " + App.getLoggedEtudiant().getIdGroupe());
+        groupeEtudiant.setText(App.getLoggedEtudiant().getNomGroupe());
         titreTest.setText(App.getActiveTest().getTitre());
         detailsTest.setText(App.getActiveTest().getDetails());
         reponsesList = new ArrayList<>();

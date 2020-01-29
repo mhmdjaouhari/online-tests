@@ -6,15 +6,19 @@ import GUI.professeur.TestFormController;
 import com.jfoenix.controls.JFXButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Test;
 
@@ -22,27 +26,22 @@ import java.util.ArrayList;
 
 public class TestsController {
 
-    public ScrollPane testsScrollPane;
-
-    private ObservableList<JFXButton> testsRows = FXCollections.observableArrayList();
+    @FXML
+    private ScrollPane testsScrollPane;
 
     public void initialize() {
-        try {
-//            Just testing emitters
-//            System.out.println(App.getEmitter().getGroupesMoyennes());
-//            System.out.println(App.getEmitter().getTestsMoyennes(App.getLoggedProfesseur().getMatricule()));
+        loadTests();
+    }
 
+    public void loadTests() {
+        try {
             ArrayList<Test> allTests = App.getEmitter().getProfesseursTests(App.getLoggedProfesseur().getMatricule());
             VBox content = new VBox();
             content.setSpacing(8);
             content.setPadding(new Insets(8));
-            ArrayList<JFXButton> arrTest = new ArrayList<>();
-            for (Test test : allTests) {
-                arrTest.add(createTestRow(test));
-                //content.getChildren().addAll(createTestRow(test));
+            for (int i = allTests.size() - 1; i >= 0; i--) {
+                content.getChildren().add(createTestRow(allTests.get(i)));
             }
-            testsRows.setAll(arrTest);
-            content.getChildren().setAll(testsRows);
             testsScrollPane.setContent(content);
         } catch (Exception e) {
             Common.showErrorAlert(e.getMessage());
@@ -50,14 +49,14 @@ public class TestsController {
         }
     }
 
-    public JFXButton createTestRow(Test test) {
-        JFXButton row = new JFXButton();
+    private HBox createTestRow(Test test) {
+        HBox row = new HBox();
+        VBox.setVgrow(row, Priority.ALWAYS);
+        row.setSpacing(8);
         row.setPadding(new Insets(12, 16, 12, 16));
-        row.setButtonType(JFXButton.ButtonType.RAISED);
-        row.setRipplerFill(Paint.valueOf("#046dd5"));
-        row.setStyle("-fx-background-color: #fff");
+        row.setStyle("-fx-background-color: #fff; -fx-border-radius: 5px; -fx-background-radius: 5px");
         row.setPrefHeight(64);
-        row.setPrefWidth(640);
+        row.setMinWidth(640);
         Label titleLabel = new Label(test.getTitre());
         titleLabel.setStyle("-fx-font-size: 24");
         Label detailsLabel = new Label(test.getDetails());
@@ -67,14 +66,38 @@ public class TestsController {
         Label groupesNoms = new Label(test.getGroupesString());
         groupesNoms.setTextFill(Paint.valueOf("#046dd5"));
         HBox groupesLine = new HBox(groupesText, groupesNoms);
-        row.setGraphic(new VBox(
-                titleLabel,
-                detailsLabel,
-                groupesLine
-        ));
-        row.setOnAction(e -> {
+        VBox description = new VBox(titleLabel, detailsLabel, groupesLine);
+        HBox.setHgrow(description, Priority.ALWAYS);
+        row.getChildren().add(description);
+
+        JFXButton editButton = new JFXButton("Modifier");
+        editButton.setButtonType(JFXButton.ButtonType.RAISED);
+        editButton.setStyle("-fx-background-color: #ddd; -fx-font-size: 14");
+        editButton.setOnAction(e -> {
             showTestForm(test);
         });
+        JFXButton consultFichesButton = new JFXButton("Consulter fiches");
+        consultFichesButton.setButtonType(JFXButton.ButtonType.RAISED);
+        consultFichesButton.setStyle("-fx-background-color: #ddd; -fx-font-size: 14");
+        consultFichesButton.setOnAction(e -> {
+//            showTestFiches(test);
+        });
+        JFXButton publishResultsButton = new JFXButton("Publier résultats");
+        publishResultsButton.setButtonType(JFXButton.ButtonType.RAISED);
+        publishResultsButton.setStyle("-fx-background-color: #ddd; -fx-font-size: 14");
+        publishResultsButton.setOnAction(e -> {
+            try {
+                App.getEmitter().publishTestResults(test.getId());
+            } catch (Exception ex) {
+                Common.showErrorAlert(ex.getMessage());
+                ex.printStackTrace();
+            }
+        });
+        VBox buttons = new VBox(editButton, consultFichesButton, publishResultsButton);
+        buttons.setSpacing(4);
+        buttons.setAlignment(Pos.TOP_RIGHT);
+        HBox.setHgrow(buttons, Priority.NEVER);
+        row.getChildren().add(buttons);
         return row;
     }
 
@@ -86,6 +109,7 @@ public class TestsController {
         try {
             Stage testStage = new Stage();
             testStage.initOwner(App.getStage());
+            testStage.initModality(Modality.WINDOW_MODAL);
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/GUI/professeur/TestForm.fxml"));
             Parent root;
@@ -99,6 +123,7 @@ public class TestsController {
                 testStage.setTitle("Modification de test");
                 controller.setFieldValues(App.getEmitter().getFullTestById(test.getId()));
             }
+            controller.setTestsController(this);
             testStage.show();
         } catch (Exception e) {
             Common.showErrorAlert(e.getMessage());

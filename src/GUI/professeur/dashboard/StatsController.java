@@ -34,15 +34,10 @@ public class StatsController {
             Common.showErrorAlert(e.getMessage());
             e.printStackTrace();
         }
-        // dummy data
-//        list.add(new Pair<>("GINF2", 13.5));
-//        list.add(new Pair<>("GINF1", 12.7));
-//        list.add(new Pair<>("GINF3", 13.1));
-//        list.add(new Pair<>("GIL1", 13.9));
-//        list.add(new Pair<>("GIL2", 12.1));
-//        list.add(new Pair<>("GIL3", 20.0));
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel("Moyenne des notes");
+        yAxis.setAutoRanging(false);
+        yAxis.setUpperBound(20);
         CategoryAxis xAxis = new CategoryAxis();
         xAxis.setLabel("Groupes");
         XYChart.Series<String, Float> moyenneSeries = new XYChart.Series<>();
@@ -67,6 +62,8 @@ public class StatsController {
         }
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel("Moyenne des notes");
+        yAxis.setAutoRanging(false);
+        yAxis.setUpperBound(20);
         CategoryAxis xAxis = new CategoryAxis();
         xAxis.setLabel("Tests");
         XYChart.Series<String, Float> moyenneSeries = new XYChart.Series<>();

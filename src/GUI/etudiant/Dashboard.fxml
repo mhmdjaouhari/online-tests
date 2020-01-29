@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="640.0" minWidth="960.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.etudiant.DashboardController">
+<AnchorPane minHeight="640.0" minWidth="960.0" stylesheets="@../gui.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.etudiant.DashboardController">
    <children>
       <BorderPane minHeight="480.0" minWidth="960.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <left>
@@ -14,6 +21,14 @@
                <children>
                   <VBox spacing="4.0" style="-fx-background-color: #046dd5;">
                      <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../online-tests.png" />
+                           </image>
+                           <VBox.margin>
+                              <Insets bottom="8.0" top="-8.0" />
+                           </VBox.margin>
+                        </ImageView>
                         <Label text="Bienvenue" textFill="WHITE">
                            <VBox.margin>
                               <Insets />
@@ -25,10 +40,10 @@
                            <font>
                               <Font name="Ubuntu" size="22.0" />
                            </font></Label>
-                        <Label fx:id="groupeEtudiant" textFill="WHITE">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin></Label>
+                        <Label fx:id="groupeEtudiant" style="-fx-border-color: #fff; -fx-border-radius: 3;" textFill="WHITE">
+                           <padding>
+                              <Insets left="4.0" right="4.0" />
+                           </padding></Label>
                      </children>
                      <padding>
                         <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
@@ -72,17 +87,23 @@
          <center>
             <VBox spacing="8.0" style="-fx-background-color: #eee;" BorderPane.alignment="CENTER">
                <children>
-                  <Label text="Mes tests">
-                     <font>
-                        <Font name="Ubuntu" size="28.0" />
-                     </font>
-                  </Label>
+                  <HBox>
+                     <children>
+                        <Label style="-fx-text-alignment: right;" text="Mes tests">
+                           <font>
+                              <Font name="Ubuntu" size="28.0" />
+                           </font>
+                        </Label>
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <JFXButton fx:id="refreshButton" buttonType="RAISED" onAction="#loadTests" styleClass="bg-blue" text="Rafraîchir" textFill="WHITE" />
+                     </children>
+                  </HBox>
                   <HBox spacing="8.0" VBox.vgrow="ALWAYS">
                      <children>
                         <VBox spacing="8.0" HBox.hgrow="ALWAYS">
                            <children>
                               <Label text="À passer" />
-                              <ScrollPane fx:id="newTestsPane" hbarPolicy="NEVER" pannable="true" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #eee;" VBox.vgrow="ALWAYS">
+                              <ScrollPane fx:id="newTestsPane" fitToWidth="true" hbarPolicy="NEVER" pannable="true" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #eee;" VBox.vgrow="ALWAYS">
                                 <content>
                                    <Label text="Chargement..." />
                                 </content>
@@ -92,7 +113,7 @@
                         <VBox spacing="8.0" HBox.hgrow="ALWAYS">
                            <children>
                               <Label text="Passés" />
-                              <ScrollPane fx:id="oldTestsPane" hbarPolicy="NEVER" pannable="true" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #eee;" VBox.vgrow="ALWAYS">
+                              <ScrollPane fx:id="oldTestsPane" fitToWidth="true" hbarPolicy="NEVER" pannable="true" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #eee;" VBox.vgrow="ALWAYS">
                                 <content>
                                    <Label text="Chargement..." />
                                 </content>
