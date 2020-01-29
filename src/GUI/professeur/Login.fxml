@@ -3,50 +3,60 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXTextField?>
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<AnchorPane minHeight="480.0" minWidth="440.0" stylesheets="@../gui.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.professeur.LoginController">
+
+<AnchorPane minHeight="480.0" minWidth="360.0" stylesheets="@../gui.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.professeur.LoginController">
     <children>
         <VBox alignment="TOP_CENTER" minHeight="480.0" prefWidth="240.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" VBox.vgrow="ALWAYS">
             <children>
-            <VBox alignment="TOP_CENTER" prefWidth="240.0">
+            <VBox alignment="TOP_CENTER" prefWidth="240.0" spacing="32.0" styleClass="bg-blue">
                <children>
-                      <Label text="ONLINE TESTS">
-                          <VBox.margin>
-                              <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
-                          </VBox.margin>
-                      </Label>
-                      <Label text="Espace des professeurs" textFill="#046dd5">
-                          <font>
-                              <Font name="Ubuntu Bold" size="14.0" />
-                          </font>
-                          <VBox.margin>
-                              <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-                          </VBox.margin>
-                      </Label>
+                  <ImageView fitHeight="150.0" fitWidth="168.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../online-tests.png" />
+                     </image>
+                  </ImageView>
+                  <Label text="Espace des professeurs" textFill="WHITE">
+                     <font>
+                        <Font name="Ubuntu Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Label>
                </children>
-               <VBox.margin>
-                  <Insets bottom="32.0" top="64.0" />
-               </VBox.margin>
+               <padding>
+                  <Insets bottom="32.0" top="48.0" />
+               </padding>
             </VBox>
-
-                <JFXTextField fx:id="usernameField" focusColor="#046dd5" labelFloat="true" maxWidth="-Infinity" prefHeight="32.0" prefWidth="160.0" promptText="Nom d'utilisateur">
-                    <VBox.margin>
+            <VBox alignment="CENTER" styleClass="bg-white" VBox.vgrow="ALWAYS">
+               <children>
+                  <JFXTextField fx:id="usernameField" focusColor="#046dd5" labelFloat="true" maxWidth="-Infinity" prefHeight="32.0" prefWidth="192.0" promptText="Nom d'utilisateur">
+                     <VBox.margin>
                         <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-                    </VBox.margin>
-                </JFXTextField>
-                <JFXPasswordField fx:id="passwordField" focusColor="#046dd5" labelFloat="true" maxWidth="-Infinity" onAction="#handleLogin" prefHeight="32.0" prefWidth="160.0" promptText="Mot de passe">
-                    <VBox.margin>
+                     </VBox.margin>
+                  </JFXTextField>
+                  <JFXPasswordField fx:id="passwordField" focusColor="#046dd5" labelFloat="true" maxWidth="-Infinity" onAction="#handleLogin" prefHeight="32.0" prefWidth="192.0" promptText="Mot de passe">
+                     <VBox.margin>
                         <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-                    </VBox.margin>
-                </JFXPasswordField>
-                <JFXButton buttonType="RAISED" onAction="#handleLogin" prefHeight="32.0" prefWidth="160.0" ripplerFill="WHITE" styleClass="bg-blue" text="Se connecter" textFill="#ffffff">
-                    <VBox.margin>
+                     </VBox.margin>
+                  </JFXPasswordField>
+                  <JFXButton buttonType="RAISED" onAction="#handleLogin" prefHeight="32.0" prefWidth="192.0" ripplerFill="WHITE" styleClass="bg-blue" text="Se connecter" textFill="#ffffff">
+                     <VBox.margin>
                         <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-                    </VBox.margin>
-                </JFXButton>
+                     </VBox.margin>
+                  </JFXButton>
+               </children>
+               <padding>
+                  <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+               </padding>
+            </VBox>
             </children>
         </VBox>
 

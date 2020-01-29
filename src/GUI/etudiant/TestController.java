@@ -54,6 +54,7 @@ public class TestController {
     private ArrayList<VBox> questionBoxesList = new ArrayList<>();
     private ArrayList<Reponse> reponsesList = new ArrayList<>();
 
+    private DashboardController dashboardController;
 
     public void initialize() {
         nomEtudiant.setText(App.getLoggedEtudiant().getPrenom() + " " + App.getLoggedEtudiant().getNom());
@@ -205,6 +206,10 @@ public class TestController {
         }
     }
 
+    public void setDashboardController(DashboardController dashboardController) {
+        this.dashboardController = dashboardController;
+    }
+
     private void submitFiche() {
         Fiche fiche = new Fiche();
         fiche.setCNE(App.getLoggedEtudiant().getCNE());
@@ -214,6 +219,7 @@ public class TestController {
         fiche.setTest(test);
         try {
             App.getEmitter().submitFiche(fiche);
+            dashboardController.loadTests();
         } catch (Exception e) {
             Common.showErrorAlert(e.getMessage());
             e.printStackTrace();

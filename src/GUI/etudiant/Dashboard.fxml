@@ -21,12 +21,12 @@
                <children>
                   <VBox spacing="4.0" style="-fx-background-color: #046dd5;">
                      <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="150.0" fitWidth="168.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../online-tests.png" />
                            </image>
                            <VBox.margin>
-                              <Insets bottom="8.0" top="-8.0" />
+                              <Insets bottom="16.0" />
                            </VBox.margin>
                         </ImageView>
                         <Label text="Bienvenue" textFill="WHITE">

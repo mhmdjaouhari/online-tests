@@ -34,6 +34,7 @@ public class TestsController {
     }
 
     public void loadTests() {
+        testsScrollPane.setFitToWidth(true);
         try {
             ArrayList<Test> allTests = App.getEmitter().getProfesseursTests(App.getLoggedProfesseur().getMatricule());
             VBox content = new VBox();
@@ -57,6 +58,7 @@ public class TestsController {
         row.setStyle("-fx-background-color: #fff; -fx-border-radius: 5px; -fx-background-radius: 5px");
         row.setPrefHeight(64);
         row.setMinWidth(640);
+        row.setPrefWidth(2560);
         Label titleLabel = new Label(test.getTitre());
         titleLabel.setStyle("-fx-font-size: 24");
         Label detailsLabel = new Label(test.getDetails());
@@ -80,7 +82,7 @@ public class TestsController {
         consultFichesButton.setButtonType(JFXButton.ButtonType.RAISED);
         consultFichesButton.setStyle("-fx-background-color: #ddd; -fx-font-size: 14");
         consultFichesButton.setOnAction(e -> {
-//            showTestFiches(test);
+//            showTestFiches(test); // TODO
         });
         JFXButton publishResultsButton = new JFXButton("Publier résultats");
         publishResultsButton.setButtonType(JFXButton.ButtonType.RAISED);

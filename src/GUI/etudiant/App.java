@@ -32,9 +32,9 @@ public class App extends Application {
         fxmlLoader.setLocation(getClass().getResource("Login.fxml"));
         Parent root = fxmlLoader.load();
         primaryStage.setTitle("Online Tests");
-        Scene scene = new Scene(root, 240, 480);
-        primaryStage.setMinWidth(240);
-        primaryStage.setMinHeight(480 + 37);
+        Scene scene = new Scene(root, 360, 560);
+        primaryStage.setMinWidth(360);
+        primaryStage.setMinHeight(520 + 37);
         scene.getStylesheets().add(getClass().getResource("/GUI/gui.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
@@ -71,7 +71,7 @@ public class App extends Application {
 
     public static void gotoLogin() {
         try {
-            Common.replaceSceneContent(stage, App.class.getResource("Login.fxml"), 240, 480);
+            Common.replaceSceneContent(stage, App.class.getResource("Login.fxml"), 360, 560);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,7 +79,7 @@ public class App extends Application {
 
     public static void gotoDashboard() {
         try {
-            Common.replaceSceneContent(stage, App.class.getResource("Dashboard.fxml"), 960, 480);
+            Common.replaceSceneContent(stage, App.class.getResource("Dashboard.fxml"), 960, 560);
         } catch (Exception e) {
             e.printStackTrace();
         }
