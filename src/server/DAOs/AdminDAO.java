@@ -1,7 +1,6 @@
 package server.DAOs;
 
 import models.Admin;
-import models.Etudiant;
 import util.Response;
 
 import java.sql.Connection;
@@ -14,7 +13,7 @@ public class AdminDAO {
 
     public static Response login(Admin admin) {
         try {
-            PreparedStatement statement = conn.prepareStatement("select * from Admin where login=? and password=?");
+            PreparedStatement statement = conn.prepareStatement("select * from admins where login=? and password=?");
             statement.setString(1, admin.getLogin());
             statement.setString(2, admin.getPassword());
             ResultSet resultSet = statement.executeQuery();
@@ -45,7 +44,11 @@ public class AdminDAO {
             pst.setString(5, oldAdmin.getLogin());
             if(pst.executeUpdate()!=0) {
                 System.out.println("Admin updated : " + newAdmin.getPrenom());
-                return new Response(0, "You are Updated :" + newAdmin.getPrenom());
+                oldAdmin.setPrenom(newAdmin.getPrenom());
+                oldAdmin.setNom(newAdmin.getNom());
+                oldAdmin.setLogin(newAdmin.getLogin());
+
+                return new Response(0, "You are Updated :" + newAdmin.getPrenom(),newAdmin);
             }
             else
             {

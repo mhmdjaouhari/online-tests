@@ -1,20 +1,34 @@
 package GUI.admin;
 
-import com.jfoenix.controls.*;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
-import javafx.fxml.*;
-import javafx.scene.control.*;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import models.Etudiant;
+import server.DAOs.EtudiantDAO;
 import server.dispatchers.EtudiantDispatcher;
-import util.*;
+import util.Action;
+import util.Request;
+import util.Response;
+import util.Role;
+
 import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
+import java.util.ResourceBundle;
 
 public class EtudiantsController implements Initializable {
-    @FXML
-    JFXComboBox<String> groups;
+    @FXML JFXComboBox<String> groups;
+    @FXML JFXComboBox<String> filterGroupe;
     // fields contents
+    @FXML JFXTextField searchField;
     @FXML JFXTextField CNEField;
     @FXML JFXTextField nomField;
     @FXML JFXTextField prenomField;
@@ -22,32 +36,93 @@ public class EtudiantsController implements Initializable {
     @FXML JFXPasswordField passwordField;
 
     // config the table
-    @FXML
-    TableView<Etudiant> tab;
-    @FXML
-    TableColumn<Etudiant, String> cne;
+    @FXML TableView<Etudiant> tab;
+    @FXML TableColumn<Etudiant, String> cne;
     @FXML TableColumn<Etudiant, String> nom;
     @FXML TableColumn<Etudiant, String> prenom;
-    @FXML TableColumn<Etudiant, String> groupe;
     @FXML TableColumn<Etudiant, String> username;
+
+    boolean isEditClicked=false;
+    Etudiant oldEtud;
+    ObservableList<Etudiant> DataEtud;
+    HashMap<Integer,String> grps;
+    // Wrap the ObservableList in a FilteredList (initially display all data).
+    FilteredList<Etudiant> filteredData;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // table initialization here is some problems !!
-//        cne.setCellValueFactory(new PropertyValueFactory<>("CNE"));
-//        nom.setCellValueFactory(new PropertyValueFactory<>("nom"));
-//        prenom.setCellValueFactory(new PropertyValueFactory<>("prenom"));
-//        groupe.setCellValueFactory(new PropertyValueFactory<>("nomGroupe"));
-//        username.setCellValueFactory(new PropertyValueFactory<>("username"));
-//        tab.setItems(getAllEtudiants());
-
+        // table initialization
+        cne.setCellValueFactory(new PropertyValueFactory<>("CNE"));
+        nom.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        prenom.setCellValueFactory(new PropertyValueFactory<>("prenom"));
+        username.setCellValueFactory(new PropertyValueFactory<>("username"));
+        initTable(-1);
         // initialize combobox
-        List<String> grps=getAllGroupes();
-        if ( grps!=null) groups.getItems().addAll(grps);
+        grps=getAllGroupes();
+        filterGroupe.getItems().add("ALL");
+        System.out.println(grps);
+        filterGroupe.getItems().addAll(grps.values());
+        filterGroupe.setValue("ALL");
+        groups.getItems().addAll(grps.values());
     }
 
-    public void createEtudiant(ActionEvent actionEvent) {
-        Response res=EtudiantDispatcher.handle(new Request(Action.CREATE_ETUDIANT,load(),Role.ETUDIANT));
+    // btnEdit
+    public void EditEtudiant(ActionEvent actionEvent) {
+        if (!tab.getSelectionModel().isEmpty()){
+            oldEtud=tab.getSelectionModel().getSelectedItem();
+            isEditClicked=true;
+            charge(oldEtud);
+        }
+    }
+    // btnSave
+    public void SaveEtudiant(ActionEvent actionEvent) {
+        if(isFieldEmpty()) App.showErrorAlert("all fields are requires !");
+        else
+        {
+            if(isEditClicked){
+            Etudiant newEtud=load();
+            System.out.println("get it "+newEtud);
+            Response res=EtudiantDAO.update(oldEtud,newEtud);
+            dialog(res);
+            cancel();
+            }
+            else
+            {
+            Response res= EtudiantDAO.add(load());
+            dialog(res);
+            cancel();
+            }
+        }
+    }
+    // btnDelete
+    public void DeleteEtudiant(ActionEvent actionEvent) {
+        if (!tab.getSelectionModel().isEmpty()){
+            Etudiant etd=tab.getSelectionModel().getSelectedItem();
+            if(App.showConfirmationAlert("You want delete student :\n "+etd.getNom()+" "+etd.getPrenom())){
+                 Response res=EtudiantDAO.delete(etd);
+                dialog(res);
+            }
+        }
+    }
+    // btn cancel
+    public void cancel() {
+        CNEField.setText("");
+        nomField.setText("");
+        prenomField.setText("");
+        usernameField.setText("");
+        passwordField.setText("");
+        groups.setValue("");
+        isEditClicked=false;
+    }
+    // Combobox FilterGroup
+    public void getFiltredGroup(ActionEvent actionEvent) {
+        initTable(getIdGroup(filterGroupe.getValue()));
+    }
+
+
+    ////////////////***Utils***//////////////////////
+    // Dialog
+    public  void dialog(Response res){
         if(res.getStatus()==1)
         {
             System.out.println("Alert smthg wrong: "+res.getMessage());
@@ -56,37 +131,19 @@ public class EtudiantsController implements Initializable {
         else {
             App.showSuccessAlert(res.getMessage());
             System.out.println(res.getMessage());
-        }
-        System.out.println(load());
-    }
-
-    public void updateEtudiant(ActionEvent actionEvent) {
-        ArrayList<Etudiant> arrayEtud= new ArrayList<Etudiant>();
-        Etudiant oldEtud=null;
-        Etudiant newEtud=load();
-
-        //arrayEtud.add(oldEtud,newEtud);
-    }
-
-    public void deleteEtudiant(ActionEvent actionEvent) {
-        Etudiant etd=new Etudiant();
-        // from table row
-        etd.setCNE("123");
-        Response res=EtudiantDispatcher.handle(new Request(Action.DELETE_ETUDIANT,etd,Role.ETUDIANT));
-        if(res.getStatus()==1)
-        {
-            System.out.println("Alert smthg wrong: "+res.getMessage());
-            App.showErrorAlert(res.getMessage());
-        }
-        else {
-            App.showSuccessAlert(res.getMessage());
-            System.out.println(res.getMessage());
-            // refresh the tableView ...
+            initTable(getIdGroup(filterGroupe.getValue()));
         }
     }
-
-    // some hlp functions : //
-
+    // charge object to textFiels
+    private void charge(Etudiant oldEtud) {
+        CNEField.setText(oldEtud.getCNE());
+        nomField.setText(oldEtud.getNom());
+        prenomField.setText(oldEtud.getPrenom());
+        usernameField.setText(oldEtud.getUsername());
+        passwordField.setText(oldEtud.getPassword());
+        groups.setValue(grps.get(oldEtud.getIdGroupe()));
+        // groups.setVisibleRowCount(1);
+    }
     // load object from textFields
     public Etudiant load() {
         Etudiant etd=new Etudiant();
@@ -99,20 +156,15 @@ public class EtudiantsController implements Initializable {
         return etd;
     }
     // to get the id of the group name
-    public static int getIdGroup(String groupeName){
-        Response res=EtudiantDispatcher.handle(new Request(Action.GET_ID_GROUP,groupeName,Role.ETUDIANT));
-        if(res.getStatus()==1)
-        {
-            System.out.println("Alert smthg wrong: "+res.getMessage());
-            return 0;
-        }
-        else {
-            return (int)res.getData();
-        }
+    public  int getIdGroup(String groupeName){
+      for (Integer key: grps.keySet())
+          if(groupeName.equals(grps.get(key)))
+              return key;
+      return -1;
     }
     // to get all groups ( inorder to use it in the combobox )
-    public static ArrayList<String> getAllGroupes(){
-        ArrayList<String> groups;
+    public  HashMap<Integer,String> getAllGroupes(){
+        HashMap<Integer,String> groups;
         Request req=new Request(Action.GET_ALL_GROUPS, Role.ETUDIANT);
         Response res=EtudiantDispatcher.handle(req);
         if(res.getStatus()==1)
@@ -121,14 +173,14 @@ public class EtudiantsController implements Initializable {
             return null;
         }
         else {
-            groups=(ArrayList<String> )res.getData();
+            groups=(HashMap<Integer,String>)res.getData();
             return groups;
         }
     }
     // to get all students
-    public static ObservableList<Etudiant> getAllEtudiants() {
+    public  ObservableList<Etudiant> getAllEtudiants(int id) {
         ObservableList<Etudiant> AllEtud;
-        Request req=new Request(Action.GET_ALL_ETUDIANTS, Role.ETUDIANT);
+        Request req=new Request(Action.GET_ALL_ETUDIANTS,id ,Role.ETUDIANT);
         Response res=EtudiantDispatcher.handle(req);
         if(res.getStatus()==1)
         {
@@ -137,8 +189,52 @@ public class EtudiantsController implements Initializable {
         }
         else {
             AllEtud=(ObservableList<Etudiant>)res.getData();
-            System.out.println(AllEtud.get(0));
+            //System.out.println(AllEtud.get(0));
             return AllEtud;
         }
     }
+    // test validation
+    public boolean isFieldEmpty(){
+        if(CNEField!=null && nomField!=null && prenomField!=null && usernameField!=null && passwordField !=null && groups.getValue()!=null) {
+            if (!CNEField.getText().isEmpty() && !nomField.getText().isEmpty() && !prenomField.getText().isEmpty() && !usernameField.getText().isEmpty() && !passwordField.getText().isEmpty() && (!groups.getValue().isEmpty())) {
+                return false;
+            }
+            else
+            return true;
+        }
+        else
+        return true;
+    }
+    // initial the table
+    public void initTable(int id){
+        DataEtud=getAllEtudiants(id);
+        filteredData= new FilteredList<>(DataEtud, b -> true);
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(etudiant -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if (etudiant.getNom().toLowerCase().indexOf(lowerCaseFilter) != -1 ) {
+                    return true;
+                } else if (etudiant.getPrenom().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+                    return true;
+                }
+                else if (etudiant.getCNE().indexOf(lowerCaseFilter)!=-1){
+                    return true;
+                }
+                else if (etudiant.getUsername().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+                    return true;
+                }
+                else
+                    return false;
+            });
+        });
+        SortedList<Etudiant> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(tab.comparatorProperty());
+        tab.setItems(sortedData);
+    }
+
 }

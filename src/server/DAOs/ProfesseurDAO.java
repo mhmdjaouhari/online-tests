@@ -1,11 +1,11 @@
 package server.DAOs;
 
-import models.Etudiant;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import models.Professeur;
 import util.Response;
 
 import java.sql.*;
-import java.util.ArrayList;
 
 public class ProfesseurDAO {
     public static Connection conn = DataSource.getInstance().getConnection();
@@ -41,7 +41,7 @@ public class ProfesseurDAO {
         public static Response getAll()
         {
             ResultSet resultSet=null;
-            ArrayList<Professeur> arr=new ArrayList<Professeur>();
+            ObservableList<Professeur> ArrayProf= FXCollections.observableArrayList();
             try
             {
                 Statement st=conn.createStatement();
@@ -55,9 +55,9 @@ public class ProfesseurDAO {
                     professeur.setPrenom(resultSet.getString("prenom"));
                     professeur.setUsername(resultSet.getString("username"));
                     professeur.setPassword(resultSet.getString("password"));
-                    arr.add(professeur);
+                    ArrayProf.add(professeur);
                 }
-                return new Response(arr);
+                return new Response(ArrayProf);
             }
             catch (SQLException ex)
             {

@@ -1,12 +1,12 @@
 package server.DAOs;
 
-import models.Professeur;
-import server.DAOs.DataSource;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import models.Etudiant;
 import util.Response;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /* This class handles the actions coming from the client,
     and all classes who interact with database are in this ActionHandlers Package */
@@ -86,14 +86,20 @@ public class EtudiantDAO {
     }
 
     // getAll Students
-    public static Response getAll()
+    public static Response getAll(int id)
     {
         ResultSet resultSet=null;
-        ArrayList<Etudiant> ArrayEtud=new ArrayList<Etudiant>();
+        ObservableList<Etudiant> ArrayEtud= FXCollections.observableArrayList();
         try
         {
             Statement st=conn.createStatement();
-            resultSet=st.executeQuery("select * from etudiants;");
+            String query;
+            if(id==-1)
+                query="select * from etudiants;";
+            else {
+                query="select * from etudiants where id_groupe="+id+";";
+            }
+            resultSet=st.executeQuery(query);
             System.out.println("getAllAProf done ! ");
             while (resultSet.next())
             {
@@ -169,16 +175,14 @@ public class EtudiantDAO {
 
     public static Response getAllGroups(){
         ResultSet resultSet=null;
-        ArrayList<String> groups = new  ArrayList<String>();
+        HashMap<Integer,String> groups = new  HashMap<Integer,String>();
         try
         {
             Statement st=conn.createStatement();
             resultSet=st.executeQuery("select * from groupes");
-            String str=null;
             while (resultSet.next())
             {
-                str=resultSet.getString("nom");
-                groups.add(str);
+                groups.put((Integer) resultSet.getInt("id_groupe"),(String) resultSet.getString("nom"));
             }
             return new Response(groups);
         }

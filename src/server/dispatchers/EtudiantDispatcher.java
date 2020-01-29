@@ -6,7 +6,6 @@ import util.Action;
 import util.Request;
 import util.Response;
 
-import java.text.BreakIterator;
 import java.util.ArrayList;
 
 public class EtudiantDispatcher {
@@ -37,7 +36,7 @@ public class EtudiantDispatcher {
                 response = EtudiantDAO.delete(etudiant);
                 break;
             case GET_ALL_ETUDIANTS:
-                response = EtudiantDAO.getAll();
+                response = EtudiantDAO.getAll((int)request.getData());
                 break;
             case SEARCH_ETUDIANT:
                 etudiant=(Etudiant) request.getData();
