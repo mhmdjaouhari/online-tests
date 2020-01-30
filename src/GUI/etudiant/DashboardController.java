@@ -8,17 +8,28 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import models.Fiche;
+import models.Temp;
 import models.Test;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DashboardController {
 
@@ -40,6 +51,7 @@ public class DashboardController {
     private TestController testController;
 
     public void initialize() {
+        checkForTemp();
         try {
             ArrayList<Test> newTests = null;
             ArrayList<Test> oldTests = null;
@@ -153,6 +165,41 @@ public class DashboardController {
 
     public boolean closeTest() {
         return testController.showSaveAndExitDialog(true);
+    }
+
+    public void checkForTemp(){
+        try{
+//            String fullName = App.getLoggedEtudiant().getPrenom() + "-" + App.getLoggedEtudiant().getNom();
+//            String filePath = "temp/" + App.getActiveTest().getTitre() + "-" + fullName+".test";
+            Stream<Path> walk = Files.walk(Paths.get("temp/"));
+            List<String> result = walk.map(x -> x.toString())
+                    .filter(f -> f.endsWith(".test")).collect(Collectors.toList());
+            if(result.size() >1){
+                Common.showErrorAlert("Une activité suspecte detécté");
+                Platform.exit();
+            }
+            if(result.size() == 1){
+                FileInputStream fileInputStream = new FileInputStream(result.get(0));
+                ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
+                Temp temp = (Temp) inputStream.readObject();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Récuperation du teste");
+                alert.setHeaderText("à cause d'une panne ou d'une deconnection au serveur, un teste n'est pas terminé");
+                Test test = App.getEmitter().getTestById(temp.getId_test());
+                String message = "Titre : "+test.getTitre()+"\n" +
+                        "Temps restant : "+(test.getDuration()-temp.getMinute())+" minutes\n" ;
+                alert.setContentText(message);
+                alert.getButtonTypes().clear();
+                ButtonType passerTeste = new ButtonType("Passer teste");
+                alert.initStyle(StageStyle.UNDECORATED);
+                alert.getButtonTypes().addAll(passerTeste);
+                alert.showAndWait();
+                openTest(test.getId());
+                testController.setPanne(true);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 

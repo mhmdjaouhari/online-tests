@@ -1,9 +1,6 @@
 package client.actionEmitters;
 
-import util.Action;
-import util.Request;
-import util.Response;
-import util.Role;
+import util.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -81,7 +78,7 @@ abstract public class ActionEmitter {
 
     public  boolean isServerOnline(){
         boolean isAlive=false;
-        SocketAddress socketAddress = new InetSocketAddress("localhost",5000);
+        SocketAddress socketAddress = new InetSocketAddress(Constants.HOST,5000);
         Socket TestSocket = new Socket();
         try{
             TestSocket.connect(socketAddress);
@@ -100,7 +97,7 @@ abstract public class ActionEmitter {
             inputStream.close();
             socket.close();
             System.out.println("okk");
-            socket = new Socket("localhost",5000);
+            socket = new Socket(Constants.HOST,5000);
             inputStream = new ObjectInputStream(socket.getInputStream());
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             connectedToServer = true;

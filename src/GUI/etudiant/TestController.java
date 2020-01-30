@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import models.*;
 
 
+import java.io.*;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
@@ -54,46 +55,67 @@ public class TestController {
     private ArrayList<VBox> questionBoxesList = new ArrayList<>();
     private ArrayList<Reponse> reponsesList = new ArrayList<>();
 
+    private boolean isPanne = false;
+
+//    private ObjectOutputStream outputStream;
+//    private ObjectInputStream inputStream;
+
+
+    public boolean isPanne() {
+        return isPanne;
+    }
+
+    public void setPanne(boolean panne) {
+        isPanne = panne;
+    }
 
     public void initialize() {
-        nomEtudiant.setText(App.getLoggedEtudiant().getPrenom() + " " + App.getLoggedEtudiant().getNom());
-        groupeEtudiant.setText("ID Groupe : " + App.getLoggedEtudiant().getIdGroupe());
-        titreTest.setText(App.getActiveTest().getTitre());
-        detailsTest.setText(App.getActiveTest().getDetails());
-        reponsesList = new ArrayList<>();
-        int i = 0;
-        for (Question question : App.getActiveTest().getQuestions()) {
-            VBox questionBox = new VBox();
-            VBox.setVgrow(questionBox, Priority.ALWAYS);
-            questionBox.setAlignment(Pos.CENTER);
-            questionBox.setSpacing(32);
-            Label questionNumber = new Label("Question #" + (++i));
-            questionNumber.setFont(new Font("Ubuntu Bold", 22));
-            Label questionText = new Label(question.getTexte());
-            HBox checkboxes = new HBox();
-            checkboxes.setSpacing(32);
-            checkboxes.setAlignment(Pos.CENTER);
+//        try {
+            //Creation of temp file
+//            String fullName = App.getLoggedEtudiant().getPrenom() + "-" + App.getLoggedEtudiant().getNom();
+//            String filePath = "temp/" + App.getActiveTest().getTitre() + "-" + fullName+".test";
+//            FileOutputStream file = new FileOutputStream(filePath);
+//            outputStream = new ObjectOutputStream(file);
+//            FileInputStream fileInputStream = new FileInputStream(filePath);
+//            inputStream = new ObjectInputStream(fileInputStream);
 
-            Reponse reponse = new Reponse();
-            reponse.setIdQuestion(question.getId());
+            nomEtudiant.setText(App.getLoggedEtudiant().getPrenom() + " " + App.getLoggedEtudiant().getNom());
+            groupeEtudiant.setText("ID Groupe : " + App.getLoggedEtudiant().getIdGroupe());
+            titreTest.setText(App.getActiveTest().getTitre());
+            detailsTest.setText(App.getActiveTest().getDetails());
+            reponsesList = new ArrayList<>();
+            int i = 0;
+            for (Question question : App.getActiveTest().getQuestions()) {
+                VBox questionBox = new VBox();
+                VBox.setVgrow(questionBox, Priority.ALWAYS);
+                questionBox.setAlignment(Pos.CENTER);
+                questionBox.setSpacing(32);
+                Label questionNumber = new Label("Question #" + (++i));
+                questionNumber.setFont(new Font("Ubuntu Bold", 22));
+                Label questionText = new Label(question.getTexte());
+                HBox checkboxes = new HBox();
+                checkboxes.setSpacing(32);
+                checkboxes.setAlignment(Pos.CENTER);
+                Reponse reponse = new Reponse();
+                reponse.setIdQuestion(question.getId());
 
-            ArrayList<String> answers = new ArrayList<>();
-            Collections.addAll(answers,question.getAnswersTexte().split(",",0));
+                ArrayList<String> answers = new ArrayList<>();
+                Collections.addAll(answers, question.getAnswersTexte().split(",", 0));
 
-            int k=1;
-            for(String answer:answers){
-                JFXCheckBox checkBox = new JFXCheckBox(answer);
-                checkBox.setCheckedColor(Color.web("#046dd5"));
-                int choix = k;
-                checkBox.setOnAction(e -> {
-                    if (checkBox.isSelected())
-                        addChoixToReponse(reponse, choix);
-                    else
-                        removeChoixFromReponse(reponse, choix);
-                });
-                checkboxes.getChildren().add(checkBox);
-                k++;
-            }
+                int k = 1;
+                for (String answer : answers) {
+                    JFXCheckBox checkBox = new JFXCheckBox(answer);
+                    checkBox.setCheckedColor(Color.web("#046dd5"));
+                    int choix = k;
+                    checkBox.setOnAction(e -> {
+                        if (checkBox.isSelected())
+                            addChoixToReponse(reponse, choix);
+                        else
+                            removeChoixFromReponse(reponse, choix);
+                    });
+                    checkboxes.getChildren().add(checkBox);
+                    k++;
+                }
 
 //            for (int j = 1; j <= 4; j++) {
 //                JFXCheckBox checkBox = new JFXCheckBox(Integer.toString(j));
@@ -107,31 +129,35 @@ public class TestController {
 //                });
 //                checkboxes.getChildren().add(checkBox);
 //            }
-            questionBox.getChildren().addAll(questionNumber, questionText, checkboxes);
-            questionBoxesList.add(questionBox);
+                questionBox.getChildren().addAll(questionNumber, questionText, checkboxes);
+                questionBoxesList.add(questionBox);
 
-            reponsesList.add(reponse);
-        }
-        currentQuestion = 0;
+                reponsesList.add(reponse);
+            }
+            currentQuestion = 0;
 //        System.out.println("size of question boxe: "+questionBoxesList.size());
-        questionPane.getChildren().setAll(questionBoxesList.get(currentQuestion));
-        prevQuestionButton.setDisable(true);
+            questionPane.getChildren().setAll(questionBoxesList.get(currentQuestion));
+            prevQuestionButton.setDisable(true);
 
-        envoyerFicheButton.setOnAction(e -> {
-            showSaveAndExitDialog(true);
-        });
-
-        Platform.runLater(() -> {
-            stage = (Stage) questionPane.getScene().getWindow();
-            stage.setOnCloseRequest(e -> {
-                if (App.getLoggedEtudiant() != null) {
-                    e.consume();
-                    showSaveAndExitDialog(true);
-                }
+            envoyerFicheButton.setOnAction(e -> {
+                showSaveAndExitDialog(true);
             });
-        });
 
-        setTimer();
+            Platform.runLater(() -> {
+                stage = (Stage) questionPane.getScene().getWindow();
+                stage.setOnCloseRequest(e -> {
+                    if (App.getLoggedEtudiant() != null) {
+                        e.consume();
+                        showSaveAndExitDialog(true);
+                    }
+                });
+            });
+
+            setTimer();
+//        }catch (IOException e){
+//            Common.showErrorAlert(e.getMessage());
+//            e.printStackTrace();
+//        }
     }
 
     private void setTimer() {
@@ -210,6 +236,8 @@ public class TestController {
             newValue = Integer.toString(choix);
         }
         reponse.setValue(newValue);
+        updateTestToTempFile();
+
     }
 
     private void removeChoixFromReponse(Reponse reponse, int choix) {
@@ -219,6 +247,7 @@ public class TestController {
             choixArray.remove(Integer.toString(choix));
             String newValue = String.join(",", choixArray);
             reponse.setValue(newValue);
+            updateTestToTempFile();
         }
     }
 
@@ -231,10 +260,35 @@ public class TestController {
         fiche.setTest(test);
         try {
             App.getEmitter().submitFiche(fiche);
+
         } catch (Exception e) {
             Common.showErrorAlert(e.getMessage());
             e.printStackTrace();
         }
     }
+
+
+    private void updateTestToTempFile(){
+        try{
+            String fullName = App.getLoggedEtudiant().getPrenom() + "-" + App.getLoggedEtudiant().getNom();
+            String filePath = "temp/" + App.getActiveTest().getTitre() + "-" + fullName+".test";
+            FileOutputStream file = new FileOutputStream(filePath);
+            ObjectOutputStream outputStream = new ObjectOutputStream(file);
+            Temp temp = new Temp();
+            temp.setId_test(App.getActiveTest().getId());
+            temp.setCne(App.getLoggedEtudiant().getCNE());
+            temp.setMinute(timerMinutes);
+            temp.setReponses(Temp.toTempReponse(reponsesList));
+//            System.out.println("write  : "+temp);
+            outputStream.writeObject(temp);
+            outputStream.close();
+        }catch (Exception e){
+            Common.showErrorAlert(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+
 
 }

@@ -5,6 +5,7 @@ import client.actionEmitters.EtudiantActionEmitter;
 import client.actionEmitters.ProfesseurActionEmitter;
 import javafx.event.ActionEvent;
 import util.Action;
+import util.Constants;
 import util.Role;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class Client {
 
     public boolean connect(){
         try{
-            Socket socket = new Socket("localhost", 5000);
+            Socket socket = new Socket(Constants.HOST, 5000);
             emitter = instantiateEmitter(socket);
             Runtime.getRuntime().addShutdownHook(new Thread(){
                 @Override
