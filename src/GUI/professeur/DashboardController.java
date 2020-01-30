@@ -1,116 +1,85 @@
 package GUI.professeur;
 
-import GUI.GUI;
+import GUI.Common;
 import com.jfoenix.controls.JFXButton;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import models.Test;
 
-import java.util.ArrayList;
+import java.io.IOException;
 
 public class DashboardController {
 
     @FXML
-    private Label newTestCount;
-
+    private AnchorPane contentPane;
     @FXML
     private Label nomProf;
-
     @FXML
-    private ScrollPane newTestsPane;
-
+    private JFXButton testsButton;
     @FXML
-    private ScrollPane oldTestsPane;
-
-    private TestController testController;
+    private JFXButton etudiantsButton;
+    @FXML
+    private JFXButton statsButton;
 
     public void initialize() {
-        System.out.println(App.getEmitter());
-        ArrayList<Test> allTests = App.getEmitter().getTests();
 
         nomProf.setText(App.getLoggedProfesseur().getPrenom() + " " + App.getLoggedProfesseur().getNom());
-        newTestCount.setText(Integer.toString(allTests.size()));
-
-        VBox content = new VBox();
-        content.setSpacing(8);
-        content.setPadding(new Insets(8));
-        for (Test test : allTests) {
-            content.getChildren().addAll(createTestRow(test));
-        }
-        newTestsPane.setContent(content);
-
-        Platform.runLater(() -> {
-            Stage stage = (Stage) newTestsPane.getScene().getWindow();
-            stage.setOnCloseRequest(e -> {
-                if (App.getLoggedProfesseur() != null &&
-                        App.getActiveTest() != null &&
-                        testController != null &&
-                        !testController.showSaveAndExitDialog()) {
-                    e.consume();
-                }
-            });
+        testsButton.setOnAction(e -> {
+            switchToTab("dashboard/Tests.fxml", testsButton);
         });
-    }
-
-    public JFXButton createTestRow(Test test) {
-        JFXButton row = new JFXButton();
-        row.setButtonType(JFXButton.ButtonType.RAISED);
-        row.setStyle("-fx-background-color: #fff");
-        row.setPrefHeight(56);
-        row.setPrefWidth(320);
-        VBox vBox = new VBox();
-        Label subtitleLabel = new Label(test.getDetails());
-        Label titleLabel = new Label(test.getTitre());
-        titleLabel.setStyle("-fx-font-weight: bold");
-        subtitleLabel.setStyle("-fx-font-size: 12");
-        vBox.getChildren().addAll(titleLabel, subtitleLabel);
-        row.setGraphic(vBox);
-        row.setOnAction(e -> {
-            openTest(test.getId());
+        etudiantsButton.setOnAction(e -> {
+            switchToTab("dashboard/Etudiants.fxml", etudiantsButton);
         });
-        return row;
+        statsButton.setOnAction(e -> {
+            switchToTab("dashboard/Stats.fxml", statsButton);
+        });
+        switchToTab("dashboard/Tests.fxml", testsButton);
+
+
+//
+//        Platform.runLater(() -> {
+//            Stage stage = (Stage) newTestsPane.getScene().getWindow();
+//            stage.setOnCloseRequest(e -> {
+//                if (App.getLoggedProfesseur() != null &&
+//                        App.getActiveTest() != null &&
+//                        testController != null &&
+//                        !testController.showSaveAndExitDialog()) {
+//                    e.consume();
+//                }
+//            });
+//        });
     }
 
-    public void handleLogout() {
-        if (App.getActiveTest() == null || closeTest()) {
-            App.setLoggedProfesseur(null);
-            App.gotoLogin();
-        }
-    }
-
-    public void openTest(int idTest) {
+    private void switchToTab(String fxml, JFXButton relatedButton) {
+        testsButton.setStyle("");
+        etudiantsButton.setStyle("");
+        statsButton.setStyle("");
+        relatedButton.setStyle("-fx-background-color: #555");
         try {
-            App.setActiveTest(App.getEmitter().getTest(idTest));
-            Stage testStage = new Stage();
-            testStage.initOwner(App.getStage());
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("Test.fxml"));
-            Parent root;
-            root = fxmlLoader.load();
-            testController = fxmlLoader.getController();
-            Scene scene = new Scene(root, 1024, 720);
-            scene.getStylesheets().add(getClass().getResource("/GUI/gui.css").toExternalForm());
-            testStage.setScene(scene);
-            testStage.setTitle("Online Tests");
-            testStage.setResizable(false);
-            testStage.show();
-        } catch (Exception e) {
-            GUI.showErrorAlert(e.getMessage());
+            fxmlLoader.setLocation(getClass().getResource(fxml));
+            Parent page = fxmlLoader.load();
+            contentPane.getChildren().setAll(page);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public boolean closeTest() {
-        return testController.showSaveAndExitDialog();
+
+    public void handleLogout() {
+        App.setLoggedProfesseur(null);
+        App.gotoLogin();
     }
 
+    public AnchorPane getContentPane() {
+        return contentPane;
+    }
 
+    public void setContentPane(AnchorPane contentPane) {
+        this.contentPane = contentPane;
+    }
 }

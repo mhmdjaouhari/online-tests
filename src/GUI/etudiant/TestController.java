@@ -1,5 +1,6 @@
 package GUI.etudiant;
 
+import GUI.Common;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import javafx.application.Platform;
@@ -76,7 +77,7 @@ public class TestController {
             Reponse reponse = new Reponse();
             reponse.setIdQuestion(question.getId());
 
-            for (int j = 1; j <= 4; j++) {
+            for (int j = 1; j <= question.getNombreChoix(); j++) {
                 JFXCheckBox checkBox = new JFXCheckBox(Integer.toString(j));
                 checkBox.setCheckedColor(Color.web("#046dd5"));
                 int choix = j;
@@ -88,6 +89,7 @@ public class TestController {
                 });
                 checkboxes.getChildren().add(checkBox);
             }
+
             questionBox.getChildren().addAll(questionNumber, questionText, checkboxes);
             questionBoxesList.add(questionBox);
 
@@ -96,6 +98,7 @@ public class TestController {
         currentQuestion = 0;
         questionPane.getChildren().setAll(questionBoxesList.get(currentQuestion));
         prevQuestionButton.setDisable(true);
+        if (questionBoxesList.size() == 1) nextQuestionButton.setDisable(true);
 
         envoyerFicheButton.setOnAction(e -> {
             showSaveAndExitDialog(true);
@@ -209,9 +212,12 @@ public class TestController {
         Test test = new Test();
         test.setId(App.getActiveTest().getId());
         fiche.setTest(test);
-
-        // TODO: in client package
-//        App.getEmitter().submitFiche(fiche);
+        try {
+            App.getEmitter().submitFiche(fiche);
+        } catch (Exception e) {
+            Common.showErrorAlert(e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 }

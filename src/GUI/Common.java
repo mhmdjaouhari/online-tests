@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 
-public class GUI {
+public class Common {
     public static FXMLLoader replaceSceneContent(Stage stage, URL resource, int minWidth, int minHeight) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(resource);
@@ -21,7 +21,7 @@ public class GUI {
         stage.setMinHeight(minHeight + 37);
 //        } else {
         scene = new Scene(page);
-        scene.getStylesheets().add(GUI.class.getResource("gui.css").toExternalForm());
+        scene.getStylesheets().add(Common.class.getResource("gui.css").toExternalForm());
         stage.setScene(scene);
 //        stage.setResizable(true);
         stage.sizeToScene();

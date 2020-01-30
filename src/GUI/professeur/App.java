@@ -1,8 +1,8 @@
 package GUI.professeur;
 
-import GUI.GUI;
+import GUI.Common;
 import client.Client;
-import client.actionEmitters.EtudiantActionEmitter;
+import client.actionEmitters.ProfesseurActionEmitter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,17 +16,16 @@ public class App extends Application {
 
     private static Stage stage;
     private static Professeur loggedProfesseur;
-    private static Test activeTest;
-    private static EtudiantActionEmitter emitter; // TODO: should be ProfesseurActionEmitter
+    private static ProfesseurActionEmitter emitter;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         Client client = new Client(Role.PROFESSEUR);
         if (!client.connect()) {
-            GUI.showErrorAlert("Server is offline");
+            Common.showErrorAlert("Server is offline");
             throw new Exception("Server is offline");
         }
-        emitter = (EtudiantActionEmitter) client.getEmitter();
+        emitter = (ProfesseurActionEmitter) client.getEmitter();
         stage = primaryStage;
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("Login.fxml"));
@@ -49,7 +48,7 @@ public class App extends Application {
         return stage;
     }
 
-    public static EtudiantActionEmitter getEmitter() {
+    public static ProfesseurActionEmitter getEmitter() {
         return emitter;
     }
 
@@ -61,17 +60,9 @@ public class App extends Application {
         loggedProfesseur = professeur;
     }
 
-    public static Test getActiveTest() {
-        return activeTest;
-    }
-
-    public static void setActiveTest(Test test) {
-        activeTest = test;
-    }
-
     public static void gotoLogin() {
         try {
-            GUI.replaceSceneContent(stage, App.class.getResource("Login.fxml"), 240, 480);
+            Common.replaceSceneContent(stage, App.class.getResource("Login.fxml"), 240, 480);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,7 +70,7 @@ public class App extends Application {
 
     public static void gotoDashboard() {
         try {
-            GUI.replaceSceneContent(stage, App.class.getResource("Dashboard.fxml"), 960, 480);
+            Common.replaceSceneContent(stage, App.class.getResource("Dashboard.fxml"), 960, 480);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefWidth="960.0" spacing="8.0" style="-fx-background-color: #eee;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="TOP_LEFT" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.professeur.dashboard.TestsController">
+    <children>
+      <HBox spacing="16.0">
+         <children>
+              <Label text="Mes tests" HBox.hgrow="ALWAYS">
+                  <font>
+                      <Font name="Ubuntu" size="28.0" />
+                  </font>
+              </Label>
+            <JFXButton onAction="#showTestForm" alignment="CENTER_RIGHT" buttonType="RAISED" styleClass="bg-blue" text="+ Créer un nouveau test" textFill="WHITE" HBox.hgrow="NEVER">
+               <font>
+                  <Font name="Ubuntu" size="18.0" />
+               </font>
+            </JFXButton>
+         </children>
+      </HBox>
+        <ScrollPane fx:id="testsScrollPane" hbarPolicy="NEVER" pannable="true" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #eee;" VBox.vgrow="ALWAYS">
+            <content>
+                <Label text="Chargement..." />
+            </content>
+        </ScrollPane>
+    </children>
+    <padding>
+        <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
+    </padding>
+</VBox>

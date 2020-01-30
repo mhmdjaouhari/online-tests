@@ -1,11 +1,14 @@
 package models;
 
-public class Question {
+import java.io.Serializable;
+
+public class Question implements Serializable {
 
     private int id;
-    private String texte;
-    private String value;
+    private String texte = "";
+    private String value = "";
     private int idTest;
+    private int nombreChoix;
 
     public Question(int id, String texte, String value, int idTest) {
         this.id = id;
@@ -49,6 +52,14 @@ public class Question {
         this.idTest = idTest;
     }
 
+    public int getNombreChoix() {
+        return nombreChoix;
+    }
+
+    public void setNombreChoix(int nombreChoix) {
+        this.nombreChoix = nombreChoix;
+    }
+
     @Override
     public String toString() {
         return "Question{" +
@@ -56,6 +67,7 @@ public class Question {
                 ", texte='" + texte + '\'' +
                 ", value='" + value + '\'' +
                 ", idTest=" + idTest +
+                ", nombreChoix=" + nombreChoix +
                 '}';
     }
 }

@@ -23,3 +23,16 @@
 .bg-gray {
     -fx-background-color: "#ccc"
 }
+
+.jfx-slider > .track {
+     -fx-background-color: "#046dd5";
+}
+.jfx-slider > .thumb {
+     -fx-background-color: "#046dd5";
+}
+.jfx-slider > .colored-track {
+     -fx-background-color: "#046dd5";
+}
+.jfx-slider > .animated-thumb {
+     -fx-background-color: "#046dd5";
+}

@@ -1,13 +1,15 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Fiche {
+public class Fiche implements Serializable {
 
     private int id;
     private float note;
     private String CNE;
     private String nomEtudiant; // nom & prénom
+
     private String nomGroupeEtudiant;
     private Test test;
     private ArrayList<Reponse> reponses;
@@ -15,12 +17,13 @@ public class Fiche {
     public Fiche() {
     }
 
-    public Fiche(int id, float note, String nomEtudiant, String nomGroupeEtudiant, Test test) {
+    public Fiche(int id,String CNE, float note, String nomEtudiant, String nomGroupeEtudiant, Test test) {
         this.id = id;
         this.note = note;
         this.nomEtudiant = nomEtudiant;
         this.nomGroupeEtudiant = nomGroupeEtudiant;
         this.test = test;
+        this.CNE = CNE;
     }
 
     public int getId() {
