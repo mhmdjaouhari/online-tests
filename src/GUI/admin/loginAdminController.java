@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import models.Admin;
+import models.Etudiant;
 import server.DAOs.AdminDAO;
 import util.Response;
 
@@ -21,8 +22,8 @@ public class loginAdminController {
 
         Response res= AdminDAO.login(adm) ;
         if(res.getStatus()==0){
-             DashBoardController.setLogedUser((Admin)res.getData());
-             App.gotoDashboard();
+            DashBoardController.setLogedUser((Admin)res.getData());
+            App.gotoDashboard();
         }
         else
             App.showErrorAlert(res.getMessage());

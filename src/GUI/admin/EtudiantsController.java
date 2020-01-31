@@ -13,14 +13,18 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import models.Etudiant;
+import models.Groupe;
 import server.DAOs.EtudiantDAO;
 import server.dispatchers.EtudiantDispatcher;
+import server.dispatchers.ProfesseurDispatcher;
 import util.Action;
 import util.Request;
 import util.Response;
 import util.Role;
 
+import java.awt.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
@@ -45,28 +49,22 @@ public class EtudiantsController implements Initializable {
     boolean isEditClicked=false;
     Etudiant oldEtud;
     ObservableList<Etudiant> DataEtud;
-    HashMap<Integer,String> grps;
+    ArrayList<Groupe> grps;
     // Wrap the ObservableList in a FilteredList (initially display all data).
     FilteredList<Etudiant> filteredData;
 
-    @Override
+       @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // table initialization
+//        // table initialization
         cne.setCellValueFactory(new PropertyValueFactory<>("CNE"));
         nom.setCellValueFactory(new PropertyValueFactory<>("nom"));
         prenom.setCellValueFactory(new PropertyValueFactory<>("prenom"));
         username.setCellValueFactory(new PropertyValueFactory<>("username"));
         initTable(-1);
-        // initialize combobox
-        grps=getAllGroupes();
-        filterGroupe.getItems().add("ALL");
-        System.out.println(grps);
-        filterGroupe.getItems().addAll(grps.values());
-        filterGroupe.setValue("ALL");
-        groups.getItems().addAll(grps.values());
+        initCombobox();
     }
 
-    // btnEdit
+//  btnEdit
     public void EditEtudiant(ActionEvent actionEvent) {
         if (!tab.getSelectionModel().isEmpty()){
             oldEtud=tab.getSelectionModel().getSelectedItem();
@@ -74,37 +72,40 @@ public class EtudiantsController implements Initializable {
             charge(oldEtud);
         }
     }
-    // btnSave
+//    // btnSave
     public void SaveEtudiant(ActionEvent actionEvent) {
         if(isFieldEmpty()) App.showErrorAlert("all fields are requires !");
         else
         {
             if(isEditClicked){
             Etudiant newEtud=load();
-            System.out.println("get it "+newEtud);
-            Response res=EtudiantDAO.update(oldEtud,newEtud);
+            System.out.println("Selected student : "+newEtud);
+            ArrayList<Etudiant> etudiants=new ArrayList<Etudiant>();
+            etudiants.add(oldEtud);
+            etudiants.add(newEtud);
+            Response res=EtudiantDispatcher.handle(new Request(Action.UPDATE_ETUDIANT,etudiants, Role.ETUDIANT));
             dialog(res);
             cancel();
             }
             else
             {
-            Response res= EtudiantDAO.add(load());
+            Response res=EtudiantDispatcher.handle(new Request(Action.CREATE_ETUDIANT,load(), Role.ETUDIANT));
             dialog(res);
             cancel();
             }
         }
     }
-    // btnDelete
+//    // btnDelete
     public void DeleteEtudiant(ActionEvent actionEvent) {
         if (!tab.getSelectionModel().isEmpty()){
             Etudiant etd=tab.getSelectionModel().getSelectedItem();
             if(App.showConfirmationAlert("You want delete student :\n "+etd.getNom()+" "+etd.getPrenom())){
-                 Response res=EtudiantDAO.delete(etd);
+                Response res=EtudiantDispatcher.handle(new Request(Action.DELETE_ETUDIANT,etd, Role.ETUDIANT));
                 dialog(res);
             }
         }
     }
-    // btn cancel
+//    // btn cancel
     public void cancel() {
         CNEField.setText("");
         nomField.setText("");
@@ -114,7 +115,7 @@ public class EtudiantsController implements Initializable {
         groups.setValue("");
         isEditClicked=false;
     }
-    // Combobox FilterGroup
+//    // Combobox FilterGroup
     public void getFiltredGroup(ActionEvent actionEvent) {
         initTable(getIdGroup(filterGroupe.getValue()));
     }
@@ -123,7 +124,7 @@ public class EtudiantsController implements Initializable {
     ////////////////***Utils***//////////////////////
     // Dialog
     public  void dialog(Response res){
-        if(res.getStatus()==1)
+        if(res.getStatus()!=0)
         {
             System.out.println("Alert smthg wrong: "+res.getMessage());
             App.showErrorAlert(res.getMessage());
@@ -141,7 +142,7 @@ public class EtudiantsController implements Initializable {
         prenomField.setText(oldEtud.getPrenom());
         usernameField.setText(oldEtud.getUsername());
         passwordField.setText(oldEtud.getPassword());
-        groups.setValue(grps.get(oldEtud.getIdGroupe()));
+        groups.setValue(getNomGroup(oldEtud.getIdGroupe()));
         // groups.setVisibleRowCount(1);
     }
     // load object from textFields
@@ -157,32 +158,37 @@ public class EtudiantsController implements Initializable {
     }
     // to get the id of the group name
     public  int getIdGroup(String groupeName){
-      for (Integer key: grps.keySet())
-          if(groupeName.equals(grps.get(key)))
-              return key;
+      for (Groupe grp: grps)
+          if(groupeName==grp.getNom())
+              return grp.getId();
       return -1;
     }
+    // to get the name of group
+    public  String getNomGroup(int id_grp){
+        for (Groupe grp: grps)
+            if(id_grp==grp.getId())
+                return grp.getNom();
+        return "";
+    }
     // to get all groups ( inorder to use it in the combobox )
-    public  HashMap<Integer,String> getAllGroupes(){
-        HashMap<Integer,String> groups;
-        Request req=new Request(Action.GET_ALL_GROUPS, Role.ETUDIANT);
-        Response res=EtudiantDispatcher.handle(req);
-        if(res.getStatus()==1)
+    public  ArrayList<Groupe> getAllGroupes(){
+        ArrayList<Groupe> groups;
+        Response res=ProfesseurDispatcher.handle(new Request(Action.GET_GROUPES, Role.PROFESSEUR));
+        if(res.getStatus()!=0)
         {
             System.out.println("Alert smthg wrong: "+res.getMessage());
             return null;
         }
         else {
-            groups=(HashMap<Integer,String>)res.getData();
+            groups=(ArrayList<Groupe>)res.getData();
             return groups;
         }
     }
     // to get all students
     public  ObservableList<Etudiant> getAllEtudiants(int id) {
         ObservableList<Etudiant> AllEtud;
-        Request req=new Request(Action.GET_ALL_ETUDIANTS,id ,Role.ETUDIANT);
-        Response res=EtudiantDispatcher.handle(req);
-        if(res.getStatus()==1)
+        Response res= EtudiantDispatcher.handle(new Request(Action.GET_ALL_ETUDIANTS,id, Role.ETUDIANT));
+        if(res.getStatus()!=0)
         {
             System.out.println("Alert smthg wrong: "+res.getMessage());
             return null;
@@ -193,7 +199,7 @@ public class EtudiantsController implements Initializable {
             return AllEtud;
         }
     }
-    // test validation
+    // test validation of fields !
     public boolean isFieldEmpty(){
         if(CNEField!=null && nomField!=null && prenomField!=null && usernameField!=null && passwordField !=null && groups.getValue()!=null) {
             if (!CNEField.getText().isEmpty() && !nomField.getText().isEmpty() && !prenomField.getText().isEmpty() && !usernameField.getText().isEmpty() && !passwordField.getText().isEmpty() && (!groups.getValue().isEmpty())) {
@@ -205,7 +211,7 @@ public class EtudiantsController implements Initializable {
         else
         return true;
     }
-    // initial the table
+    // init the table
     public void initTable(int id){
         DataEtud=getAllEtudiants(id);
         filteredData= new FilteredList<>(DataEtud, b -> true);
@@ -235,6 +241,16 @@ public class EtudiantsController implements Initializable {
         SortedList<Etudiant> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(tab.comparatorProperty());
         tab.setItems(sortedData);
+    }
+    // init the combobox
+    private void initCombobox() {
+        grps=getAllGroupes();
+        filterGroupe.getItems().add("ALL");
+       for(Groupe grp : grps){
+            filterGroupe.getItems().add(grp.getNom());
+            groups.getItems().add(grp.getNom());
+          }
+        filterGroupe.setValue("ALL");
     }
 
 }

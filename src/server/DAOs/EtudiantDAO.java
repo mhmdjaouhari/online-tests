@@ -1,9 +1,13 @@
 package server.DAOs;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import models.Etudiant;
+import util.Response;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /* This class handles the actions coming from the client,
     and all classes who interact with database are in this ActionHandlers Package */
@@ -46,30 +50,34 @@ public class EtudiantDAO {
             throw new SQLException("Problem in adding etudian");
         }
         System.out.println("Etudiant Added !! ");
-
     }
 
-    // delete Student by cne
-    public static void delete(String cne) throws SQLException {
-        PreparedStatement statement =conn.prepareStatement("delete from etudiants where cne=?;");
-        statement.setString(1,cne);
-        if(statement.executeUpdate()!=0)
+    // delete Student
+    public static void delete(Etudiant etd) throws SQLException {
+        PreparedStatement pst =conn.prepareStatement("delete from etudiants where cne=?;");
+        pst.setString(1,etd.getCNE());
+        if(pst.executeUpdate()!=0)
         {
-            System.out.println("Etudiant deleted : ");
+            System.out.println("Etudiant deleted : "+etd.getCNE());
         }
         else{
             throw new SQLException("Etudiant doesn't exist");
         }
     }
 
-    // getAll Students
-    public static ArrayList<Etudiant> getAllEtudiants() throws SQLException {
+    // get all Students (id=-1) or all std in a given grp, "as <ObservableList>" for tabViews
+    public static ObservableList<Etudiant> getAllEtudiants( int id_grp) throws SQLException {
         ResultSet resultSet=null;
-        ArrayList<Etudiant> etudiants=new ArrayList<Etudiant>();
-
-            Statement statement=conn.createStatement();
-            resultSet=statement.executeQuery("select * from etudiants;");
-            while (resultSet.next())
+        ObservableList<Etudiant> ArrayEtud= FXCollections.observableArrayList();
+        Statement st=conn.createStatement();
+        String query;
+        if(id_grp==-1)
+            query="select * from etudiants;";
+        else {
+            query="select * from etudiants where id_groupe="+id_grp+";";
+        }
+        resultSet=st.executeQuery(query);
+        while (resultSet.next())
             {
                 Etudiant fullEtudiant = new Etudiant();
                 fullEtudiant.setCNE(resultSet.getString("CNE"));
@@ -78,9 +86,9 @@ public class EtudiantDAO {
                 fullEtudiant.setPrenom(resultSet.getString("prenom"));
                 fullEtudiant.setUsername(resultSet.getString("username"));
                 fullEtudiant.setPassword(resultSet.getString("password"));
-                etudiants.add(fullEtudiant);
+                ArrayEtud.add(fullEtudiant);
             }
-            return etudiants;
+            return ArrayEtud;
         }
 
     // getAll Student in a given groupe
@@ -122,51 +130,20 @@ public class EtudiantDAO {
         }
     }
 
-
     // update Student
-    public static void update(String oldEtudiantCne, Etudiant newEtudiant) throws SQLException {
-        PreparedStatement statement = conn.prepareStatement(
-                "update etudiants set cne=?,id_groupe=?,username=?,password=?,nom=?,prenom=? where cne=?;"
-        );
-        Etudiant oldEtudiant = getEtudiantById(oldEtudiantCne);
-        if (newEtudiant.getCNE() != null) {
-            statement.setString(1, newEtudiant.getCNE());
-        } else {
-            statement.setString(1, oldEtudiant.getCNE());
+    public static void update(Etudiant oldEtud,Etudiant newEtud) throws SQLException {
+        PreparedStatement pst =conn.prepareStatement("update etudiants set cne=?,id_groupe=?,username=?,password=?,nom=?,prenom=? where cne=?;");
+        pst.setString(1, newEtud.getCNE());
+        pst.setInt(2, newEtud.getIdGroupe());
+        pst.setString(3, newEtud.getUsername());
+        pst.setString(4, newEtud.getPassword());
+        pst.setString(5, newEtud.getNom());
+        pst.setString(6, newEtud.getPassword());
+        pst.setString(7, oldEtud.getCNE());
+        if(pst.executeUpdate()!=0) {
+            System.out.println("Prof updated : " + newEtud.getPrenom());
         }
-
-        if (newEtudiant.getIdGroupe() != 0) {
-            statement.setInt(2, newEtudiant.getIdGroupe());
-        } else {
-            statement.setInt(2, oldEtudiant.getIdGroupe());
-        }
-
-        if (newEtudiant.getUsername() != null) {
-            statement.setString(3, newEtudiant.getUsername());
-        } else {
-            statement.setString(3, oldEtudiant.getUsername());
-        }
-
-        if (newEtudiant.getPassword() != null) {
-            statement.setString(4, newEtudiant.getPassword());
-        } else {
-            statement.setString(4, oldEtudiant.getPassword());
-        }
-
-        if (newEtudiant.getNom() != null) {
-            statement.setString(5, newEtudiant.getNom());
-        } else {
-            statement.setString(5, oldEtudiant.getNom());
-        }
-
-        if (newEtudiant.getPrenom() != null) {
-            statement.setString(6, newEtudiant.getPrenom());
-        } else {
-            statement.setString(6, oldEtudiant.getPrenom());
-        }
-        statement.setString(7, oldEtudiantCne);
-        if (statement.executeUpdate() == 0) {
-            throw new SQLException("Etudiant doesn't exist");
-        }
+        else
+            throw new SQLException("Etudiant not found");
     }
 }

@@ -18,13 +18,13 @@
         <JFXTextField fx:id="nomField" labelFloat="true" layoutX="347.0" layoutY="282.0" maxWidth="370.0" minWidth="370.0" prefHeight="31.0" prefWidth="370.0" promptText="Nom" />
         <JFXTextField fx:id="prenomField" labelFloat="true" layoutX="347.0" layoutY="343.0" maxWidth="370.0" minWidth="370.0" prefHeight="31.0" prefWidth="370.0" promptText="Prénom" />
         <JFXPasswordField fx:id="passwordField" labelFloat="true" layoutX="347.0" layoutY="476.0" maxWidth="370.0" minWidth="370.0" prefHeight="31.0" prefWidth="370.0" promptText="Password" />
-      <JFXButton fx:id="btnUpdate" layoutX="458.0" layoutY="551.0" onAction="#updateAdmin" style="-fx-background-color: #c1d5e0;" text="Update" />
-      <JFXButton fx:id="btnCancel" cancelButton="true" layoutX="551.0" layoutY="551.0" onAction="#Cancel" style="-fx-background-color: #c1d5e0;" text="Cancel" />
-      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="454.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@Assets/man.png" />
-         </image>
-      </ImageView>
+        <JFXButton fx:id="btnUpdate" layoutX="458.0" layoutY="551.0" onAction="#updateAdmin" style="-fx-background-color: #c1d5e0;" text="Update" />
+        <JFXButton fx:id="btnCancel" cancelButton="true" layoutX="551.0" layoutY="551.0" onAction="#Cancel" style="-fx-background-color: #c1d5e0;" text="Cancel" />
+        <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="454.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@Assets/man.png" />
+            </image>
+        </ImageView>
     </children>
 
 </AnchorPane>

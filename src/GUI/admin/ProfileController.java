@@ -6,7 +6,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import models.Admin;
+import models.Professeur;
 import server.DAOs.AdminDAO;
+import server.DAOs.ProfesseurDAO;
 import util.Response;
 
 import java.net.URL;

@@ -40,7 +40,7 @@ public class App extends Application {
         if (result.get() == ButtonType.OK){
             return true;
         } else {
-           return false;
+            return false;
         }
     }
 
@@ -53,12 +53,12 @@ public class App extends Application {
         stage.show();
     }
     public static void gotoDashboard() throws IOException {
-       Parent root=FXMLLoader.load(App.class.getResource("dashboard.fxml"));
-       stage.setTitle("Admin Dashboard");
-       stage.setScene(new Scene(root));
-       stage.centerOnScreen();
-       stage.setOnCloseRequest(windowEvent -> {});
-       stage.setMaximized(true);
-       stage.show();
+        Parent root=FXMLLoader.load(App.class.getResource("dashboard.fxml"));
+        stage.setTitle("Admin Dashboard");
+        stage.setScene(new Scene(root));
+        stage.centerOnScreen();
+        stage.setOnCloseRequest(windowEvent -> {});
+        stage.setMaximized(true);
+        stage.show();
     }
 }

@@ -1,6 +1,7 @@
 package GUI.admin;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextField;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,16 +9,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import models.Admin;
 
 import java.io.IOException;
 import java.net.URL;
+
 import java.util.ResourceBundle;
 
 
@@ -59,7 +64,7 @@ public class DashBoardController implements Initializable {
             Statistics = FXMLLoader.load(getClass().getResource("Statistics.fxml"));
             setNode(Console);
         } catch (IOException e) {
-                e.printStackTrace();
+            e.printStackTrace();
         }
         btnWelcome.setText("Welcome : "+loggeduser.getNom()+" !");
         statServer=new Label("Server offline !");
@@ -110,4 +115,8 @@ public class DashBoardController implements Initializable {
         setNode(Console);
     }
 
+    public void logout(ActionEvent actionEvent) throws IOException {
+        DashBoardController.setLogedUser(null);
+        App.gotoLogin();
+    }
 }

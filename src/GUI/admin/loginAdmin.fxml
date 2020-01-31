@@ -3,12 +3,14 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXTextField?>
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+
 <AnchorPane minHeight="480.0" minWidth="440.0" stylesheets="@../gui.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.admin.loginAdminController">
     <children>
         <VBox alignment="TOP_CENTER" minHeight="480.0" prefWidth="240.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" VBox.vgrow="ALWAYS">
@@ -20,11 +22,11 @@
                                 <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
                             </VBox.margin>
                         </Label>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@Assets/icons8-admin-settings-male-500.png" />
-                     </image>
-                  </ImageView>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@Assets/icons8-admin-settings-male-500.png" />
+                            </image>
+                        </ImageView>
                         <Label text="Espace administrateur" textFill="#046dd5">
                             <font>
                                 <Font name="Ubuntu Bold" size="14.0" />

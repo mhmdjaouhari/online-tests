@@ -13,9 +13,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import models.Professeur;
 import server.DAOs.ProfesseurDAO;
+import server.dispatchers.ProfesseurDispatcher;
+import util.Action;
+import util.Request;
 import util.Response;
+import util.Role;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ProfesseurController implements Initializable {
@@ -67,13 +72,16 @@ public class ProfesseurController implements Initializable {
             if(isEditClicked){
                 Professeur newProf=load();
                 System.out.println("get it "+newProf);
-                Response res= ProfesseurDAO.update(oldProf,newProf);
+                ArrayList<Professeur> Profs=new ArrayList<Professeur>();
+                Profs.add(oldProf);
+                Profs.add(newProf);
+                Response res= ProfesseurDispatcher.handle(new Request(Action.UPDATE_PROF,Profs,Role.PROFESSEUR));
                 dialog(res);
                 cancel();
             }
             else
             {
-                Response res= ProfesseurDAO.add(load());
+                Response res= ProfesseurDispatcher.handle(new Request(Action.CREATE_PROF, Role.PROFESSEUR));
                 dialog(res);
                 cancel();
             }
@@ -84,7 +92,7 @@ public class ProfesseurController implements Initializable {
         if (!tab.getSelectionModel().isEmpty()){
             Professeur prof=tab.getSelectionModel().getSelectedItem();
             if(App.showConfirmationAlert("You want delete student :\n "+prof.getNom()+" "+prof.getPrenom())){
-                Response res=ProfesseurDAO.delete(prof);
+                Response res=ProfesseurDispatcher.handle(new Request(Action.DELETE_PROF,prof,Role.PROFESSEUR));
                 dialog(res);
             }
         }
@@ -102,7 +110,7 @@ public class ProfesseurController implements Initializable {
     ////////////////***Utils***//////////////////////
     // Dialog
     public  void dialog(Response res){
-        if(res.getStatus()==1)
+        if(res.getStatus()!=0)
         {
             System.out.println("Alert smthg wrong: "+res.getMessage());
             App.showErrorAlert(res.getMessage());
@@ -134,7 +142,7 @@ public class ProfesseurController implements Initializable {
     // to get all Profs
     public ObservableList<Professeur> getAllProfs() {
         ObservableList<Professeur> AllEtud;
-        Response res= ProfesseurDAO.getAll();
+        Response res= ProfesseurDispatcher.handle(new Request(Action.GET_ALL_PROFS, Role.PROFESSEUR));
         if(res.getStatus()==1)
         {
             System.out.println("Alert smthg wrong: "+res.getMessage());

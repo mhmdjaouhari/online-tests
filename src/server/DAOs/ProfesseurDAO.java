@@ -1,6 +1,9 @@
 package server.DAOs;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import models.Professeur;
+import util.Response;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -30,9 +33,9 @@ public class ProfesseurDAO {
     }
 
     // getALl profs
-    public static ArrayList<Professeur> getAllProfesseurs() throws SQLException {
+    public static ObservableList<Professeur> getAllProfesseurs() throws SQLException {
         ResultSet resultSet=null;
-        ArrayList<Professeur> professeurs=new ArrayList<Professeur>();
+        ObservableList<Professeur> ArrayProf= FXCollections.observableArrayList();
             Statement st=conn.createStatement();
             resultSet=st.executeQuery("select * from professeurs;");
             while (resultSet.next())
@@ -43,11 +46,9 @@ public class ProfesseurDAO {
                 professeur.setPrenom(resultSet.getString("prenom"));
                 professeur.setUsername(resultSet.getString("username"));
                 professeur.setPassword(resultSet.getString("password"));
-                professeurs.add(professeur);
+                ArrayProf.add(professeur);
             }
-            return professeurs;
-
-
+            return ArrayProf;
     }
 
     // Add prof
@@ -64,15 +65,17 @@ public class ProfesseurDAO {
         System.out.println("Prof Added :"+professeur.getNom());
     }
 
-
-    // delete professeur by Matricule
-    public static void delete(String matricule) throws SQLException {
-        PreparedStatement statement =conn.prepareStatement("delete from professeurs where matricule=?;");
-        statement.setString(1,matricule);
-        if(statement.executeUpdate()==0) {
-            throw new SQLException("Professeur doesn't exist");
+    // delete professeur
+    public static void delete(Professeur prof) throws SQLException {
+        PreparedStatement pst =conn.prepareStatement("delete from professeurs where matricule=?;");
+        pst.setString(1,prof.getMatricule());
+        if(pst.executeUpdate()!=0)
+        {
+            System.out.println("Prof deleted : "+prof.getMatricule());
         }
-
+        else {
+            throw new SQLException("Prof doesn't exist");
+        }
     }
 
     // get professeur by Matricule
@@ -94,39 +97,18 @@ public class ProfesseurDAO {
     }
 
     // Update prof
-    public static void update(String oldProfesseurMatricule,Professeur newProfesseur) throws SQLException {
-        PreparedStatement statement = conn.prepareStatement(
-                "update professeurs set username=?,password=?,nom=?,prenom=? where matricule=?;"
-        );
-        Professeur oldProfesseur = getProfesseurById(oldProfesseurMatricule);
-
-
-        if (newProfesseur.getUsername() != null) {
-            statement.setString(1, newProfesseur.getUsername());
-        } else {
-            statement.setString(1, oldProfesseur.getUsername());
+    public static void update(Professeur oldProf,Professeur newProf) throws SQLException {
+        PreparedStatement pst =conn.prepareStatement("update professeurs set matricule=?,username=?,password=?,nom=?,prenom=? where matricule=?;");
+        pst.setString(1, newProf.getMatricule());
+        pst.setString(2, newProf.getUsername());
+        pst.setString(3, newProf.getPassword());
+        pst.setString(4, newProf.getNom());
+        pst.setString(5, newProf.getPrenom());
+        pst.setString(6, oldProf.getMatricule());
+        if(pst.executeUpdate()!=0) {
+            System.out.println("Prof updated : " + newProf.getPrenom());
         }
-
-        if (newProfesseur.getPassword() != null) {
-            statement.setString(2, newProfesseur.getPassword());
-        } else {
-            statement.setString(2, oldProfesseur.getPassword());
-        }
-
-        if (newProfesseur.getNom() != null) {
-            statement.setString(3, newProfesseur.getNom());
-        } else {
-            statement.setString(3, oldProfesseur.getNom());
-        }
-
-        if (newProfesseur.getPrenom() != null) {
-            statement.setString(4, newProfesseur.getPrenom());
-        } else {
-            statement.setString(4, oldProfesseur.getPrenom());
-        }
-        statement.setString(5, oldProfesseurMatricule);
-        if (statement.executeUpdate() == 0) {
+        else
             throw new SQLException("Professeur doesn't exist");
-        }
     }
 }

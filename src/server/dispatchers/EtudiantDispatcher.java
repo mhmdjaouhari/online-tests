@@ -1,5 +1,7 @@
 package server.dispatchers;
 
+import GUI.admin.ConsolleController;
+import javafx.collections.ObservableList;
 import models.*;
 import server.DAOs.EtudiantDAO;
 import server.DAOs.TestDAO;
@@ -21,6 +23,7 @@ public class EtudiantDispatcher {
                     ArrayList<String> credentials = (ArrayList<String>) request.getData();
                     Etudiant etudiant = EtudiantDAO.login(credentials.get(0),credentials.get(1));
                     response = new Response(0,"User logged successfully",etudiant);
+                    ConsolleController.log.appendText("l'étudiant "+etudiant.getNom()+" "+etudiant.getPrenom()+" est connecté au serveur"+"\n");
                     break;
                 }
                 case EXIT: {
@@ -35,32 +38,19 @@ public class EtudiantDispatcher {
                     break;
                 }
                 case UPDATE_ETUDIANT: {
-                    ArrayList<Object> data = (ArrayList<Object>) request.getData();
-                    String oldEtudiantCne = "";
-                    Etudiant newEtudiant = new Etudiant();
-                    for(Object elm:data){
-                        if(elm instanceof String){
-                            oldEtudiantCne = (String) elm;
-                        }
-                        else if(elm instanceof Etudiant){
-                            newEtudiant = (Etudiant) elm;
-                        }
-                        else{
-                            throw new IOException("Invalid request data");
-                        }
-                    }
-                    EtudiantDAO.update(oldEtudiantCne, newEtudiant);
+                    ArrayList<Etudiant> ArrayEtud = ( ArrayList<Etudiant>) request.getData();
+                    EtudiantDAO.update(ArrayEtud.get(0),ArrayEtud.get(1));
                     response = new Response(0,"Etudiant updated successfully");
                     break;
                 }
                 case DELETE_ETUDIANT: {
-                    String cne = (String) request.getData();
-                    EtudiantDAO.delete(cne);
+                    Etudiant etudiant=(Etudiant) request.getData();
+                    EtudiantDAO.delete(etudiant);
                     response = new Response(0,"Etudiant deleted successfully");
                     break;
                 }
                 case GET_ALL_ETUDIANTS: {
-                    ArrayList<Etudiant> etudiants = EtudiantDAO.getAllEtudiants();
+                    ObservableList<Etudiant> etudiants = EtudiantDAO.getAllEtudiants((int)request.getData());
                     response = new Response(0,"Etudiants loaded successfully",etudiants);
                     break;
                 }
