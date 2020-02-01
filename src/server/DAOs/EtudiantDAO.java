@@ -45,7 +45,7 @@ public class EtudiantDAO {
         statement.setString(3, etudiant.getUsername());
         statement.setString(4, etudiant.getPassword());
         statement.setString(5, etudiant.getNom());
-        statement.setString(6, etudiant.getPassword());
+        statement.setString(6, etudiant.getPrenom());
         if(statement.executeUpdate()==0){
             throw new SQLException("Problem in adding etudian");
         }
@@ -138,7 +138,7 @@ public class EtudiantDAO {
         pst.setString(3, newEtud.getUsername());
         pst.setString(4, newEtud.getPassword());
         pst.setString(5, newEtud.getNom());
-        pst.setString(6, newEtud.getPassword());
+        pst.setString(6, newEtud.getPrenom());
         pst.setString(7, oldEtud.getCNE());
         if(pst.executeUpdate()!=0) {
             System.out.println("Prof updated : " + newEtud.getPrenom());

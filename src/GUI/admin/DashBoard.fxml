@@ -70,7 +70,7 @@
                     </graphic>
 
                 </JFXButton>
-                <JFXButton fx:id="btnProfile" alignment="BASELINE_LEFT" layoutX="10.0" layoutY="193.0" onAction="#switchProfile" prefHeight="42.0" prefWidth="164.0" text="Profile" textFill="#a1aec4">
+                <JFXButton fx:id="btnProfile" alignment="BASELINE_LEFT" layoutX="10.0" layoutY="193.0" onAction="#switchProfile" prefHeight="42.0" prefWidth="164.0" text="Profil" textFill="#a1aec4">
                     <font>
                         <Font name="Roboto Bold" size="14.0" />
                     </font>
