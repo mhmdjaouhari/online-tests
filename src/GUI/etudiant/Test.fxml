@@ -1,80 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXProgressBar?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="720.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.etudiant.TestController">
-    <top>
-        <HBox prefHeight="72.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-            <children>
-                <VBox styleClass="bg-gray" HBox.hgrow="ALWAYS">
-                    <children>
-                        <Label fx:id="titreTest">
-                            <font>
-                                <Font name="Ubuntu" size="22.0" />
-                            </font>
-                        </Label>
-                        <Label fx:id="detailsTest" />
-                    </children>
-                    <padding>
-                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-                    </padding>
-                </VBox>
-                <VBox alignment="CENTER" styleClass="bg-dark" HBox.hgrow="NEVER">
-                    <children>
-                        <Label text="Temps restant" textAlignment="CENTER" textFill="WHITE" />
-                        <Label fx:id="tempsRestant" textAlignment="CENTER" textFill="WHITE">
-                            <font>
-                                <Font name="Ubuntu" size="26.0" />
-                            </font>
-                        </Label>
-                    </children>
-                    <padding>
-                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-                    </padding>
-                </VBox>
-                <VBox styleClass="bg-blue" HBox.hgrow="SOMETIMES">
-                    <children>
-                        <Label fx:id="nomEtudiant" textFill="WHITE">
-                            <font>
-                                <Font name="Ubuntu" size="22.0" />
-                            </font>
-                        </Label>
-                        <Label fx:id="groupeEtudiant" style="-fx-border-color: #fff; -fx-border-radius: 3;" textFill="WHITE">
-                            <padding>
-                                <Insets left="4.0" right="4.0" />
-                            </padding></Label>
-                    </children>
-                    <padding>
-                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-                    </padding>
-                </VBox>
-                <JFXButton fx:id="envoyerFicheButton" buttonType="RAISED" prefHeight="300.0" prefWidth="100.0" styleClass="bg-red" text="Envoyer ma fiche" textAlignment="CENTER" textFill="WHITE" wrapText="true">
-                    <HBox.margin>
-                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                    </HBox.margin>
-                </JFXButton>
-            </children>
-        </HBox>
-    </top>
     <bottom>
         <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
-                <JFXButton fx:id="prevQuestionButton" onAction="#showPrevQuestion" buttonType="RAISED" prefHeight="200.0" prefWidth="128.0" styleClass="bg-gray" text="Question précédente" textAlignment="CENTER" wrapText="true">
+                <JFXButton fx:id="prevQuestionButton" buttonType="RAISED" onAction="#showPrevQuestion" prefHeight="200.0" prefWidth="128.0" styleClass="bg-gray" text="Question précédente" textAlignment="CENTER" wrapText="true">
                     <HBox.margin>
                         <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                     </HBox.margin>
                 </JFXButton>
                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
-                <JFXButton fx:id="nextQuestionButton" onAction="#showNextQuestion" buttonType="RAISED" prefHeight="200.0" prefWidth="128.0" styleClass="bg-gray" text="Question suivante" textAlignment="CENTER" wrapText="true">
+                <JFXButton fx:id="nextQuestionButton" buttonType="RAISED" onAction="#showNextQuestion" prefHeight="200.0" prefWidth="128.0" styleClass="bg-gray" text="Question suivante" textAlignment="CENTER" wrapText="true">
                     <HBox.margin>
                         <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                     </HBox.margin>
@@ -89,4 +35,70 @@
             <VBox fx:id="questionPane" prefHeight="200.0" prefWidth="100.0" styleClass="bg-white" BorderPane.alignment="CENTER">
             </VBox>
     </center>
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+              <HBox prefHeight="72.0" prefWidth="200.0">
+                  <children>
+                      <VBox styleClass="bg-gray" HBox.hgrow="ALWAYS">
+                          <children>
+                              <Label fx:id="titreTest">
+                                  <font>
+                                      <Font name="Ubuntu" size="22.0" />
+                                  </font>
+                              </Label>
+                              <Label fx:id="detailsTest" />
+                          </children>
+                          <padding>
+                              <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                          </padding>
+                      </VBox>
+                      <VBox styleClass="bg-blue" HBox.hgrow="SOMETIMES">
+                          <children>
+                              <Label fx:id="nomEtudiant" textFill="WHITE">
+                                  <font>
+                                      <Font name="Ubuntu" size="22.0" />
+                                  </font>
+                              </Label>
+                              <Label fx:id="groupeEtudiant" style="-fx-border-color: #fff; -fx-border-radius: 3;" textFill="WHITE">
+                                  <padding>
+                                      <Insets left="4.0" right="4.0" />
+                                  </padding>
+                        </Label>
+                          </children>
+                          <padding>
+                              <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                          </padding>
+                      </VBox>
+                      <JFXButton fx:id="envoyerFicheButton" buttonType="RAISED" prefHeight="300.0" prefWidth="100.0" styleClass="bg-red" text="Envoyer ma fiche" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                          <HBox.margin>
+                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                          </HBox.margin>
+                      </JFXButton>
+                  </children>
+              </HBox>
+            <JFXProgressBar prefHeight="24.0" prefWidth="2560.0" progress="0.49">
+               <VBox.margin>
+                  <Insets top="2.0" />
+               </VBox.margin>
+            </JFXProgressBar>
+            <HBox alignment="TOP_CENTER">
+               <children>
+                        <Label text="Temps restant" textAlignment="CENTER" textFill="WHITE" />
+                        <Label fx:id="tempsRestant" textAlignment="CENTER" textFill="WHITE">
+                            <font>
+                                <Font name="Ubuntu" size="26.0" />
+                            </font>
+                        </Label>
+               </children>
+               <VBox.margin>
+                  <Insets top="-24.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
 </BorderPane>
