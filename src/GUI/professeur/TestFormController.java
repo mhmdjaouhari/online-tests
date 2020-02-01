@@ -71,7 +71,6 @@ public class TestFormController {
         }
         for (Question question : test.getQuestions()) {
             addQuestion(question);
-            questionsList.add(question);
         }
     }
 
@@ -239,6 +238,7 @@ public class TestFormController {
             activeTest.setMatriculeProf(App.getLoggedProfesseur().getMatricule());
             activeTest.setTitre(titreTestField.getText());
             activeTest.setGroupes(groupesList);
+            System.out.println(questionsList.size());
             for (int i = 0; i < questionsList.size(); i++) {
                 questionsList.get(i).setTexte(questionTextesList.get(i).getText());
                 String oldValue = questionsList.get(i).getValue();
