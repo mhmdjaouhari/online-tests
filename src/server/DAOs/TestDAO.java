@@ -20,7 +20,7 @@ public class TestDAO {
         PreparedStatement statement = conn.prepareStatement(
                 "select * from tests where id_test in(" +
                         "select a.id_test from etudiants e,affectations a where e.cne=? and a.id_groupe=e.id_groupe" +
-                        "); "
+                        " and results_published=1); "
                 );
         statement.setString(1,cne);
         ResultSet resultSet = statement.executeQuery();
