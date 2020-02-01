@@ -1,9 +1,6 @@
 package client.actionEmitters;
 
-import util.Action;
-import util.Request;
-import util.Response;
-import util.Role;
+import util.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -11,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.net.SocketException;
 import java.util.Scanner;
 
 abstract public class ActionEmitter {
@@ -34,21 +32,12 @@ abstract public class ActionEmitter {
 
         try {
             if(!isServerOnline()){
-                System.out.println("Server is offline, changes aren't comitted, exit anyway ?(Y/N) :");
-                Scanner scanner = new Scanner(System.in);
-                String answer = scanner.next();
-                if(answer.equalsIgnoreCase("y")){
-                    outputStream.close();
-                    inputStream.close();
-                    return true;
-                }else{
-                    return false;
-                }
+                Request request = new Request(Action.EXIT, Role.ETUDIANT);
+                outputStream.writeObject(request);
+                outputStream.close();
+                inputStream.close();
             }
-            Request request = new Request(Action.EXIT, Role.ETUDIANT);
-            outputStream.writeObject(request);
-            outputStream.close();
-            inputStream.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,7 +70,7 @@ abstract public class ActionEmitter {
 
     public  boolean isServerOnline(){
         boolean isAlive=false;
-        SocketAddress socketAddress = new InetSocketAddress("localhost",5000);
+        SocketAddress socketAddress = new InetSocketAddress(Constants.HOST,Constants.PORT);
         Socket TestSocket = new Socket();
         try{
             TestSocket.connect(socketAddress);
@@ -96,11 +85,8 @@ abstract public class ActionEmitter {
 
     public void reConnect() {
         try {
-            outputStream.close();
-            inputStream.close();
-            socket.close();
             System.out.println("okk");
-            socket = new Socket("localhost",5000);
+            socket = new Socket(Constants.HOST,Constants.PORT);
             inputStream = new ObjectInputStream(socket.getInputStream());
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             connectedToServer = true;
@@ -126,6 +112,9 @@ abstract public class ActionEmitter {
             response = (Response) inputStream.readObject();
             outputStream.reset();
         }catch (IOException | ClassNotFoundException e){
+            if(e instanceof SocketException){
+                reConnect();
+            }
             e.printStackTrace();
         }
         return response;

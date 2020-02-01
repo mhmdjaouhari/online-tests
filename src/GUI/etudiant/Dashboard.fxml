@@ -69,7 +69,7 @@
                               <Insets left="16.0" right="16.0" top="20.0" />
                            </padding>
                         </Label>
-                        <Label text="En ligne" textFill="#76ff03">
+                        <Label fx:id="serverStatus" text="En ligne" textFill="#76ff03">
                            <padding>
                               <Insets left="16.0" right="16.0" />
                            </padding>

@@ -3,10 +3,7 @@ package client.actionEmitters;
 import models.Etudiant;
 import models.Fiche;
 import models.Test;
-import util.Action;
-import util.Request;
-import util.Response;
-import util.Role;
+import util.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -28,7 +25,7 @@ public class EtudiantActionEmitter extends ActionEmitter {
         Request request = new Request(Action.LOGIN, credentials, Role.ETUDIANT);
         Response response = post(request);
         if(response == null){
-            throw new Exception("An error has occurred");
+            throw new ServerOfflineException("Le serveur est hors ligne, essayez plus tard");
         }
         if(response.getStatus()!=0){
             throw new Exception(response.getMessage());
@@ -39,6 +36,9 @@ public class EtudiantActionEmitter extends ActionEmitter {
 
     public ArrayList<Test> getNewEtudiantTests(String CNE) throws Exception {
         Response response = post(new Request(Action.GET_NEW_TESTS_ETUDIANT,CNE,Role.ETUDIANT));
+        if(response == null){
+            throw new ServerOfflineException("Le serveur est hors ligne, essayez plus tard");
+        }
         if(response.getStatus() != 0){
             throw new Exception(response.getMessage());
         }
@@ -46,6 +46,9 @@ public class EtudiantActionEmitter extends ActionEmitter {
     }
     public ArrayList<Test> getOldEtudiantTests(String CNE) throws Exception {
         Response response = post(new Request(Action.GET_OLD_TESTS_ETUDIANT,CNE,Role.ETUDIANT));
+        if(response == null){
+            throw new ServerOfflineException("Le serveur est hors ligne, essayez plus tard");
+        }
         if(response.getStatus() != 0){
             throw new Exception(response.getMessage());
         }
@@ -53,6 +56,9 @@ public class EtudiantActionEmitter extends ActionEmitter {
     }
     public ArrayList<Test> getAllEtudiantTests(String CNE) throws Exception {
         Response response = post(new Request(Action.GET_ALL_TESTS_ETUDIANT,CNE,Role.ETUDIANT));
+        if(response == null){
+            throw new ServerOfflineException("Le serveur est hors ligne, essayez plus tard");
+        }
         if(response.getStatus() != 0){
             throw new Exception(response.getMessage());
         }
@@ -61,6 +67,9 @@ public class EtudiantActionEmitter extends ActionEmitter {
 
     public Test getTestById(int idTest) throws Exception {
         Response response = post(new Request(Action.GET_TEST,idTest,Role.ETUDIANT));
+        if(response == null){
+            throw new ServerOfflineException("Le serveur est hors ligne, essayez plus tard");
+        }
         if(response.getStatus() != 0){
             throw new Exception(response.getMessage());
         }
@@ -69,6 +78,9 @@ public class EtudiantActionEmitter extends ActionEmitter {
 
     public Etudiant getEtudiant(String CNE) throws Exception {
         Response response = post(new Request(Action.GET_ETUDIANT,CNE,Role.ETUDIANT));
+        if(response == null){
+            throw new ServerOfflineException("Le serveur est hors ligne, essayez plus tard");
+        }
         if(response.getStatus() != 0){
             throw new Exception(response.getMessage());
         }
@@ -77,6 +89,9 @@ public class EtudiantActionEmitter extends ActionEmitter {
 
     public void submitFiche(Fiche fiche) throws Exception {
         Response response = post(new Request(Action.SUBMIT_FICHE,fiche,Role.ETUDIANT));
+        if(response == null){
+            throw new ServerOfflineException("Le serveur est hors ligne, essayez plus tard");
+        }
         if(response.getStatus() != 0){
             throw new Exception(response.getMessage());
         }
@@ -84,6 +99,9 @@ public class EtudiantActionEmitter extends ActionEmitter {
 
     public ArrayList<Fiche> getFichesEtudiant(String CNE) throws Exception {
         Response response = post(new Request(Action.GET_FICHES_ETUDIANT,CNE,Role.ETUDIANT));
+        if(response == null){
+            throw new ServerOfflineException("Le serveur est hors ligne, essayez plus tard");
+        }
         if(response.getStatus() != 0){
             throw new Exception(response.getMessage());
         }
@@ -95,6 +113,9 @@ public class EtudiantActionEmitter extends ActionEmitter {
         data.add(cne);
         data.add(id_test);
         Response response = post(new Request(Action.GET_FICHE_ETUDIANT,data,Role.ETUDIANT));
+        if(response == null){
+            throw new ServerOfflineException("Le serveur est hors ligne, essayez plus tard");
+        }
         if(response.getStatus() != 0){
             throw new Exception(response.getMessage());
         }
@@ -103,7 +124,11 @@ public class EtudiantActionEmitter extends ActionEmitter {
 
     public Test getFullTestById(int id_test) throws Exception {
         Response response = post(new Request(Action.GET_FULL_TEST,id_test,Role.ETUDIANT));
+        if(response == null){
+            throw new ServerOfflineException("Le serveur est hors ligne, essayez plus tard");
+        }
         if(response.getStatus() != 0){
+
             throw new Exception(response.getMessage());
         }
         Test test = (Test) response.getData();

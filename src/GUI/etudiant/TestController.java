@@ -17,12 +17,19 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import models.*;
+import util.ServerOfflineException;
 
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TestController {
 
@@ -56,6 +63,21 @@ public class TestController {
 
     private DashboardController dashboardController;
 
+    private Boolean isPanne = false;
+
+    private String filePath;
+
+    private String newFilePath;
+
+    public Boolean getPanne() {
+        return isPanne;
+    }
+
+    public void setPanne(Boolean panne) {
+        isPanne = panne;
+    }
+
+
     public void initialize() {
         nomEtudiant.setText(App.getLoggedEtudiant().getPrenom() + " " + App.getLoggedEtudiant().getNom());
         groupeEtudiant.setText(App.getLoggedEtudiant().getNomGroupe());
@@ -83,11 +105,17 @@ public class TestController {
                 checkBox.setCheckedColor(Color.web("#046dd5"));
                 int choix = j;
                 checkBox.setOnAction(e -> {
-                    if (checkBox.isSelected())
+                    if (checkBox.isSelected()){
                         addChoixToReponse(reponse, choix);
-                    else
+                    }
+                    else{
                         removeChoixFromReponse(reponse, choix);
+                    }
+                    updateTestToTempFile();
                 });
+
+
+                checkOldValues(question.getId(),reponse,checkBox,j);
                 checkboxes.getChildren().add(checkBox);
             }
 
@@ -120,7 +148,9 @@ public class TestController {
 
     private void setTimer() {
         timer = new Timer();
-        timerMinutes = App.getActiveTest().getDuration();
+        if(!isPanne){
+            timerMinutes = App.getActiveTest().getDuration();
+        }
         tempsRestant.setText(LocalTime.MIN.plus(Duration.ofMinutes(timerMinutes)).toString());
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
@@ -194,6 +224,8 @@ public class TestController {
             newValue = Integer.toString(choix);
         }
         reponse.setValue(newValue);
+//        Thread thread = new Thread(this::updateTestToTempFile);
+//        thread.start();
     }
 
     private void removeChoixFromReponse(Reponse reponse, int choix) {
@@ -203,6 +235,8 @@ public class TestController {
             choixArray.remove(Integer.toString(choix));
             String newValue = String.join(",", choixArray);
             reponse.setValue(newValue);
+//            Thread thread = new Thread(this::updateTestToTempFile);
+//            thread.start();
         }
     }
 
@@ -219,8 +253,81 @@ public class TestController {
         fiche.setTest(test);
         try {
             App.getEmitter().submitFiche(fiche);
+            File file;
+            if(filePath == null){
+                file = new File(newFilePath);
+            }else{
+                file = new File(filePath);
+            }
+            file.delete();
             dashboardController.loadTests();
         } catch (Exception e) {
+            if(e instanceof ServerOfflineException){
+                dashboardController.getServerStatus().setText("Hors ligne");
+                dashboardController.getServerStatus().setStyle("-fx-text-fill: red");
+            }
+            Common.showErrorAlert("Le serveur est hors ligne, l'application va se fermer, " +
+                    "votre test est sauvgardé, veulliez essayer plus tard");
+            Platform.exit();
+            e.printStackTrace();
+
+        }
+    }
+
+    private void checkOldValues(int id_question,Reponse reponse,JFXCheckBox checkBox,int choix){
+        String oldValue = getOldQuestionValue(id_question);
+        if(oldValue != null){
+            if(oldValue.contains(Integer.toString(choix))){
+                checkBox.setSelected(true);
+                addChoixToReponse(reponse, choix);
+            }
+        }
+    }
+
+    private String getOldQuestionValue(int id_question){
+        try{
+            Stream<Path> walk = Files.walk(Paths.get("temp/"));
+            List<String> result = walk.map(x -> x.toString())
+                .filter(f -> f.endsWith(".test")).collect(Collectors.toList());
+            if(result.size() >1){
+                Common.showErrorAlert("Une activité suspecte detécté");
+                Platform.exit();
+            }
+            else if(result.size() == 1){
+                filePath = result.get(0);
+                FileInputStream fileInputStream = new FileInputStream(result.get(0));
+                ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
+                Temp temp = (Temp) inputStream.readObject();
+                isPanne = true;
+                timerMinutes = temp.getMinute();
+                for(Temp.TempReponse tempReponse:temp.getReponses()){
+                    if(tempReponse.getId_question() == id_question){
+                        return tempReponse.getValue();
+                    }
+                }
+            }
+        }catch (Exception e){
+            Common.showErrorAlert(e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void updateTestToTempFile(){
+        try{
+            String fullName = App.getLoggedEtudiant().getPrenom() + "-" + App.getLoggedEtudiant().getNom();
+            newFilePath = "temp/" + App.getActiveTest().getTitre() + "-" + fullName+".test";
+            FileOutputStream file = new FileOutputStream(newFilePath);
+            ObjectOutputStream outputStream = new ObjectOutputStream(file);
+            Temp temp = new Temp();
+            temp.setId_test(App.getActiveTest().getId());
+            temp.setCne(App.getLoggedEtudiant().getCNE());
+            temp.setMinute(timerMinutes);
+            temp.setReponses(Temp.toTempReponse(reponsesList));
+            System.out.println("write  : "+temp);
+            outputStream.writeObject(temp);
+            outputStream.close();
+        }catch (Exception e){
             Common.showErrorAlert(e.getMessage());
             e.printStackTrace();
         }
