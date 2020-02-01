@@ -1,8 +1,8 @@
 package models;
 
-import javafx.scene.control.Label;
-
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Test implements Serializable {
@@ -10,6 +10,7 @@ public class Test implements Serializable {
     private String titre;
     private boolean locked;
     private boolean penalite;
+    private boolean resultsPublished;
     private int duration;
     private String matriculeProf;
     private String nomProf; // nom & prénom
@@ -24,6 +25,7 @@ public class Test implements Serializable {
         this.matriculeProf = matriculeProf;
         this.nomProf = nomProf;
     }
+
     public Test(int id, String titre, boolean locked, int duration, String matriculeProf, String nomProf, ArrayList<Question> qst, ArrayList<Groupe> grp) {
         this.id = id;
         this.titre = titre;
@@ -31,8 +33,8 @@ public class Test implements Serializable {
         this.duration = duration;
         this.matriculeProf = matriculeProf;
         this.nomProf = nomProf;
-        this.questions=qst;
-        this.groupes=grp;
+        this.questions = qst;
+        this.groupes = grp;
     }
 
     public Test() {
@@ -64,6 +66,14 @@ public class Test implements Serializable {
 
     public boolean isPenalite() {
         return penalite;
+    }
+
+    public boolean isResultsPublished() {
+        return resultsPublished;
+    }
+
+    public void setResultsPublished(boolean resultsPublished) {
+        this.resultsPublished = resultsPublished;
     }
 
     public void setPenalite(boolean penalite) {
@@ -124,9 +134,7 @@ public class Test implements Serializable {
     }
 
     public String getDurationString() {
-        int hours = (int) Math.floor((float) this.getDuration() / 60);
-        String durationString = "" + hours + "h" + (this.getDuration() - hours * 60);
-        return durationString;
+        return LocalTime.MIN.plus(Duration.ofMinutes(duration)).toString();
     }
 
     public String getLockedString() {
@@ -138,7 +146,7 @@ public class Test implements Serializable {
     }
 
     public String getDetails() {
-        return getDurationString() + "  ·  " + getLockedString() + "  ·  " + getPenaliteString();
+        return getPenaliteString() + "  ·  " + getLockedString() + "  ·  Durée : " + getDurationString();
     }
 
     public String getGroupesString() {

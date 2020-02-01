@@ -4,12 +4,16 @@ import GUI.Common;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -44,6 +48,8 @@ public class TestController {
     @FXML
     private Label tempsRestant;
     @FXML
+    private ProgressBar tempsRestantProgressBar;
+    @FXML
     private VBox questionPane;
     @FXML
     private JFXButton prevQuestionButton;
@@ -55,7 +61,7 @@ public class TestController {
     private Stage stage;
 
     private Timer timer;
-    private int timerMinutes;
+    private int timerSeconds;
 
     private int currentQuestion;
     private ArrayList<VBox> questionBoxesList = new ArrayList<>();
@@ -105,17 +111,16 @@ public class TestController {
                 checkBox.setCheckedColor(Color.web("#046dd5"));
                 int choix = j;
                 checkBox.setOnAction(e -> {
-                    if (checkBox.isSelected()){
+                    if (checkBox.isSelected()) {
                         addChoixToReponse(reponse, choix);
-                    }
-                    else{
+                    } else {
                         removeChoixFromReponse(reponse, choix);
                     }
-                    updateTestToTempFile();
+                    writeTestToTempFile();
                 });
 
+                checkOldValues(question.getId(), reponse, checkBox, j);
 
-                checkOldValues(question.getId(),reponse,checkBox,j);
                 checkboxes.getChildren().add(checkBox);
             }
 
@@ -135,6 +140,27 @@ public class TestController {
 
         Platform.runLater(() -> {
             stage = (Stage) questionPane.getScene().getWindow();
+            if (App.getActiveTest().isLocked()) {
+                stage.setFullScreenExitHint("");
+                stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+                stage.setFullScreen(true);
+                stage.fullScreenProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue != null && !newValue)
+                        stage.setFullScreen(true);
+                });
+                new Thread(() -> {
+                    while (true) {
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        Platform.runLater(() -> {
+                            stage.toFront();
+                        });
+                    }
+                }).start();
+            }
             stage.setOnCloseRequest(e -> {
                 if (App.getLoggedEtudiant() != null) {
                     e.consume();
@@ -142,27 +168,36 @@ public class TestController {
                 }
             });
         });
-
         setTimer();
+        writeTestToTempFile();
     }
 
     private void setTimer() {
         timer = new Timer();
-        if(!isPanne){
-            timerMinutes = App.getActiveTest().getDuration();
+        if (!isPanne) {
+            timerSeconds = App.getActiveTest().getDuration() * 60;
         }
-        tempsRestant.setText(LocalTime.MIN.plus(Duration.ofMinutes(timerMinutes)).toString());
+        int duration = App.getActiveTest().getDuration();
+        int interval = 2;
+        tempsRestant.setText(LocalTime.MIN.plus(Duration.ofMinutes(timerSeconds / 60)).toString());
+        tempsRestantProgressBar.setProgress((double) (duration - timerSeconds / 60) / duration);
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
-                if (timerMinutes > 0) {
-                    Platform.runLater(() -> tempsRestant.setText(LocalTime.MIN.plus(Duration.ofMinutes(timerMinutes)).toString()));
-                    timerMinutes--;
+                if (timerSeconds > 0) {
+                    Platform.runLater(() -> {
+                        tempsRestantProgressBar.setProgress((double) (duration * 60 - timerSeconds) / (duration * 60));
+                        if (timerSeconds % 60 == 0)
+                            tempsRestant.setText(LocalTime.MIN.plus(Duration.ofMinutes(timerSeconds)).toString());
+                    });
+                    timerSeconds -= interval;
                 } else {
+                    Platform.runLater(() -> {
+                        showSaveAndExitDialog(false);
+                    });
                     timer.cancel();
-                    showSaveAndExitDialog(false);
                 }
             }
-        }, 60 * 1000, 60 * 1000);
+        }, interval * 1000, interval * 1000);
     }
 
     public boolean showSaveAndExitDialog(boolean isExitVoluntary) {
@@ -254,80 +289,78 @@ public class TestController {
         try {
             App.getEmitter().submitFiche(fiche);
             File file;
-            if(filePath == null){
+            if (filePath == null) {
                 file = new File(newFilePath);
-            }else{
+            } else {
                 file = new File(filePath);
             }
             file.delete();
             dashboardController.loadTests();
         } catch (Exception e) {
-            if(e instanceof ServerOfflineException){
+            if (e instanceof ServerOfflineException) {
                 dashboardController.getServerStatus().setText("Hors ligne");
                 dashboardController.getServerStatus().setStyle("-fx-text-fill: red");
+                Common.showErrorAlert("Le serveur est hors ligne, l'application va se fermer, " +
+                        "votre test est sauvegardé, veuillez essayer plus tard");
+                Platform.exit();
             }
-            Common.showErrorAlert("Le serveur est hors ligne, l'application va se fermer, " +
-                    "votre test est sauvgardé, veulliez essayer plus tard");
-            Platform.exit();
             e.printStackTrace();
-
         }
     }
 
-    private void checkOldValues(int id_question,Reponse reponse,JFXCheckBox checkBox,int choix){
+    private void checkOldValues(int id_question, Reponse reponse, JFXCheckBox checkBox, int choix) {
         String oldValue = getOldQuestionValue(id_question);
-        if(oldValue != null){
-            if(oldValue.contains(Integer.toString(choix))){
+        if (oldValue != null) {
+            if (oldValue.contains(Integer.toString(choix))) {
                 checkBox.setSelected(true);
                 addChoixToReponse(reponse, choix);
             }
         }
     }
 
-    private String getOldQuestionValue(int id_question){
-        try{
+    private String getOldQuestionValue(int id_question) {
+        try {
             Stream<Path> walk = Files.walk(Paths.get("temp/"));
             List<String> result = walk.map(x -> x.toString())
-                .filter(f -> f.endsWith(".test")).collect(Collectors.toList());
-            if(result.size() >1){
-                Common.showErrorAlert("Une activité suspecte detécté");
+                    .filter(f -> f.endsWith(".test")).collect(Collectors.toList());
+            if (result.size() > 1) {
+                Common.showErrorAlert("Une activité suspecte a été detéctée");
                 Platform.exit();
-            }
-            else if(result.size() == 1){
+            } else if (result.size() == 1) {
                 filePath = result.get(0);
                 FileInputStream fileInputStream = new FileInputStream(result.get(0));
                 ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
                 Temp temp = (Temp) inputStream.readObject();
                 isPanne = true;
-                timerMinutes = temp.getMinute();
-                for(Temp.TempReponse tempReponse:temp.getReponses()){
-                    if(tempReponse.getId_question() == id_question){
+                timerSeconds = temp.getMinute() * 60;
+                System.out.println("TS 2 : " + timerSeconds);
+                for (Temp.TempReponse tempReponse : temp.getReponses()) {
+                    if (tempReponse.getId_question() == id_question) {
                         return tempReponse.getValue();
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Common.showErrorAlert(e.getMessage());
             e.printStackTrace();
         }
         return null;
     }
 
-    private void updateTestToTempFile(){
-        try{
+    private void writeTestToTempFile() {
+        try {
             String fullName = App.getLoggedEtudiant().getPrenom() + "-" + App.getLoggedEtudiant().getNom();
-            newFilePath = "temp/" + App.getActiveTest().getTitre() + "-" + fullName+".test";
+            newFilePath = "temp/" + App.getActiveTest().getTitre() + "-" + fullName + ".test";
             FileOutputStream file = new FileOutputStream(newFilePath);
             ObjectOutputStream outputStream = new ObjectOutputStream(file);
             Temp temp = new Temp();
             temp.setId_test(App.getActiveTest().getId());
             temp.setCne(App.getLoggedEtudiant().getCNE());
-            temp.setMinute(timerMinutes);
-            temp.setReponses(Temp.toTempReponse(reponsesList));
-            System.out.println("write  : "+temp);
+            temp.setMinute(timerSeconds / 60);
+            System.out.println("write  : " + temp);
             outputStream.writeObject(temp);
             outputStream.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             Common.showErrorAlert(e.getMessage());
             e.printStackTrace();
         }

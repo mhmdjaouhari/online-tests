@@ -90,15 +90,16 @@ public class DashboardController {
             Image refreshIcon = new Image(getClass().getResourceAsStream("icon-refresh.png"));
             ImageView refreshIconView = new ImageView(refreshIcon);
             refreshButton.setGraphic(refreshIconView);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void loadTests() {
-        try{
+        try {
             ArrayList<Test> newTests = App.getEmitter().getNewEtudiantTests(App.getLoggedEtudiant().getCNE());
-            ArrayList<Test> oldTests = App.getEmitter().getOldEtudiantTests(App.getLoggedEtudiant().getCNE());
+            ArrayList<Fiche> oldTestsFiches = App.getEmitter().getFichesEtudiant(App.getLoggedEtudiant().getCNE());
             newTestCount.setText(Integer.toString(newTests.size()));
 
             VBox newTestsContent = new VBox();
@@ -117,15 +118,15 @@ public class DashboardController {
             oldTestsContent.setSpacing(8);
             oldTestsContent.setPadding(new Insets(8));
 
-            for (int i = oldTests.size() - 1; i >= 0; i--) {
-                Test test = oldTests.get(i);
-                oldTestsContent.getChildren().add(createOldTestRow(test));
+            for (int i = oldTestsFiches.size() - 1; i >= 0; i--) {
+                Fiche fiche = oldTestsFiches.get(i);
+                oldTestsContent.getChildren().add(createOldTestRow(fiche));
             }
             oldTestsPane.setContent(oldTestsContent);
             serverStatus.setText("En ligne");
             serverStatus.setStyle("-fx-text-fill: #76ff03");
-        }catch (Exception e){
-            if(e instanceof ServerOfflineException){
+        } catch (Exception e) {
+            if (e instanceof ServerOfflineException) {
                 serverStatus.setText("Hors ligne");
                 serverStatus.setStyle("-fx-text-fill: red");
             }
@@ -158,7 +159,8 @@ public class DashboardController {
         return row;
     }
 
-    public JFXButton createOldTestRow(Test test) throws Exception {
+    public JFXButton createOldTestRow(Fiche fiche) throws Exception {
+        Test test = fiche.getTest();
         JFXButton row = new JFXButton();
         row.setButtonType(JFXButton.ButtonType.RAISED);
         row.setRipplerFill(Paint.valueOf("#046dd5"));
@@ -175,7 +177,6 @@ public class DashboardController {
         subtitleLabel.setStyle("-fx-font-size: 12");
         bylineLabel.setStyle("-fx-font-size: 12");
         vBox.getChildren().addAll(titleLabel, subtitleLabel, bylineLabel);
-        Fiche fiche = App.getEmitter().getFicheEtudiant(App.getLoggedEtudiant().getCNE(), test.getId());
         String note = (new DecimalFormat("#.##")).format(fiche.getNote());
         Label noteLabel = new Label(note);
         noteLabel.setTextFill(Paint.valueOf("#f00"));
@@ -185,7 +186,8 @@ public class DashboardController {
         VBox noteBox = new VBox(noteLabel, baremeLabel);
         noteBox.setAlignment(Pos.BASELINE_CENTER);
         noteBox.setStyle("-fx-border-color: #f00; -fx-border-radius: 100%");
-        noteBox.setPrefWidth(44);
+        noteBox.setMinSize(44, 48);
+        noteBox.setMaxSize(44, 48);
 //        noteBox.setPrefSize(32,32);
         row.setGraphic(new HBox(vBox, noteBox));
         HBox.setHgrow(vBox, Priority.ALWAYS);
@@ -208,7 +210,7 @@ public class DashboardController {
             fxmlLoader.setLocation(getClass().getResource("Test.fxml"));
             Parent root;
             root = fxmlLoader.load();
-            System.out.println("root : "+root);
+            System.out.println("root : " + root);
             testController = fxmlLoader.getController();
             testController.setDashboardController(this);
             //testController.setTemp(temp);
@@ -221,7 +223,7 @@ public class DashboardController {
             serverStatus.setText("En ligne");
             serverStatus.setStyle("-fx-text-fill: #76ff03");
         } catch (Exception e) {
-            if(e instanceof ServerOfflineException){
+            if (e instanceof ServerOfflineException) {
                 serverStatus.setText("Hors ligne");
                 serverStatus.setStyle("-fx-text-fill: red");
             }
@@ -235,23 +237,23 @@ public class DashboardController {
     }
 
 
-    public void checkForTemp(){
-        try{
+    public void checkForTemp() {
+        try {
 //            String fullName = App.getLoggedEtudiant().getPrenom() + "-" + App.getLoggedEtudiant().getNom();
 //            String filePath = "temp/" + App.getActiveTest().getTitre() + "-" + fullName+".test";
             //check if directory exists
             File directory = new File("temp/");
-            if(!directory.exists()){
+            if (!directory.exists()) {
                 directory.mkdir();
             }
             Stream<Path> walk = Files.walk(Paths.get("temp/"));
             List<String> result = walk.map(x -> x.toString())
                     .filter(f -> f.endsWith(".test")).collect(Collectors.toList());
-            if(result.size() >1){
+            if (result.size() > 1) {
                 Common.showErrorAlert("Une activité suspecte detécté");
                 Platform.exit();
             }
-            if(result.size() == 1){
+            if (result.size() == 1) {
                 FileInputStream fileInputStream = new FileInputStream(result.get(0));
                 ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
                 Temp temp = (Temp) inputStream.readObject();
@@ -259,8 +261,8 @@ public class DashboardController {
                 alert.setTitle("Récuperation du teste");
                 alert.setHeaderText("à cause d'une panne ou d'une deconnection au serveur, un teste n'est pas terminé");
                 Test test = App.getEmitter().getTestById(temp.getId_test());
-                String message = "Titre : "+test.getTitre()+"\n" +
-                        "Temps restant : "+temp.getMinute()+" minutes\n" ;
+                String message = "Titre : " + test.getTitre() + "\n" +
+                        "Temps restant : " + temp.getMinute() + " minutes\n";
                 alert.setContentText(message);
                 alert.getButtonTypes().clear();
                 ButtonType passerTeste = new ButtonType("Passer teste");
@@ -268,10 +270,10 @@ public class DashboardController {
                 alert.getButtonTypes().addAll(passerTeste);
                 alert.showAndWait();
                 openTest(test.getId());
-                System.out.println("testController : "+testController);
+                System.out.println("testController : " + testController);
                 testController.setPanne(true);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

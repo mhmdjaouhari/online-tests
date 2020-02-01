@@ -56,7 +56,7 @@
                            <font>
                               <Font name="Ubuntu Bold" size="28.0" />
                            </font></Label>
-                        <Label text="tests à passer !" textFill="WHITE" />
+                        <Label text="test(s) à passer !" textFill="WHITE" />
                      </children>
                      <padding>
                         <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
