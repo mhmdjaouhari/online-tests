@@ -1,13 +1,16 @@
 package server.DAOs;
 
+import javafx.collections.ObservableList;
 import javafx.util.Pair;
+import models.Etudiant;
 import models.Fiche;
 import models.Groupe;
 import models.Test;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import javax.xml.transform.Result;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class StatisticsDAO {
     private static Connection conn = DataSource.getInstance().getConnection();
@@ -49,4 +52,49 @@ public class StatisticsDAO {
         }
         return res;
     }
+
+    // get the number of std in each group
+    public static HashMap<String,Integer> getCountEtudIngroup(){
+        Statement st= null;
+        HashMap<String,Integer> ArrCount=null;
+        Integer nbr;
+        try {
+            ArrayList<Groupe> grps=TestDAO.getAllGroupes();
+            ArrCount=new HashMap<String,Integer>();
+            for (Groupe gp: grps)
+            {
+                nbr=EtudiantDAO.getAllEtudiants((int)gp.getId()).size();
+                if ( nbr!=null )
+                ArrCount.put(gp.getNom(),nbr);
+                else
+                    ArrCount.put(gp.getNom(),0);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ArrCount;
+    }
+
+    // get the nbr of tests in each grp
+    public static HashMap<String,Integer> getCountTestsIngroup(){
+        Statement st= null;
+        HashMap<String,Integer> ArrCount=null;
+        Integer nbr;
+        try {
+            ArrayList<Groupe> grps=TestDAO.getAllGroupes();
+            ArrCount=new HashMap<String,Integer>();
+            for (Groupe gp: grps)
+            {
+                nbr=TestDAO.getTestsGroupe((int)gp.getId()).size();
+                if ( nbr!=null )
+                    ArrCount.put(gp.getNom(),nbr);
+                else
+                    ArrCount.put(gp.getNom(),0);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ArrCount;
+    }
+
 }

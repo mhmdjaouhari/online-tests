@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXPasswordField?>
-<?import com.jfoenix.controls.JFXTextField?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="640.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.admin.ProfesseurController">
+<AnchorPane prefHeight="640.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.admin.ProfesseurController">
    <children>
       <Label layoutX="19.0" layoutY="17.0" prefHeight="30.0" prefWidth="392.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #7387A8;" text="Gestion des enseignants" />
       <Separator layoutX="3.0" layoutY="55.0" prefHeight="4.0" prefWidth="1213.0" />
@@ -24,29 +18,74 @@
             </ImageView>
          </graphic>
       </Label>
-      <Label layoutX="472.0" layoutY="78.0" prefHeight="30.0" prefWidth="392.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #7387A8;" text="Liste des enseignants " />
-      <JFXTextField fx:id="usernameField" labelFloat="true" layoutX="40.0" layoutY="418.0" maxWidth="370.0" minWidth="370.0" prefHeight="31.0" prefWidth="370.0" promptText="Username" />
+      <JFXTextField fx:id="usernameField" labelFloat="true" layoutX="40.0" layoutY="418.0" maxWidth="370.0" minWidth="370.0" prefHeight="31.0" prefWidth="370.0" promptText="Nom d'utilisateur" />
       <JFXTextField fx:id="nomField" labelFloat="true" layoutX="40.0" layoutY="288.0" maxWidth="370.0" minWidth="370.0" prefHeight="31.0" prefWidth="370.0" promptText="Nom" />
       <JFXTextField fx:id="prenomField" labelFloat="true" layoutX="40.0" layoutY="349.0" maxWidth="370.0" minWidth="370.0" prefHeight="31.0" prefWidth="370.0" promptText="Prénom" />
-      <JFXPasswordField fx:id="passwordField" labelFloat="true" layoutX="40.0" layoutY="482.0" maxWidth="370.0" minWidth="370.0" prefHeight="31.0" prefWidth="370.0" promptText="Password" />
+      <JFXPasswordField fx:id="passwordField" labelFloat="true" layoutX="40.0" layoutY="482.0" maxWidth="370.0" minWidth="370.0" prefHeight="31.0" prefWidth="370.0" promptText="Mot de passe" />
       <JFXTextField fx:id="matriculeField" labelFloat="true" layoutX="40.0" layoutY="226.0" maxWidth="370.0" minWidth="370.0" prefHeight="31.0" prefWidth="370.0" promptText="Matricule" />
-      <TableView fx:id="tab" editable="true" layoutX="472.0" layoutY="164.0" prefHeight="409.0" prefWidth="589.0">
-         <columns>
-            <TableColumn fx:id="matricule" prefWidth="127.99996948242188" text=" Matricule">
-               <graphic>
-                  <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@Assets/icons8-key-48.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </TableColumn>
-            <TableColumn fx:id="nom" prefWidth="140.00006103515625" text="Nom" />
-            <TableColumn fx:id="prenom" prefWidth="150.66668701171875" text="Prenom" />
-            <TableColumn fx:id="username" prefWidth="163.66668701171875" text="Username" />
-         </columns>
-      </TableView>
-      <JFXButton fx:id="btnSave" layoutX="128.0" layoutY="545.0" onAction="#SaveProf" style="-fx-background-color: #c1d5e0;" text="Save">
+
+
+      <JFXTabPane layoutX="463.0" layoutY="71.0" prefHeight="556.0" prefWidth="635.0" tabDragPolicy="REORDER">
+         <tabs>
+            <Tab text="Liste des enseignants ">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="524.0" prefWidth="635.0" style="-fx-background-color: white;">
+                     <children>
+                        <TableView fx:id="tab" editable="true" layoutX="22.0" layoutY="64.0" prefHeight="397.0" prefWidth="589.0">
+                           <columns>
+                              <TableColumn fx:id="matricule" prefWidth="127.99996948242188" text=" Matricule">
+                                 <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@Assets/icons8-key-48.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </TableColumn>
+                              <TableColumn fx:id="nom" prefWidth="140.00006103515625" text="Nom" />
+                              <TableColumn fx:id="prenom" prefWidth="150.66668701171875" text="Prenom" />
+                              <TableColumn fx:id="username" prefWidth="163.66668701171875" text="Username" />
+                           </columns>
+                        </TableView>
+                        <JFXTextField fx:id="searchField" layoutX="63.0" layoutY="26.0" prefHeight="25.0" prefWidth="302.0" promptText=" Rechercher" />
+                        <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="26.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Assets/icons8-find-user-male-64.png" />
+                           </image>
+                        </ImageView>
+                  
+                  
+                        <JFXButton fx:id="btnEdit" layoutX="389.0" layoutY="475.0" onAction="#EditProf" prefHeight="33.0" prefWidth="101.0" style="-fx-background-color: #c1d5e0;" text="Editer">
+                           <graphic>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@Assets/icons8-registration-128.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </JFXButton>
+                        <JFXButton fx:id="btnDelete" layoutX="510.0" layoutY="475.0" onAction="#DeleteProf" style="-fx-background-color: #c1d5e0;" text="Supprimer">
+                           <graphic>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@Assets/icons8-denied-128.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+         </tabs>
+      </JFXTabPane>
+
+
+
+
+
+
+      <JFXButton fx:id="btnSave" layoutX="115.0" layoutY="545.0" onAction="#SaveProf" style="-fx-background-color: #c1d5e0;" text="Enregistrer">
          <graphic>
             <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -55,7 +94,7 @@
             </ImageView>
          </graphic>
       </JFXButton>
-      <JFXButton fx:id="btnCancel" layoutX="236.0" layoutY="545.0" onAction="#cancel" style="-fx-background-color: #c1d5e0;" text="Cancel">
+      <JFXButton fx:id="btnCancel" layoutX="237.0" layoutY="545.0" onAction="#cancel" prefHeight="33.0" prefWidth="103.0" style="-fx-background-color: #c1d5e0;" text="Annuler">
          <graphic>
             <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -64,30 +103,7 @@
             </ImageView>
          </graphic>
       </JFXButton>
-      <JFXButton fx:id="btnEdit" layoutX="894.0" layoutY="591.0" onAction="#EditProf" style="-fx-background-color: #c1d5e0;" text="Edit">
-         <graphic>
-            <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@Assets/icons8-registration-128.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </JFXButton>
-      <JFXButton fx:id="btnDelete" layoutX="981.0" layoutY="591.0" onAction="#DeleteProf" style="-fx-background-color: #c1d5e0;" text="Delete">
-         <graphic>
-            <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@Assets/icons8-denied-128.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </JFXButton>
-      <JFXTextField fx:id="searchField" layoutX="513.0" layoutY="122.0" prefHeight="25.0" prefWidth="302.0" promptText="search" />
-      <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="478.0" layoutY="122.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@Assets/icons8-find-user-male-64.png" />
-         </image>
-      </ImageView>
+
    </children>
 
 </AnchorPane>

@@ -14,6 +14,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import models.Etudiant;
 import models.Groupe;
+import server.DAOs.AdminDAO;
 import server.DAOs.EtudiantDAO;
 import server.dispatchers.EtudiantDispatcher;
 import server.dispatchers.ProfesseurDispatcher;
@@ -38,6 +39,7 @@ public class EtudiantsController implements Initializable {
     @FXML JFXTextField prenomField;
     @FXML JFXTextField usernameField;
     @FXML JFXPasswordField passwordField;
+    @FXML JFXTextField GroupField;
 
     // config the table
     @FXML TableView<Etudiant> tab;
@@ -55,16 +57,17 @@ public class EtudiantsController implements Initializable {
 
        @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        // table initialization
+        // table initialization
         cne.setCellValueFactory(new PropertyValueFactory<>("CNE"));
         nom.setCellValueFactory(new PropertyValueFactory<>("nom"));
         prenom.setCellValueFactory(new PropertyValueFactory<>("prenom"));
         username.setCellValueFactory(new PropertyValueFactory<>("username"));
         initTable(-1);
+        // combobox initialization
         initCombobox();
     }
 
-//  btnEdit
+    // btnEdit
     public void EditEtudiant(ActionEvent actionEvent) {
         if (!tab.getSelectionModel().isEmpty()){
             oldEtud=tab.getSelectionModel().getSelectedItem();
@@ -72,7 +75,7 @@ public class EtudiantsController implements Initializable {
             charge(oldEtud);
         }
     }
-//    // btnSave
+    // btnSave
     public void SaveEtudiant(ActionEvent actionEvent) {
         if(isFieldEmpty()) App.showErrorAlert("all fields are requires !");
         else
@@ -95,7 +98,7 @@ public class EtudiantsController implements Initializable {
             }
         }
     }
-//    // btnDelete
+    // btnDelete
     public void DeleteEtudiant(ActionEvent actionEvent) {
         if (!tab.getSelectionModel().isEmpty()){
             Etudiant etd=tab.getSelectionModel().getSelectedItem();
@@ -105,7 +108,7 @@ public class EtudiantsController implements Initializable {
             }
         }
     }
-//    // btn cancel
+    // btn cancel
     public void cancel() {
         CNEField.setText("");
         nomField.setText("");
@@ -115,11 +118,26 @@ public class EtudiantsController implements Initializable {
         groups.setValue("");
         isEditClicked=false;
     }
-//    // Combobox FilterGroup
+
+    // btnSaveGroup
+    public void SaveGroup(ActionEvent actionEvent) {
+        if(!GroupField.getText().isEmpty()){
+            String nomGroup=GroupField.getText();
+            Response res= AdminDAO.AddGroup(nomGroup);
+            dialog(res);
+            cancel();
+            initCombobox();
+        }
+    }
+    // btnCancelGroupField
+    public void cancelGroupField(ActionEvent actionEvent) {
+           GroupField.setText("");
+    }
+
+    // Combobox FilterGroup
     public void getFiltredGroup(ActionEvent actionEvent) {
         initTable(getIdGroup(filterGroupe.getValue()));
     }
-
 
     ////////////////***Utils***//////////////////////
     // Dialog

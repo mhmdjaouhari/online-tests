@@ -10,7 +10,7 @@
 
 <AnchorPane fx:id="anch" prefHeight="640.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.admin.ConsolleController">
    <children>
-      <Label layoutX="19.0" layoutY="17.0" prefHeight="30.0" prefWidth="392.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #7387A8;" text="Gestion de serveur" />
+      <Label layoutX="19.0" layoutY="17.0" prefHeight="30.0" prefWidth="392.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #7387A8;" text="Gestion de serveur" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="805.3333333333333" />
       <Separator layoutX="3.0" layoutY="55.0" prefHeight="4.0" prefWidth="1213.0" />
       <JFXButton fx:id="bntStart" buttonType="RAISED" layoutX="149.0" layoutY="156.0" onAction="#startServer" prefHeight="30.0" prefWidth="106.0" style="-fx-background-color: #00A65A;" text="Start Server" textFill="WHITE">
          <font>

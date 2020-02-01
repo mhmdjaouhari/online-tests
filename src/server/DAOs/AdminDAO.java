@@ -33,8 +33,7 @@ public class AdminDAO {
         }
     }
 
-    public static Response update(Admin oldAdmin,Admin newAdmin)
-    {
+    public static Response update(Admin oldAdmin,Admin newAdmin) {
         try{
             PreparedStatement pst =conn.prepareStatement("update admins set nom=?,prenom=?,password=?,login=? where login=?;");
             pst.setString(1, newAdmin.getNom());
@@ -59,5 +58,21 @@ public class AdminDAO {
             return new Response(1, "SERVER DB ERROR :"+e.getMessage());
         }
     }
+
+    public static Response AddGroup(String nom_grp){
+        PreparedStatement statement = null;
+        try {
+            statement = conn.prepareStatement("insert into groupes (nom) values(?);");
+            statement.setString(1,nom_grp);
+            if(statement.executeUpdate()!=0){
+                return  new Response(0,"le groupe est ajouté !");
+            }
+            return  new Response(0,"ce groupe existe déjà!");
+        }
+        catch (SQLException e) {
+            return  new Response(1,"ce groupe existe déjà, ajouter un nouveau groupe svp  ");
+        }
+    }
+
 }
 

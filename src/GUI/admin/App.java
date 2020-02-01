@@ -18,6 +18,7 @@ public class App extends Application {
         stage=primaryStage;
         gotoLogin();
     }
+
     public static void main(String[] args) {
         launch(args);
     }
