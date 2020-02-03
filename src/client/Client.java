@@ -31,9 +31,9 @@ public class Client {
                 @Override
                 public void run() {
                     System.out.println("closing ...");
-                    if(emitter.getClientOnline()){
-                        emitter.exit();
-                    }
+                    emitter.exit(role);
+//                    if(emitter.getClientOnline()){
+//                    }
                 }
             });
             return true;

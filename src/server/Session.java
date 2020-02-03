@@ -50,10 +50,18 @@ public class Session extends Thread {
 
                 action = request.getAction();
 
+
+
                 if (action == Action.EXIT) {
+                    if(role == Role.ETUDIANT){
+                        System.out.println("Closing session etudiant...");
+                    }else if(role == Role.PROFESSEUR){
+                        System.out.println("Closing session prof...");
+                    }
                     System.out.println("Closing session...");
                     break;
                 }
+
                 Response response;
                 switch (role) {
                     case PROFESSEUR:
