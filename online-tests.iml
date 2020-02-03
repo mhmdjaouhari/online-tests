@@ -25,5 +25,8 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="mysql-connector-java-5.1.48-bin" level="application" />
+    <orderEntry type="library" name="jfoenix-9.0.8" level="application" />
+    <orderEntry type="library" name="JavaFx-11" level="application" />
   </component>
 </module>

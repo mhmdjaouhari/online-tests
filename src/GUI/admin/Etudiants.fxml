@@ -3,11 +3,11 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXPasswordField?>
-<?import com.jfoenix.controls.JFXTabPane?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
@@ -33,9 +33,9 @@
       <JFXComboBox fx:id="groups" layoutX="40.0" layoutY="519.0" prefHeight="25.0" prefWidth="107.0" promptText="Groupe" />
       <JFXTextField fx:id="CNEField" labelFloat="true" layoutX="40.0" layoutY="208.0" maxWidth="370.0" minWidth="370.0" prefHeight="31.0" prefWidth="370.0" promptText="CNE" />
 
-      <JFXTabPane layoutX="460.0" layoutY="68.0" prefHeight="556.0" prefWidth="635.0" tabDragPolicy="REORDER">
+      <TabPane layoutX="460.0" layoutY="68.0" prefHeight="556.0" prefWidth="635.0" tabDragPolicy="REORDER">
          <tabs>
-            <Tab text="Liste des étudiants">
+            <Tab closable="false" text="Liste des étudiants">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="696.0" style="-fx-background-color: white;">
                      <children>
@@ -111,7 +111,7 @@
                </content>
             </Tab>
          </tabs>
-      </JFXTabPane>
+      </TabPane>
 
 
 

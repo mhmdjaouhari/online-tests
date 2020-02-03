@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="640.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.admin.ProfesseurController">
+<AnchorPane prefHeight="640.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.admin.ProfesseurController">
    <children>
       <Label layoutX="19.0" layoutY="17.0" prefHeight="30.0" prefWidth="392.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #7387A8;" text="Gestion des enseignants" />
       <Separator layoutX="3.0" layoutY="55.0" prefHeight="4.0" prefWidth="1213.0" />
@@ -25,9 +33,9 @@
       <JFXTextField fx:id="matriculeField" labelFloat="true" layoutX="40.0" layoutY="226.0" maxWidth="370.0" minWidth="370.0" prefHeight="31.0" prefWidth="370.0" promptText="Matricule" />
 
 
-      <JFXTabPane layoutX="463.0" layoutY="71.0" prefHeight="556.0" prefWidth="635.0" tabDragPolicy="REORDER">
+      <TabPane layoutX="463.0" layoutY="71.0" prefHeight="556.0" prefWidth="635.0" tabDragPolicy="REORDER">
          <tabs>
-            <Tab text="Liste des enseignants ">
+            <Tab closable="false" text="Liste des enseignants ">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="524.0" prefWidth="635.0" style="-fx-background-color: white;">
                      <children>
@@ -78,7 +86,7 @@
                </content>
             </Tab>
          </tabs>
-      </JFXTabPane>
+      </TabPane>
 
 
 
