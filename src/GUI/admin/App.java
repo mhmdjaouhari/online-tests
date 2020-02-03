@@ -54,7 +54,7 @@ public class App extends Application {
         stage.show();
     }
     public static void gotoDashboard() throws IOException {
-        Parent root=FXMLLoader.load(App.class.getResource("dashboard.fxml"));
+        Parent root=FXMLLoader.load(App.class.getResource("DashBoard.fxml"));
         stage.setTitle("Admin Dashboard");
         stage.setScene(new Scene(root));
         stage.centerOnScreen();
