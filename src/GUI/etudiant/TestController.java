@@ -169,7 +169,7 @@ public class TestController {
             });
         });
         setTimer();
-        writeTestToTempFile();
+        //writeTestToTempFile();
     }
 
     private void setTimer() {
@@ -356,6 +356,7 @@ public class TestController {
             Temp temp = new Temp();
             temp.setId_test(App.getActiveTest().getId());
             temp.setCne(App.getLoggedEtudiant().getCNE());
+            temp.setReponses(Temp.toTempReponse(reponsesList));
             temp.setMinute(timerSeconds / 60);
             System.out.println("write  : " + temp);
             outputStream.writeObject(temp);
