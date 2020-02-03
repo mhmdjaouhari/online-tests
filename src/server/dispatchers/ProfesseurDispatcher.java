@@ -1,5 +1,7 @@
 package server.dispatchers;
 
+import GUI.admin.ConsolleController;
+import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import models.*;
 import server.DAOs.EtudiantDAO;
@@ -15,7 +17,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ProfesseurDispatcher {
-
     public static Response handle(Request request){
         Action action = request.getAction();
         Response response;
@@ -25,6 +26,7 @@ public class ProfesseurDispatcher {
                     ArrayList<String> credentials = (ArrayList<String>) request.getData();
                     Professeur professeur = ProfesseurDAO.login(credentials.get(0),credentials.get(1));
                     response = new Response(0,"Proffesseur logged successfully",professeur);
+                    ConsolleController.log.appendText("Le professeur "+professeur.getNom()+" "+professeur.getPrenom()+" est connecté au serveur"+"\n");
                     break;
                 }
                 case EXIT: {
@@ -39,32 +41,19 @@ public class ProfesseurDispatcher {
                     break;
                 }
                 case UPDATE_PROF: {
-                    ArrayList<Object> data = (ArrayList<Object>) request.getData();
-                    String oldProfesseurMatricule = "";
-                    Professeur newProfesseur = new Professeur();
-                    for(Object elm:data){
-                        if(elm instanceof String){
-                            oldProfesseurMatricule = (String) elm;
-                        }
-                        else if(elm instanceof Professeur){
-                            newProfesseur = (Professeur) elm;
-                        }
-                        else{
-                            throw new IOException("Invalid request data");
-                        }
-                    }
-                    ProfesseurDAO.update(oldProfesseurMatricule, newProfesseur);
+                    ArrayList<Professeur> ArrayProf = ( ArrayList<Professeur>) request.getData();
+                    ProfesseurDAO.update( ArrayProf.get(0), ArrayProf.get(1));
                     response = new Response(0,"Proffesseur updated successfully");
                     break;
                 }
                 case DELETE_PROF: {
-                    String matricule = (String) request.getData();
-                    ProfesseurDAO.delete(matricule);
-                    response = new Response(0,"Proffesseur deleted successfully");
+                    Professeur prof = (Professeur) request.getData();
+                    ProfesseurDAO.delete(prof);
+                    response = new Response(0,"Proffesseur "+prof.getNom()+" deleted successfully");
                     break;
                 }
                 case GET_ALL_PROFS:{
-                    ArrayList<Professeur> professeurs = ProfesseurDAO.getAllProfesseurs();
+                    ObservableList<Professeur> professeurs = ProfesseurDAO.getAllProfesseurs();
                     response = new Response(0,"Professeurs loaded successfully",professeurs);
                     break;
                 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="640.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.admin.StatisticsController">
+    <children>
+        <Label layoutX="19.0" layoutY="17.0" prefHeight="30.0" prefWidth="392.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #7387A8;" text="Statistiques" />
+        <Separator layoutX="3.0" layoutY="55.0" prefHeight="4.0" prefWidth="1213.0" />
+      <BarChart fx:id="grpChart" layoutX="37.0" layoutY="128.0" title="Nombre des étudiants par groupe ">
+        <xAxis>
+          <CategoryAxis fx:id="X" label="Nom du groupe" side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis fx:id="Y" label="Nombre des étudiants" side="LEFT" />
+        </yAxis>
+      </BarChart>
+      <BarChart fx:id="grpChart1" layoutX="578.0" layoutY="128.0" title="Nombre des tests par groupe">
+         <xAxis>
+            <CategoryAxis fx:id="X1" label="Nom du groupe" side="BOTTOM" />
+         </xAxis>
+         <yAxis>
+            <NumberAxis fx:id="Y1" label="Nombre des tests " side="LEFT" />
+         </yAxis>
+      </BarChart>
+    </children>
+</AnchorPane>

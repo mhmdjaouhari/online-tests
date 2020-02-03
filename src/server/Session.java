@@ -1,5 +1,6 @@
 package server;
 
+import GUI.admin.ConsolleController;
 import server.dispatchers.EtudiantDispatcher;
 import server.dispatchers.ProfesseurDispatcher;
 import util.Action;
@@ -47,7 +48,6 @@ public class Session extends Thread {
                 Request request = (Request) inputStream.readObject();
 
                 role = request.getRole();
-
                 action = request.getAction();
 
 
@@ -78,6 +78,7 @@ public class Session extends Thread {
                 }
             } catch (IOException | ClassNotFoundException e) {
                 System.err.println("Client break the connection ! "+Thread.currentThread());
+                ConsolleController.log.appendText("Client break the connection ! \n");
                 Thread.currentThread().interrupt();
                 break;
             }

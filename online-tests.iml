@@ -7,8 +7,26 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="JavaFx-11" level="application" />
-    <orderEntry type="library" exported="" name="mysql-connector-java-5.1.48-bin" level="application" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../projet Java/autres/jfoenix-9.0.8.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../projet Java/autres/mysql-connector-java-5.1.48.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="mysql-connector-java-5.1.48-bin" level="application" />
     <orderEntry type="library" name="jfoenix-9.0.8" level="application" />
+    <orderEntry type="library" name="JavaFx-11" level="application" />
   </component>
 </module>

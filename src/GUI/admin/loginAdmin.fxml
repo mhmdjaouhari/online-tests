@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane minHeight="480.0" minWidth="440.0" stylesheets="@../gui.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.admin.loginAdminController">
+    <children>
+        <VBox alignment="TOP_CENTER" minHeight="480.0" prefWidth="240.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" VBox.vgrow="ALWAYS">
+            <children>
+                <VBox alignment="TOP_CENTER" prefWidth="240.0">
+                    <children>
+                        <Label text="ONLINE TESTS">
+                            <VBox.margin>
+                                <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
+                            </VBox.margin>
+                        </Label>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@Assets/icons8-admin-settings-male-500.png" />
+                            </image>
+                        </ImageView>
+                        <Label text="Espace administrateur" textFill="#046dd5">
+                            <font>
+                                <Font name="Ubuntu Bold" size="14.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                            </VBox.margin>
+                        </Label>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="32.0" top="64.0" />
+                    </VBox.margin>
+                </VBox>
+
+                <JFXTextField fx:id="usernameField" focusColor="#046dd5" labelFloat="true" maxWidth="-Infinity" prefHeight="32.0" prefWidth="160.0" promptText="Nom d'utilisateur">
+                    <VBox.margin>
+                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                    </VBox.margin>
+                </JFXTextField>
+                <JFXPasswordField fx:id="passwordField" focusColor="#046dd5" labelFloat="true" maxWidth="-Infinity" onAction="#login" prefHeight="32.0" prefWidth="160.0" promptText="Mot de passe">
+                    <VBox.margin>
+                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                    </VBox.margin>
+                </JFXPasswordField>
+                <JFXButton buttonType="RAISED" onAction="#login" prefHeight="32.0" prefWidth="160.0" ripplerFill="WHITE" styleClass="bg-blue" text="Se connecter" textFill="#ffffff">
+                    <VBox.margin>
+                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                    </VBox.margin>
+                </JFXButton>
+            </children>
+        </VBox>
+
+    </children>
+</AnchorPane>
