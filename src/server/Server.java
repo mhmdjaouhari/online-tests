@@ -1,12 +1,13 @@
 package server;
 
 
-import java.io.*;
-import java.net.ConnectException;
+import GUI.admin.ConsolleController;
+
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server implements Runnable{
+public class  Server implements Runnable{
     public static boolean stopServer=true;
 
     @Override
@@ -14,13 +15,12 @@ public class Server implements Runnable{
         Socket socket = null;
         try (ServerSocket serverSocket = new ServerSocket(5000)) {
             while (true) {
-
                 if(!stopServer){
                     System.out.println("Closing server ....");
+                    serverSocket.close();
                     Thread.currentThread().interrupt();
                     break;
                 }
-
                 socket = serverSocket.accept();
                 System.out.println("Client connected"+" info : "+socket);
                 //ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
@@ -29,11 +29,6 @@ public class Server implements Runnable{
                 session.start();
             }
         } catch (IOException e) {
-            try {
-                socket.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
             System.out.println(e.getMessage());
         }
     }

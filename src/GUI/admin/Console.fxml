@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anch" prefHeight="640.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.admin.ConsolleController">
+   <children>
+      <Label layoutX="19.0" layoutY="17.0" prefHeight="30.0" prefWidth="392.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #7387A8;" text="Gestion de serveur" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="805.3333333333333" />
+      <Separator layoutX="3.0" layoutY="55.0" prefHeight="4.0" prefWidth="1213.0" />
+      <JFXButton fx:id="bntStart" buttonType="RAISED" layoutX="149.0" layoutY="156.0" onAction="#startServer" prefHeight="30.0" prefWidth="106.0" style="-fx-background-color: #00A65A;" text="Start Server" textFill="WHITE">
+         <font>
+            <Font name="Roboto Medium" size="14.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Assets/icons8-play-64%20(1).png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </JFXButton>
+      <JFXButton fx:id="btnStop" buttonType="RAISED" disable="true" layoutX="293.0" layoutY="156.0" onAction="#stopServer" prefHeight="30.0" prefWidth="106.0" style="-fx-background-color: #00A65A;" text="Stop Server" textFill="WHITE">
+         <font>
+            <Font name="Roboto Medium" size="14.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Assets/icons8-stop-64.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </JFXButton>
+      <JFXButton fx:id="btnClear" buttonType="RAISED" layoutX="436.0" layoutY="156.0" onAction="#ClearLog" prefHeight="30.0" prefWidth="106.0" style="-fx-background-color: #00A65A;" text="Clean" textFill="WHITE">
+         <font>
+            <Font name="Roboto Medium" size="14.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Assets/icons8-broom-64.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </JFXButton>
+   </children>
+</AnchorPane>
