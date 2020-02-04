@@ -76,7 +76,7 @@ public class EtudiantsController implements Initializable {
     }
     // btnSave
     public void SaveEtudiant(ActionEvent actionEvent) {
-        if(isFieldEmpty()) App.showErrorAlert("all fields are requires !");
+        if(isFieldEmpty()) App.showErrorAlert("Tous les champs sont obligatoires !");
         else
         {
             if(isEditClicked){
@@ -101,9 +101,18 @@ public class EtudiantsController implements Initializable {
     public void DeleteEtudiant(ActionEvent actionEvent) {
         if (!tab.getSelectionModel().isEmpty()){
             Etudiant etd=tab.getSelectionModel().getSelectedItem();
-            if(App.showConfirmationAlert("You want delete student :\n "+etd.getNom()+" "+etd.getPrenom())){
+            if(App.showConfirmationAlert(" Voulez vous supprimer l'étudiant : "+etd.getNom()+" "+etd.getPrenom())){
                 Response res=EtudiantDispatcher.handle(new Request(Action.DELETE_ETUDIANT,etd, Role.ETUDIANT));
-                dialog(res);
+                if(res.getStatus()!=0)
+                {
+                    System.out.println(res.getMessage());
+                    App.showErrorAlert("L'étudiant a déjà passé des tests, vous ne pouvez pas le supprimer.");
+                }
+                else {
+                    App.showSuccessAlert(res.getMessage());
+                    System.out.println(res.getMessage());
+                    initTable(getIdGroup(filterGroupe.getValue()));
+                }
                 cancel();
             }
         }

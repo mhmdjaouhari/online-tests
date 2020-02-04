@@ -66,7 +66,7 @@ public class ProfesseurController implements Initializable {
     }
     // btnSave
     public void SaveProf(ActionEvent actionEvent) {
-        if(isFieldEmpty()) App.showErrorAlert("plead");
+        if(isFieldEmpty()) App.showErrorAlert("Tous les champs sont obligatoires !");
         else
         {
             if(isEditClicked){
@@ -91,9 +91,18 @@ public class ProfesseurController implements Initializable {
     public void DeleteProf(ActionEvent actionEvent) {
         if (!tab.getSelectionModel().isEmpty()){
             Professeur prof=tab.getSelectionModel().getSelectedItem();
-            if(App.showConfirmationAlert("You want delete student :\n "+prof.getNom()+" "+prof.getPrenom())){
+            if(App.showConfirmationAlert("Voulez vous supprimer le prof: "+prof.getNom()+" "+prof.getPrenom())){
                 Response res=ProfesseurDispatcher.handle(new Request(Action.DELETE_PROF,prof,Role.PROFESSEUR));
-                dialog(res);
+                if(res.getStatus()!=0)
+                {
+                    System.out.println("Alert smthg wrong: "+res.getMessage());
+                    App.showErrorAlert("Ce prof a déjà creé des tests, vous ne pouvez pas le supprimer.");
+                }
+                else {
+                    App.showSuccessAlert(res.getMessage());
+                    System.out.println(res.getMessage());
+                    initTable();
+                }
                 cancel();
             }
         }
