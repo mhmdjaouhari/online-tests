@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -32,39 +30,25 @@
             <NumberAxis fx:id="Y1" label="Nombre des tests " side="LEFT" />
          </yAxis>
       </BarChart>
-        <VBox fx:id="nbrProfLabel" alignment="TOP_CENTER" layoutX="192.0" layoutY="440.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="174.0" prefWidth="251.0" HBox.hgrow="ALWAYS">
+        <VBox fx:id="nbrProfLabel" alignment="TOP_CENTER" layoutX="175.0" layoutY="440.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="174.0" prefWidth="280.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label alignment="CENTER" prefHeight="48.0" prefWidth="250.0" style="-fx-background-color: #FFC66C;" text="Nombre de professeurs connectés">
+                        <Label alignment="CENTER" prefHeight="56.0" prefWidth="300.0" style="-fx-background-color: #FFC66C;" text="Nombre de professeurs connectés depuis le démarrage du serveur" textAlignment="CENTER" wrapText="true">
                             <font>
                                 <Font name="Ebrima Bold" size="15.0" />
                             </font>
                         </Label>
-                        <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="111.0" style="-fx-border-color: #72D3FE;">
-                            <VBox.margin>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                            </VBox.margin>
-                            <children>
-                                <ProgressIndicator prefHeight="43.0" prefWidth="63.0" />
-                            </children>
-                        </HBox>
                     </children>
         </VBox>
-      <VBox fx:id="nbrEtudLabel" alignment="TOP_CENTER" layoutX="743.0" layoutY="440.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="174.0" prefWidth="251.0">
+      <VBox fx:id="nbrEtudLabel" alignment="TOP_CENTER" layoutX="720.0" layoutY="440.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="174.0" prefWidth="272.0">
          <children>
-            <Label alignment="CENTER" prefHeight="48.0" prefWidth="250.0" style="-fx-background-color: #FFC66C;" text="Nombre d'étudiants connectés">
+            <Label alignment="CENTER" prefHeight="56.0" prefWidth="272.0" style="-fx-background-color: #FFC66C;" text="Nombre d'étudiants connectés depuis le démarrage du serveur" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font name="Ebrima Bold" size="15.0" />
                </font>
             </Label>
-            <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="111.0" style="-fx-border-color: #72D3FE;">
-               <VBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </VBox.margin>
-               <children>
-                  <ProgressIndicator prefHeight="43.0" prefWidth="63.0" />
-               </children>
-            </HBox>
          </children>
       </VBox>
+<!--                    <ProgressIndicator layoutX="130.0" layoutY="488.0" prefHeight="48.0" prefWidth="45.0" />-->
+<!--      <ProgressIndicator layoutX="698.0" layoutY="488.0" prefHeight="48.0" prefWidth="45.0" />-->
     </children>
 </AnchorPane>

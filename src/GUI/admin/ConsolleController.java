@@ -31,13 +31,13 @@ public class ConsolleController implements Initializable {
         Server.setStopServer(true);
         starter= new Thread(new Server());
         starter.start();
-        System.out.println("kokokoko");
+//        System.out.println("kokokoko");
         //starter.interrupt();
         ///
         log.appendText("Server started ...\n");
         bntStart.setDisable(true);
         btnStop.setDisable(false);
-        System.out.println("clicked");
+//        System.out.println("clicked");
         bntStart.setText("Server On...");
         DashBoardController.statServer.setText("Server is online !");
         DashBoardController.statServer.setTextFill(Color.web("#00ff49"));

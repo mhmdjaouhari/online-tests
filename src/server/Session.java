@@ -53,18 +53,12 @@ public class Session extends Thread {
 
                 if (action == Action.EXIT) {
                     if(role==Role.ETUDIANT) {
-                        ConsolleController.log.appendText("Le client de type 'Etudiant' est déconnecté : " + socket + "\n");
-                        StatisticsController.nbrEtd--;
-                        System.out.println(StatisticsController.nbrEtd);
-                        StatisticsController.OnlineStudents.setText(String.valueOf(StatisticsController.nbrEtd));
+                        ConsolleController.log.appendText("Un client de type 'Etudiant' est déconnecté : " + socket + "\n");
                     }
                     else if (role==Role.PROFESSEUR) {
-                        ConsolleController.log.appendText("Le client de type 'Prof' est déconnecté : " + socket + "\n");
-                        StatisticsController.nbrPf--;
-                        System.out.println(StatisticsController.nbrPf--);
-                        StatisticsController.OnlineProfs.setText(String.valueOf(StatisticsController.nbrPf));
+                        ConsolleController.log.appendText("Un client de type 'Prof' est déconnecté : " + socket + "\n");
                     }
-                        break;
+                    break;
                 }
                 Response response;
                 switch (role) {

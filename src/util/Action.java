@@ -41,5 +41,4 @@ public enum Action {
     //Statitics
         GET_MOYENNES_GROUPES,
         GET_TESTS_MOYENNE
-
 }

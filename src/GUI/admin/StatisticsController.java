@@ -8,6 +8,8 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import models.Groupe;
@@ -35,8 +37,8 @@ public class StatisticsController implements Initializable {
     HashMap<String,Integer> MapGrpsNamesTests;
     public static int nbrEtd=0;
     public static int nbrPf=0;
-    public static Label OnlineProfs;
-    public static Label OnlineStudents;
+    public static TextField OnlineProfs;
+    public static TextField OnlineStudents;
 
 //            <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="48.0" prefWidth="250.0" style="-fx-background-color: #FFC66C;" text="0">
 //                            <font>
@@ -45,6 +47,9 @@ public class StatisticsController implements Initializable {
 //                        </Label>
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        OnlineProfs=new TextField();
+        OnlineStudents=new TextField();
+
         MapGrpsNamesCount=getCountGroups();
         MapGrpsNamesTests=getCountTestsInGroup();
 
@@ -59,23 +64,24 @@ public class StatisticsController implements Initializable {
         grpChart.getData().add(set1);
         grpChart1.getData().add(set2);
 
-        OnlineProfs=new Label();
-        OnlineStudents=new Label();
-        OnlineProfs.setAlignment(Pos.CENTER);
+
         OnlineProfs.setStyle("-fx-background-color: #FFC66C;");
         OnlineProfs.setFont(new Font("Ebrima Bold",25));
-        OnlineStudents.setAlignment(Pos.CENTER);
-        OnlineStudents.setStyle("-fx-background-color: #FFC66C;");
+        OnlineProfs.setEditable(false);
+        OnlineProfs.setAlignment(Pos.TOP_CENTER);
+
+        OnlineStudents.setStyle("-fx-background-color: #FFC66C; -fx-text-alignment: center");
         OnlineStudents.setFont(new Font("Ebrima Bold",25));
+        OnlineStudents.setEditable(false);
+        OnlineStudents.setAlignment(Pos.TOP_CENTER);
 
         OnlineStudents.setLayoutX(10);
         OnlineStudents.setLayoutY(10);
-        OnlineStudents.setPrefHeight(48);
-        OnlineStudents.setPrefWidth(250);
+
         OnlineProfs.setLayoutX(10);
         OnlineProfs.setLayoutY(10);
         OnlineProfs.setPrefHeight(48);
-        OnlineProfs.setPrefWidth(250);
+        OnlineProfs.setPrefWidth(96);
 
         OnlineProfs.setText("0");
         OnlineStudents.setText("0");
