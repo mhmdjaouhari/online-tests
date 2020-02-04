@@ -81,7 +81,7 @@ public class ProfesseurController implements Initializable {
             }
             else
             {
-                Response res= ProfesseurDispatcher.handle(new Request(Action.CREATE_PROF, Role.PROFESSEUR));
+                Response res= ProfesseurDispatcher.handle(new Request(Action.CREATE_PROF,load(),Role.PROFESSEUR));
                 dialog(res);
                 cancel();
             }
