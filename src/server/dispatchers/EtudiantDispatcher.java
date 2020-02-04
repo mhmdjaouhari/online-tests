@@ -1,6 +1,7 @@
 package server.dispatchers;
 
 import GUI.admin.ConsolleController;
+import GUI.admin.StatisticsController;
 import javafx.collections.ObservableList;
 import models.*;
 import server.DAOs.EtudiantDAO;
@@ -24,6 +25,8 @@ public class EtudiantDispatcher {
                     Etudiant etudiant = EtudiantDAO.login(credentials.get(0),credentials.get(1));
                     response = new Response(0,"User logged successfully",etudiant);
                     ConsolleController.log.appendText("l'étudiant "+etudiant.getNom()+" "+etudiant.getPrenom()+" est connecté au serveur"+"\n");
+                    StatisticsController.nbrEtd++;
+                    StatisticsController.OnlineStudents.setText(String.valueOf(StatisticsController.nbrEtd));
                     break;
                 }
                 case EXIT: {

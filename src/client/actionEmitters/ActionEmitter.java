@@ -32,8 +32,7 @@ abstract public class ActionEmitter {
 
         try {
 //            if(!isServerOnline()){
-//                System.out.println("dkhaaal");
-                Request request = new Request(Action.EXIT, role);
+                Request request = new Request(Action.EXIT,role);
                 outputStream.writeObject(request);
                 outputStream.close();
                 inputStream.close();

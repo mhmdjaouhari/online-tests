@@ -2,10 +2,14 @@ package GUI.admin;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import models.Groupe;
 import server.DAOs.StatisticsDAO;
 import server.dispatchers.ProfesseurDispatcher;
@@ -23,9 +27,22 @@ public class StatisticsController implements Initializable {
 
     @FXML BarChart<String,Integer> grpChart;
     @FXML BarChart<String,Integer> grpChart1;
+    @FXML VBox nbrEtudLabel;
+    @FXML VBox nbrProfLabel;
+
 
     HashMap<String,Integer> MapGrpsNamesCount;
     HashMap<String,Integer> MapGrpsNamesTests;
+    public static int nbrEtd=0;
+    public static int nbrPf=0;
+    public static Label OnlineProfs;
+    public static Label OnlineStudents;
+
+//            <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="48.0" prefWidth="250.0" style="-fx-background-color: #FFC66C;" text="0">
+//                            <font>
+//                                <Font name="Ebrima Bold" size="25.0" />
+//                            </font>
+//                        </Label>
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         MapGrpsNamesCount=getCountGroups();
@@ -41,6 +58,29 @@ public class StatisticsController implements Initializable {
         }
         grpChart.getData().add(set1);
         grpChart1.getData().add(set2);
+
+        OnlineProfs=new Label();
+        OnlineStudents=new Label();
+        OnlineProfs.setAlignment(Pos.CENTER);
+        OnlineProfs.setStyle("-fx-background-color: #FFC66C;");
+        OnlineProfs.setFont(new Font("Ebrima Bold",25));
+        OnlineStudents.setAlignment(Pos.CENTER);
+        OnlineStudents.setStyle("-fx-background-color: #FFC66C;");
+        OnlineStudents.setFont(new Font("Ebrima Bold",25));
+
+        OnlineStudents.setLayoutX(10);
+        OnlineStudents.setLayoutY(10);
+        OnlineStudents.setPrefHeight(48);
+        OnlineStudents.setPrefWidth(250);
+        OnlineProfs.setLayoutX(10);
+        OnlineProfs.setLayoutY(10);
+        OnlineProfs.setPrefHeight(48);
+        OnlineProfs.setPrefWidth(250);
+
+        OnlineProfs.setText("0");
+        OnlineStudents.setText("0");
+        nbrProfLabel.getChildren().add(OnlineProfs);
+        nbrEtudLabel.getChildren().add(OnlineStudents);
     }
 
     // Utils

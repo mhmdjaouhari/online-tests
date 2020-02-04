@@ -94,11 +94,13 @@ public class ProfesseurController implements Initializable {
             if(App.showConfirmationAlert("You want delete student :\n "+prof.getNom()+" "+prof.getPrenom())){
                 Response res=ProfesseurDispatcher.handle(new Request(Action.DELETE_PROF,prof,Role.PROFESSEUR));
                 dialog(res);
+                cancel();
             }
         }
     }
     // btn cancel
     public void cancel() {
+        matriculeField.setDisable(false);
         matriculeField.setText("");
         nomField.setText("");
         prenomField.setText("");
@@ -134,6 +136,7 @@ public class ProfesseurController implements Initializable {
     // charge object to textFiels
     private void charge(Professeur oldProf) {
         matriculeField.setText(oldProf.getMatricule());
+        matriculeField.setDisable(true);
         nomField.setText(oldProf.getNom());
         prenomField.setText(oldProf.getPrenom());
         usernameField.setText(oldProf.getUsername());
