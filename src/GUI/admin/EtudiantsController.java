@@ -104,12 +104,14 @@ public class EtudiantsController implements Initializable {
             if(App.showConfirmationAlert("You want delete student :\n "+etd.getNom()+" "+etd.getPrenom())){
                 Response res=EtudiantDispatcher.handle(new Request(Action.DELETE_ETUDIANT,etd, Role.ETUDIANT));
                 dialog(res);
+                cancel();
             }
         }
     }
     // btn cancel
     public void cancel() {
         CNEField.setText("");
+        CNEField.setDisable(false);
         nomField.setText("");
         prenomField.setText("");
         usernameField.setText("");
@@ -155,6 +157,7 @@ public class EtudiantsController implements Initializable {
     // charge object to textFiels
     private void charge(Etudiant oldEtud) {
         CNEField.setText(oldEtud.getCNE());
+        CNEField.setDisable(true);
         nomField.setText(oldEtud.getNom());
         prenomField.setText(oldEtud.getPrenom());
         usernameField.setText(oldEtud.getUsername());

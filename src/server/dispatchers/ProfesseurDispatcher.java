@@ -1,6 +1,7 @@
 package server.dispatchers;
 
 import GUI.admin.ConsolleController;
+import GUI.admin.StatisticsController;
 import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import models.*;
@@ -27,6 +28,8 @@ public class ProfesseurDispatcher {
                     Professeur professeur = ProfesseurDAO.login(credentials.get(0),credentials.get(1));
                     response = new Response(0,"Proffesseur logged successfully",professeur);
                     ConsolleController.log.appendText("Le professeur "+professeur.getNom()+" "+professeur.getPrenom()+" est connecté au serveur"+"\n");
+                    StatisticsController.nbrPf++;
+                    StatisticsController.OnlineProfs.setText(String.valueOf(StatisticsController.nbrPf));
                     break;
                 }
                 case EXIT: {

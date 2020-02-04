@@ -28,15 +28,15 @@ abstract public class ActionEmitter {
     }
 
 
-    public boolean exit() {
+    public boolean exit(Role role) {
 
         try {
-            if(!isServerOnline()){
-                Request request = new Request(Action.EXIT, Role.ETUDIANT);
+//            if(!isServerOnline()){
+                Request request = new Request(Action.EXIT,role);
                 outputStream.writeObject(request);
                 outputStream.close();
                 inputStream.close();
-            }
+//            }
 
         } catch (IOException e) {
             e.printStackTrace();

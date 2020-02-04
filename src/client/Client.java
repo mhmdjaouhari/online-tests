@@ -32,7 +32,7 @@ public class Client {
                 public void run() {
                     System.out.println("closing ...");
                     if(emitter.getClientOnline()){
-                        emitter.exit();
+                        emitter.exit(role);
                     }
                 }
             });

@@ -1,6 +1,7 @@
 package server;
 
 import GUI.admin.ConsolleController;
+import GUI.admin.StatisticsController;
 import server.dispatchers.EtudiantDispatcher;
 import server.dispatchers.ProfesseurDispatcher;
 import util.Action;
@@ -51,8 +52,19 @@ public class Session extends Thread {
                 action = request.getAction();
 
                 if (action == Action.EXIT) {
-                    System.out.println("Closing session...");
-                    break;
+                    if(role==Role.ETUDIANT) {
+                        ConsolleController.log.appendText("Le client de type 'Etudiant' est déconnecté : " + socket + "\n");
+                        StatisticsController.nbrEtd--;
+                        System.out.println(StatisticsController.nbrEtd);
+                        StatisticsController.OnlineStudents.setText(String.valueOf(StatisticsController.nbrEtd));
+                    }
+                    else if (role==Role.PROFESSEUR) {
+                        ConsolleController.log.appendText("Le client de type 'Prof' est déconnecté : " + socket + "\n");
+                        StatisticsController.nbrPf--;
+                        System.out.println(StatisticsController.nbrPf--);
+                        StatisticsController.OnlineProfs.setText(String.valueOf(StatisticsController.nbrPf));
+                    }
+                        break;
                 }
                 Response response;
                 switch (role) {
@@ -70,7 +82,7 @@ public class Session extends Thread {
                 }
             } catch (IOException | ClassNotFoundException e) {
                 System.err.println("Client break the connection ! "+Thread.currentThread());
-                ConsolleController.log.appendText("Client break the connection ! \n");
+                ConsolleController.log.appendText("Client break the connection : "+socket+"\n");
                 Thread.currentThread().interrupt();
                 break;
             }
