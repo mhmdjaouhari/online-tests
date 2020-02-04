@@ -265,6 +265,8 @@ public class EtudiantsController implements Initializable {
     // init the combobox
     private void initCombobox() {
         grps=getAllGroupes();
+        filterGroupe.getItems().clear();
+        groups.getItems().clear();
         filterGroupe.getItems().add("ALL");
        for(Groupe grp : grps){
             filterGroupe.getItems().add(grp.getNom());
