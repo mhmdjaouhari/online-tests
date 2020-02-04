@@ -8,24 +8,39 @@ import util.Action;
 import util.Constants;
 import util.Role;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Properties;
 
 public class Client {
 
     ActionEmitter emitter;
     Role role;
 
+    private static String HOST;
+    private static int PORT;
+
     public Client(Role role){
+                try {
+            File configFile = new File("config.properties");
+            FileReader reader = new FileReader(configFile);
+            Properties props = new Properties();
+            props.load(reader);
+            HOST = props.getProperty("HOST");
+            PORT = Integer.parseInt(props.getProperty("PORT"));
+            reader.close();
+        }catch (IOException e){
+            e.printStackTrace();
+            System.out.println("Config file not found");
+        }
+
       this.role = role;
     }
 
     public boolean connect(){
         try{
-            Socket socket = new Socket(Constants.HOST, Constants.PORT);
+            Socket socket = new Socket(Client.getHOST(),Client.getPORT());
             emitter = instantiateEmitter(socket);
             Runtime.getRuntime().addShutdownHook(new Thread(){
                 @Override
@@ -67,5 +82,21 @@ public class Client {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public static String getHOST() {
+        return HOST;
+    }
+
+    public static void setHOST(String HOST) {
+        Client.HOST = HOST;
+    }
+
+    public static int getPORT() {
+        return PORT;
+    }
+
+    public static void setPORT(int PORT) {
+        Client.PORT = PORT;
     }
 }
