@@ -177,7 +177,7 @@ public class DashboardController {
         subtitleLabel.setStyle("-fx-font-size: 12");
         bylineLabel.setStyle("-fx-font-size: 12");
         vBox.getChildren().addAll(titleLabel, subtitleLabel, bylineLabel);
-        String note = (new DecimalFormat("#.##")).format(fiche.getNote());
+        String note = (new DecimalFormat("#.#")).format(fiche.getNote());
         Label noteLabel = new Label(note);
         noteLabel.setTextFill(Paint.valueOf("#f00"));
         Label baremeLabel = new Label("20");

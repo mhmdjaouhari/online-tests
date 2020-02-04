@@ -53,23 +53,6 @@ public class DashboardController {
         ImageView barChartIconView = new ImageView(barChartIcon);
         statsButton.setGraphic(barChartIconView);
 
-
-//
-//        Platform.runLater(() -> {
-//            Stage stage = (Stage) newTestsPane.getScene().getWindow();
-//            stage.setOnCloseRequest(e -> {
-//                if (App.getLoggedProfesseur() != null &&
-//                        App.getActiveTest() != null &&
-//                        testController != null &&
-//                        !testController.showSaveAndExitDialog()) {
-//                    e.consume();
-//                }
-//            });
-//        });
-    }
-
-    public void switchToTests() {
-        switchToTab("dashboard/Tests.fxml", testsButton);
     }
 
     private void switchToTab(String fxml, JFXButton relatedButton) {
@@ -87,17 +70,9 @@ public class DashboardController {
         }
     }
 
-
     public void handleLogout() {
         App.setLoggedProfesseur(null);
         App.gotoLogin();
     }
 
-    public AnchorPane getContentPane() {
-        return contentPane;
-    }
-
-    public void setContentPane(AnchorPane contentPane) {
-        this.contentPane = contentPane;
-    }
 }
