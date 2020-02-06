@@ -39,7 +39,6 @@ public class Session extends Thread {
 
         }catch (IOException e){
             System.out.println("Ping/Test request");
-            //e.printStackTrace();
             return;
         }
         Action action = Action.DEFAULT;
