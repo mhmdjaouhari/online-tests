@@ -14,19 +14,12 @@ public class Common {
         fxmlLoader.setLocation(resource);
         Parent page = fxmlLoader.load();
         Scene scene = stage.getScene();
-
-//        if (scene != null) {
-        //            stage.getScene().setRoot(page);
         stage.setMinWidth(minWidth);
         stage.setMinHeight(minHeight + 37);
-//        } else {
         scene = new Scene(page);
         scene.getStylesheets().add(Common.class.getResource("gui.css").toExternalForm());
         stage.setScene(scene);
-//        stage.setResizable(true);
         stage.sizeToScene();
-//        stage.setResizable(false);
-//        }
         stage.centerOnScreen();
         return fxmlLoader;
     }
