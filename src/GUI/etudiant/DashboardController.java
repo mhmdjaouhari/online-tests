@@ -168,7 +168,6 @@ public class DashboardController {
         row.setPrefHeight(56);
         row.setMinWidth(304);
         row.setPrefWidth(640);
-        //row.setDisable(true);
         VBox vBox = new VBox();
         Label subtitleLabel = new Label(test.getDetails());
         Label titleLabel = new Label(test.getTitre());
@@ -188,7 +187,6 @@ public class DashboardController {
         noteBox.setStyle("-fx-border-color: #f00; -fx-border-radius: 100%");
         noteBox.setMinSize(44, 48);
         noteBox.setMaxSize(44, 48);
-//        noteBox.setPrefSize(32,32);
         row.setGraphic(new HBox(vBox, noteBox));
         HBox.setHgrow(vBox, Priority.ALWAYS);
         HBox.setHgrow(noteBox, Priority.NEVER);
@@ -213,7 +211,6 @@ public class DashboardController {
             System.out.println("root : " + root);
             testController = fxmlLoader.getController();
             testController.setDashboardController(this);
-            //testController.setTemp(temp);
             Scene scene = new Scene(root, 1024, 720);
             scene.getStylesheets().add(getClass().getResource("/GUI/gui.css").toExternalForm());
             testStage.setScene(scene);
@@ -239,8 +236,6 @@ public class DashboardController {
 
     public void checkForTemp() {
         try {
-//            String fullName = App.getLoggedEtudiant().getPrenom() + "-" + App.getLoggedEtudiant().getNom();
-//            String filePath = "temp/" + App.getActiveTest().getTitre() + "-" + fullName+".test";
             //check if directory exists
             File directory = new File("temp/");
             if (!directory.exists()) {
