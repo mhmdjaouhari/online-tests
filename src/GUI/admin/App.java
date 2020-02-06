@@ -59,7 +59,6 @@ public class App extends Application {
         stage.setScene(new Scene(root));
         stage.centerOnScreen();
         stage.setOnCloseRequest(windowEvent -> {});
-        //stage.setMaximized(true);
         stage.show();
     }
 }
