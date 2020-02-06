@@ -144,7 +144,6 @@ public class TestsController {
             Stage fichesStage = new Stage();
             fichesStage.initOwner(App.getStage());
             fichesStage.setMaxWidth(672);
-//            fichesStage.initModality(Modality.WINDOW_MODAL);
             VBox vBox = new VBox();
             vBox.setFillWidth(true);
             vBox.setSpacing(8);
@@ -179,7 +178,6 @@ public class TestsController {
         row.setPrefHeight(56);
         row.setMinWidth(304);
         row.setPrefWidth(640);
-//        row.setDisable(true);
         VBox vBox = new VBox();
         Label subtitleLabel = new Label(test.getDetails());
         Label titleLabel = new Label(test.getTitre());
@@ -199,7 +197,6 @@ public class TestsController {
         noteBox.setStyle("-fx-border-color: #f00; -fx-border-radius: 100%");
         noteBox.setMinSize(44, 48);
         noteBox.setMaxSize(44, 48);
-//        noteBox.setPrefSize(32,32);
         row.setGraphic(new HBox(vBox, noteBox));
         HBox.setHgrow(vBox, Priority.ALWAYS);
         HBox.setHgrow(noteBox, Priority.NEVER);
