@@ -465,7 +465,7 @@ public class TestDAO {
 
     /*========================== CREATION ==========================*/
 
-    // add test (please use this version instead -jaouhari)
+    // add test
     public static void createTest(Test test) throws SQLException {
         PreparedStatement statement = conn.prepareStatement(
                 "insert into tests(matricule, titre, duration, locked, penalite) values (?,?,?,?,?)",
@@ -630,7 +630,6 @@ public class TestDAO {
                     updateQuestion(question);
                 } else {
                     question.setIdTest(newTest.getId());
-                    //System.out.println(question);
                     addQuestion(question);
                 }
             }
