@@ -15,7 +15,7 @@ import java.util.Scanner;
 abstract public class ActionEmitter {
 
     private Socket socket;
-    protected ObjectInputStream inputStream;    // Protected is the best solution for the encapsulation so far
+    protected ObjectInputStream inputStream;    
     protected ObjectOutputStream outputStream;
     private Boolean isClientOnline;
     private Boolean connectedToServer;
@@ -32,12 +32,10 @@ abstract public class ActionEmitter {
     public boolean exit(Role role) {
 
         try {
-//            if(!isServerOnline()){
                 Request request = new Request(Action.EXIT,role);
                 outputStream.writeObject(request);
                 outputStream.close();
                 inputStream.close();
-//            }
 
         } catch (IOException e) {
             e.printStackTrace();
