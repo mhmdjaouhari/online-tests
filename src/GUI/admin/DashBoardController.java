@@ -68,9 +68,6 @@ public class DashBoardController implements Initializable {
         }
         btnWelcome.setText("Welcome : "+loggeduser.getNom()+" !");
         statServer=new Label("Server offline !");
-        //statServer.setAlignment(Pos.BASELINE_CENTER);
-
-        //statServer.setContentDisplay(ContentDisplay.C);
         statServer.prefHeight(42);
         statServer.prefWidth(161);
         statServer.setFont(new Font(14.0));
