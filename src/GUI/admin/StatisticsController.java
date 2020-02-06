@@ -39,12 +39,7 @@ public class StatisticsController implements Initializable {
     public static int nbrPf=0;
     public static TextField OnlineProfs;
     public static TextField OnlineStudents;
-
-//            <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="48.0" prefWidth="250.0" style="-fx-background-color: #FFC66C;" text="0">
-//                            <font>
-//                                <Font name="Ebrima Bold" size="25.0" />
-//                            </font>
-//                        </Label>
+    
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         OnlineProfs=new TextField();
