@@ -31,34 +31,24 @@ public class ConsolleController implements Initializable {
         Server.setStopServer(true);
         starter= new Thread(new Server());
         starter.start();
-//        System.out.println("kokokoko");
-        //starter.interrupt();
-        ///
         log.appendText("Server started ...\n");
         bntStart.setDisable(true);
         btnStop.setDisable(false);
-//        System.out.println("clicked");
         bntStart.setText("Server On...");
         DashBoardController.statServer.setText("Server is online !");
         DashBoardController.statServer.setTextFill(Color.web("#00ff49"));
-        //System.out.println(starter.isInterrupted());
-        //starter.interrupt();
     }
 
     // here is some problems with threads and process
     public void stopServer(ActionEvent actionEvent) throws IOException {
         Server.setStopServer(false);
         Socket socket = new Socket("localhost", 5000);
-//        System.out.println(socket.isConnected());
         socket.close();
         log.appendText("Server stopping... \n");
         bntStart.setDisable(false);
         btnStop.setDisable(true);
-//        System.out.println("Clickedstop");
         bntStart.setText("Start Server");
-//        System.out.println(socket.isConnected());
         starter.interrupt();
-//        System.out.println(starter.isInterrupted());
         DashBoardController.statServer.setTextFill(Color.web("#ff0000"));
         DashBoardController.statServer.setText("Server is Offline !");
     }
