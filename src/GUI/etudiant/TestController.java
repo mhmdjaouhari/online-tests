@@ -169,7 +169,6 @@ public class TestController {
             });
         });
         setTimer();
-        //writeTestToTempFile();
     }
 
     private void setTimer() {
@@ -259,8 +258,6 @@ public class TestController {
             newValue = Integer.toString(choix);
         }
         reponse.setValue(newValue);
-//        Thread thread = new Thread(this::updateTestToTempFile);
-//        thread.start();
     }
 
     private void removeChoixFromReponse(Reponse reponse, int choix) {
@@ -270,8 +267,6 @@ public class TestController {
             choixArray.remove(Integer.toString(choix));
             String newValue = String.join(",", choixArray);
             reponse.setValue(newValue);
-//            Thread thread = new Thread(this::updateTestToTempFile);
-//            thread.start();
         }
     }
 
