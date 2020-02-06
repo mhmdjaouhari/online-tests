@@ -172,7 +172,6 @@ public class EtudiantsController implements Initializable {
         usernameField.setText(oldEtud.getUsername());
         passwordField.setText(oldEtud.getPassword());
         groups.setValue(getNomGroup(oldEtud.getIdGroupe()));
-        // groups.setVisibleRowCount(1);
     }
     // load object from textFields
     public Etudiant load() {
@@ -224,7 +223,6 @@ public class EtudiantsController implements Initializable {
         }
         else {
             AllEtud=(ObservableList<Etudiant>)res.getData();
-            //System.out.println(AllEtud.get(0));
             return AllEtud;
         }
     }
